@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My personal website</title>
+    <style>
+        a{
+            text-decoration: none;
+        }
+        li{
+            display: inline;
+            padding-left: 50px;
+        }
+        
+    </style>
+</head>
+<body>
+    
+    <div class="navbar">
+        <header>
+            <nav>
+                <ul>
+                    <li><img src="../prototype- Page profil Solicode/student-removebg-preview.png" alt="my image" width="50px"></li>
+                    <li><a href="#accueil">accueil</a></li>
+                    <li><a href="#cv">CV</a></li>
+                    <li><a href="#contact">contact</a></li>
+                </ul>
+               
+            </nav>
+        </header>
+    </div>
+    <div class="main-section">
+        <main>
+            <section id="accueil">
+                <h1>Welcome in my personal web page </h1>
+                <p>you gonna find all the needed information about me here</p>
+            </section>
+            <section id="cv">
+                <h2>CV section</h2>
+                <table border="1">
+                    <tr>
+                        <th>2022-2023 :  </th>
+                        <td>I took my bac with good mark .</td>
+                    </tr>
+                    <tr>
+                        <th>2023-2025 :  </th>
+                        <td>I studied in ISMONTIC for one year, i experienced how to create a web site static and some other stuff .</td>
+                    </tr>
+                    <tr>
+                        <th>2025-2026</th>
+                        <td>Im integrating Solicode center to improve all my skills .</td>
+                    </tr>
+                </table>
+            </section>
+        </main>
+    </div>
+    <div class="contact-center">
+        <footer id="contact">
+            <h2>CONTACT Page</h2>
+            <form action="file.php">
+                <fieldset>
+                    <legend>    ENTER YOUR INFOS PLEASE</legend>
+                    <br><br>
+                    <label for="name">Full name</label>
+                    <input type="text" name="full-name" id="name" maxlength="20" placeholder="ayoub elfaquihi">
+                    <br>
+                    <br>
+                    <label for="Age">Age</label>
+                    <input type="number" name="age" id="Age" min="10" max="100" placeholder="19">
+                    <br><br>
+                    <label for="mail">Mail</label>
+                    <input type="email" name="mail" id="mail" placeholder="exple@gmail.com">
+                    <br><br>
+                    <label for="Male">Male</label>
+                    <input type="radio" name="gender" id="Male">
+                    <label for="Male">female</label>
+                    <input type="radio" name="gender" id="female">
+                    <br><br>
+                    <label for="message">message</label>
+                    <textarea name="message" id="message" cols="30" rows="3" placeholder="write your message here"></textarea>
+                    <br><br><br>
+                    <button type="submit" value="submit">Send</button>
+                    <button type="reset" value="reset">Reset</button>
+                    
+
+
+
+                   
+                </fieldset>
+            </form>
+        </footer>
+
+    </div>
+</body>
+</html>
