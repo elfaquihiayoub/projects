@@ -9,7 +9,7 @@ body{
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 20vh 70vh 10vh;
     gap: 8px;
-    line-height: 1.5;
+    line-height: 1.5rem;
     color: #333 ;
     text-align: center;
     font-weight: 600;
