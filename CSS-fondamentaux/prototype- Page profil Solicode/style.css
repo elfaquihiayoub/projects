@@ -10,7 +10,7 @@ body{
     grid-template-rows: 20vh 70vh 10vh;
     gap: 8px;
     line-height: 1.5;
-    color: rgb(197, 189, 178) ;
+    color: #333 ;
     text-align: center;
 
 }
@@ -102,13 +102,20 @@ main{
 .Compétences h2{
     margin-bottom: 5px;
 }
-.Compétences table{
+table{
     margin: auto;
+   
     
 }
-th{
-    color:  rgb(221, 211, 200) ;
+th,td{
+    border-bottom:solid 2px #DBE2EF;
+    padding-left: 10px;
+    padding-right: 10px;
+    background: #dbe2ef3a;
+    border-radius: 5px;
+   
 }
+
 .Loisirs{
     grid-column: 2/3;
     grid-row: 2/3;
@@ -124,3 +131,7 @@ footer{
     margin-top: 4vh;
 
 }
+.fa-github{
+    color: lightgrey ;
+}
+
