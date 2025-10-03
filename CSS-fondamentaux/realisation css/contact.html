@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
+    <link rel="stylesheet" href="contact.css">
 </head>
 <body>
-    <div>
+    <div class="first-section">
         <header>
-            <h1>Contact me</h1>
-            <nav>
-                <ul>
+            
+            <nav >
+                <ul id="nav-list">
                     <li><a href="accuel.html">accueil</a></li>
                     <li><a href="cv.html">CV</a></li>
                     <li><a href="mailto:elfaquihi.ayoub093@gmail.com">email</a></li>
@@ -19,35 +20,44 @@
                 </ul>
             </nav>
         </header>
-        <br><br><br><br>
+      
         
     </div>
-    <div>
+    <div class="secound-section">
+       
         <main>
+            <article>
+                <h1>Contact us</h1>
+                <p>Need to get in touch with us?Either fill out te form with your inquiry.</p>
+            </article>
             <form action="file.php">
-                <fieldset>
-                    <legend>Contact me</legend>
-                    <label for="name">Name</label>
+                <div class="inputs-items">
+               
+                    
+                    <label for="name">Name :</label>
                     <input type="text" name="NOM" id="name" maxlength="20" required>
-                    <label for="email">Email</label>
+                    <label for="email">Email :</label>
                     <input type="email" name="Email" id="email" required>
-                    <br><br>
-                    <textarea name="Feedback" id="message" cols="30" rows="3" placeholder="message us"></textarea>
-                    <br>
+                    <label for="message">what we can help you </label>
+                    
+                    
+                   
+                    <textarea name="Feedback" id="message" cols="69" rows="5    " placeholder="    message us"></textarea>
+                    
                     <button type="submit">SEND</button>
-                </fieldset>
+                </div>
             </form>
         </main>
     </div>
-    <div>
+    <div class="last-section">
         <footer>
-            <nav>
-                <br><br><br>
-                <ul>
+           
+                
+                <ul id="last-nav">
                     <li><a href="#">haut de page</a></li>
                    
                 </ul>
-            </nav>
+            
         </footer>
     </div>
     

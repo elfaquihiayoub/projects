@@ -1,0 +1,130 @@
+*{
+    margin: 0px;
+    padding: 0;
+}
+body{
+
+   
+    background-size:cover;
+    color: white;
+    text-shadow: 4px 2px 4px lightgray;
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows: 10vh 80vh 10vh;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    width: 100%;
+    height: 100vh;
+    line-height: 1.8em;
+    text-align: center;
+    font-size: large;
+    font-weight: 500;
+    gap: 1vh;
+ 
+    
+    background-image: url(https://wallpapercave.com/wp/wp2856136.gif);
+   
+    
+}
+::selection{
+    color: rgb(42, 153, 193);
+}
+.first-section{
+    
+    grid-column: 1/3;
+}
+#nav-list{
+    display: flex;
+    list-style: none;
+    justify-content: space-around;
+    padding-top: 5vh;
+}
+.secound-section{    
+    grid-column: 1/3;
+        
+
+}
+h1{
+   
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    color: white;
+    text-shadow: 4px 2px 4px grey
+}
+h2{
+    padding-bottom: 5%;
+}
+p{
+    padding-top: 2vh;
+}
+main{
+   
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 30vh 30vh;
+    gap: 1vh;
+}
+.Profil{
+    grid-column: 1/2;
+    grid-row: 1/2;
+    background-color: rgba(255, 255, 255, 0.160 );
+    border-radius: 20px;
+    box-shadow: 4px 4px 8px 0 rgba(238, 241, 241, 0.87)
+    
+}
+.Compétences{
+    grid-column: 2/3;
+    grid-row: 1/2;
+    background-color:rgba(255, 255, 255, 0.160 );
+    border-radius: 20px;
+    box-shadow: -4px 4px 8px 0 rgba(238, 241, 241, 0.87) 
+}
+.Formation{
+    grid-column: 1/2;
+    grid-row: 2/3;
+    background-color:rgba(255, 255, 255, 0.160 );
+    border-radius: 20px;
+    box-shadow: 4px 4px 8px 0 rgba(238, 241, 241, 0.87)
+}
+.Experiences{
+    grid-column: 2/3;
+    grid-row: 2/3;
+    background-color:rgba(255, 255, 255, 0.160 );
+    border-radius: 20px;
+    box-shadow: -4px 4px 8px 0 rgba(238, 241, 241, 0.87)
+}
+li{
+    list-style: none;
+    line-height: 2em;
+}
+a{
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.2em;
+    color: white;
+    text-shadow: 4px 2px 4px lightgray
+}
+a:hover{
+    color: rgb(46, 169, 203);
+    text-shadow: 4px 2px 4px white;
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.last-section   {
+   grid-column: 1/3;
+
+    
+}
