@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>adding new book</title>
+    <link rel="stylesheet" href="contact.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li id="logo">
+                    <a href="#"> <img src="logo.png"width="120px"></a>
+                  
+                </li>
+                <li><a href="cataloge.html">main page</a></li>
+                
+            </ul>
+        </nav>
+
+    </header>
+    <main>
+   
+        <div class="form-container">
+            <form action="" >
+                <label for="">name of book </label>
+                <input type="text" required id="nameOfAddingBook">
+
+                <label for="">auteur</label>
+                <input type="text" required id="auteurOfAddingBook">
+
+                <label for="">publish year</label>
+                <input type="number" required id="publishOfAddingBook">
+
+                <label for="">code</label>
+                <input type="number" required id="codeOfAddingBook">
+
+                <label for="">disponible?</label>
+                <select name="" id="disponibleOfAddingBook" required >
+                    <option value="true">yes</option>
+                    <option value="false">no</option>
+                </select>
+
+                <label for="" required>prix</label>
+                <input type="number" id="prixOfAddingBook">
+
+                <button type="submit" id="addNewBookButton">ajouter</button>
+                
+
+                
+
+
+
+
+            </form>
+        </div>
+    </main>
+        
+    
+    <script type="module" src="contact.js"></script>
+</body>
+</html>
