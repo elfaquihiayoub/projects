@@ -107,7 +107,7 @@ if(searchbar){
 
  
  // start of full number of book
- let NumberBook=function(bibliotheque){
+ let NumberBook=function(){
     let counter=0
     for (let i of bibliotheque) {
         counter++
@@ -156,6 +156,8 @@ let numberBookDisponible=function(){
     AddingBookCover(bibliotheque);
     Addingtitle(bibliotheque);
     AdingNumberOfBooks();
+    afficherLesLIvre();
+    NumberBook()
    
 
 
