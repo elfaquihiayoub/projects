@@ -11,13 +11,13 @@ export let bibliotheque =[
 
 {code:6,titre:"The Beginning After The End"   ,auteur:"	TurtleMe", anne: 2018 ,disponible: true , prix: 500 , cover:"assets/The Beginning After The End.webp" },
 
-{code:7,titre:"Shadow slave"   ,auteur:"Guiltythree", anne: 2022 ,disponible: false , prix: 300 , cover:"assets/Shadow slave.webp" },
+{code:7,titre:"Shadow slave"   ,auteur:"Guiltythree", anne: 2022 ,disponible: false , prix: 600 , cover:"assets/Shadow slave.webp" },
 
-{code:8,titre:"Lord of Mysteries"   ,auteur:"	Cuttlefish That Loves Diving", anne: 2018 ,disponible: true , prix: 400 ,cover:"assets/Lord of Mysteries.webp" },
+{code:8,titre:"Lord of Mysteries"   ,auteur:"	Cuttlefish That Loves Diving", anne: 2018 ,disponible: true , prix: 300 ,cover:"assets/Lord of Mysteries.webp" },
 
 {code:9,titre:"Sword Art Online"   ,auteur:"Reki Kawahara", anne: 2015 ,disponible: true , prix: 250 ,cover:"assets/Sword Art Online.webp" },
 
-{code:10,titre:"Re:Zero - Starting Life in Another World"   ,auteur:"Tappei Nagatsuki", anne: 2020 ,disponible: false , prix: 500,cover:"assets/Re-Zero.webp" },
+{code:10,titre:"Re:Zero "   ,auteur:"Tappei Nagatsuki", anne: 2020 ,disponible: false , prix: 400,cover:"assets/Re-Zero.webp" },
 
 ];
 
@@ -157,7 +157,9 @@ let numberBookDisponible=function(){
     Addingtitle(bibliotheque);
     AdingNumberOfBooks();
     afficherLesLIvre();
-    NumberBook()
+    NumberBook();
+    expensiveBook(bibliotheque);
+    reserverBook(bibliotheque)
    
 
 
@@ -204,6 +206,102 @@ let Addingtitle = function(bibliotheque) {
     btn.addEventListener("click", DeleteBook);
   });
 };
+
+
+///------------ realisation functions------------////////////
+
+
+///--------------1 afficher le book le plus chaire----------------
+
+
+let expensiveBook=function(bibliotheque){
+  let expensiveBookcart=document.querySelector(".container2")
+  let max=0;
+  let index=0
+  for (let i = 0; i < bibliotheque.length; i++) {
+    if(bibliotheque[i].prix>max){
+      max=bibliotheque[i].prix
+      index=i
+    }   
+  
+  }
+  if(expensiveBookcart){
+    expensiveBookcart.innerHTML = `
+
+    <h3>${bibliotheque[index].titre}<span>
+    ${bibliotheque[index].auteur}</span>
+    <span class="span-prix">
+    PRIX: ${bibliotheque[index].prix}</span>
+    </h3>
+   
+    <img src="${bibliotheque[index].cover}" alt="${bibliotheque[index].titre}" class="book-cover-cart">
+    
+      
+  `;
+  }
+
+ 
+
+}
+
+///////----- 2 -- reserverBook function---------------=/////////////
+let reserverBook=function(bibliotheque){  
+  const bookContainer=document.querySelector("main");
+    
+  for (let i = 0; i < bibliotheque.length; i++) {
+      let reserverCart=bookContainer.querySelector(".photo"+[i+1])
+      let reserverCartinfo=bookContainer.querySelector(".infos"+[i+1])
+    
+    if (bibliotheque[i].disponible === false) {
+      reserverCart.insertAdjacentHTML(
+        "beforeend",
+        `<div class="reserved">reserved</div>`
+      );
+    }
+    else{
+      reserverCartinfo.insertAdjacentHTML(
+        "afterend",
+        `   <button type="submit" class="toReserver">Reserver!</button>`
+      );
+    }
+  }
+
+
+      
+    }
+
+    // Keep track of sort order
+let sortAscending = true;
+
+// Function to sort the bibliotheque array and re-render the DOM
+function sortBooksByTitle() {
+    bibliotheque.sort((a, b) => {
+        if (sortAscending) {
+            return a.titre.localeCompare(b.titre); // Ascending
+        } else {
+            return b.titre.localeCompare(a.titre); // Descending
+        }
+    });
+
+    // Toggle order for next click
+    sortAscending = !sortAscending;
+
+    // Re-render the books in the DOM
+    AddingBookCover(bibliotheque);
+    Addingtitle(bibliotheque);
+    reserverBook(bibliotheque);
+}
+
+// Attach click event to the image
+const sortImg = document.getElementById("sortImage");
+if (sortImg) {
+    sortImg.addEventListener("click", sortBooksByTitle);
+}
+
+
+
+
+
 
 
 
