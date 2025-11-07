@@ -69,40 +69,84 @@ let afficherUnLivre=function(inputeCodeAffich){
 
 
 
-//adding new book
+//adding books dynamicly
 
+function renderBooks() {
+    const container = document.getElementById("bookContainer");
+  
+  
+    bibliotheque.forEach((book) => {
+        const section = document.createElement("section");
+        section.classList.add("section-books");
+  
+        section.innerHTML = `
+            <div class="photo"><img src="${book.cover}" alt="${book.titre}" class="book-cover"></div>
+            <div class="infos">
+                <h4>${book.titre}</h4>
+              
+                ${book.disponible ? `<button class="toReserver">Reserver!</button>` : `<div class="reserved">reserved</div>`}
+                <button class="delete">supprimer</button>
+            </div>
+        `;
+  
+        // Delete functionality
+        section.querySelector(".delete").addEventListener("click", () => {
+            section.remove();
+        });
+  
+        container.appendChild(section);
+    });
+  }
+////-------------------------reserved book-------------------------------------
+
+function reservedBook() {
+  let buttonReserver = document.querySelectorAll(".toReserver");
+
+  for (let i = 0; i < buttonReserver.length; i++) {
+
+    buttonReserver[i].addEventListener("click", function () {
+
+      if (bibliotheque[i].disponible === true) {
+///change the status from true to false - change text btn and - 
+        bibliotheque[i].disponible = false;
+        buttonReserver[i].textContent = "reserved";
+        buttonReserver[i].style.backgroundColor = "gray";
+/// create the reserved card and added it to 
+        let card = this.closest(".section-books");
+        let photo = card.querySelector(".photo");
+        let label = document.createElement("div");
+        label.classList.add("reserved");
+        label.textContent = "Reserved";
+        photo.appendChild(label);
+      }
+     
+    });
+  }
+}
+  
 
 //start of searching a book
 let searchbar=document.getElementById("searching") ;
 let searchingBook=function(bibliotheque){
  let searchValue=searchbar.value.trim().toLowerCase()
- 
- for( let i=0; i < bibliotheque.length; i++){
+ let changeField=document.querySelectorAll(".section-books")
+ changeField.forEach((card,i) => {
     let titlebook=bibliotheque[i].titre.trim().toLowerCase()
-  
-    if (titlebook.includes(searchValue)) {
-      
-        let changeField=document.getElementById("section"+(i+1))
-     
-        changeField.classList.add("book-found")
-     
-        
-       
-      
-        
-    }
-    
-  
    
-       
-}}
-
+    if(titlebook.includes(searchValue)){
+        card.style.display = "block";
+    }else{
+        card.style.display = "none";
+    }
+})};
+ 
 if(searchbar){
-    searchbar.addEventListener("change",function(){
+    searchbar.addEventListener("input",function(){
         searchingBook(bibliotheque)
         })
         
 }
+
 
 
  
@@ -153,59 +197,21 @@ let numberBookDisponible=function(){
 
 
   window.onload = function() {
-    AddingBookCover(bibliotheque);
-    Addingtitle(bibliotheque);
+  
+  
     AdingNumberOfBooks();
     afficherLesLIvre();
     NumberBook();
     expensiveBook(bibliotheque);
-    reserverBook(bibliotheque)
+    renderBooks();
+    reservedBook();
+   
+    
    
 
 
   };
-   // adding the books covers
-   let AddingBookCover=function(bibliotheque){
-    for (let i = 0; i < bibliotheque.length; i++) {
-        let bookCover=document.querySelector(".photo"+[i+1])
-        if(bookCover){
-        bookCover.innerHTML = `
-        <img src="${bibliotheque[i].cover}" alt="${bibliotheque[i].titre}" class="book-cover">
-       
-      `
-    }
-        
-    }
 
-  }
-
-
-  // the end of adding books functions
-  function DeleteBook(event) {
-  let sectionToRemove = event.target.closest(".section-books");
-  if (sectionToRemove) {
-    sectionToRemove.remove();
-  }
-}
-
-let Addingtitle = function(bibliotheque) {
-  for (let i = 0; i < bibliotheque.length; i++) {
-    let booktiter = document.querySelector(".infos" + [i + 1]);
-    if (booktiter) {
-      booktiter.innerHTML = `
-        <h4>${bibliotheque[i].titre}</h4>
-        <button class="delete">supprimer</button>
-          
-      `;
-    }
-  }
-
- 
-  let deleteBtns = document.querySelectorAll(".delete");
-  deleteBtns.forEach(function(btn) {
-    btn.addEventListener("click", DeleteBook);
-  });
-};
 
 
 ///------------ realisation functions------------////////////
@@ -245,58 +251,8 @@ let expensiveBook=function(bibliotheque){
 }
 
 ///////----- 2 -- reserverBook function---------------=/////////////
-let reserverBook=function(bibliotheque){  
-  const bookContainer=document.querySelector("main");
-    
-  for (let i = 0; i < bibliotheque.length; i++) {
-      let reserverCart=bookContainer.querySelector(".photo"+[i+1])
-      let reserverCartinfo=bookContainer.querySelector(".infos"+[i+1])
-    
-    if (bibliotheque[i].disponible === false) {
-      reserverCart.insertAdjacentHTML(
-        "beforeend",
-        `<div class="reserved">reserved</div>`
-      );
-    }
-    else{
-      reserverCartinfo.insertAdjacentHTML(
-        "afterend",
-        `   <button type="submit" class="toReserver">Reserver!</button>`
-      );
-    }
-  }
 
 
-      
-    }
-
-    // Keep track of sort order
-let sortAscending = true;
-
-// Function to sort the bibliotheque array and re-render the DOM
-function sortBooksByTitle() {
-    bibliotheque.sort((a, b) => {
-        if (sortAscending) {
-            return a.titre.localeCompare(b.titre); // Ascending
-        } else {
-            return b.titre.localeCompare(a.titre); // Descending
-        }
-    });
-
-    // Toggle order for next click
-    sortAscending = !sortAscending;
-
-    // Re-render the books in the DOM
-    AddingBookCover(bibliotheque);
-    Addingtitle(bibliotheque);
-    reserverBook(bibliotheque);
-}
-
-// Attach click event to the image
-const sortImg = document.getElementById("sortImage");
-if (sortImg) {
-    sortImg.addEventListener("click", sortBooksByTitle);
-}
 
 
 
