@@ -92,6 +92,7 @@ function renderBooks() {
         // Delete functionality
         section.querySelector(".delete").addEventListener("click", () => {
             section.remove();
+            bibliotheque.splice(book,1)
         });
   
         container.appendChild(section);
@@ -141,7 +142,7 @@ let searchingBook=function(bibliotheque){
 })};
  
 if(searchbar){
-    searchbar.addEventListener("input",function(){
+    searchbar.addEventListener("inout",function(){
         searchingBook(bibliotheque)
         })
         
@@ -178,6 +179,7 @@ let numberBookDisponible=function(){
 }
 
 
+
   //--------------it just left the recall at html file-----------
 
   let AdingNumberOfBooks=function(){
@@ -201,10 +203,18 @@ let numberBookDisponible=function(){
   
     AdingNumberOfBooks();
     afficherLesLIvre();
-    NumberBook();
+
     expensiveBook(bibliotheque);
     renderBooks();
     reservedBook();
+    localStorage.clear()
+    localStorage.setItem("bibliotheque",JSON.stringify(bibliotheque))
+     let newBIB=JSON.parse(localStorage.getItem("bibliotheque"))
+     bibliotheque=newBIB
+     console.log(bibliotheque)
+     
+
+  
    
     
    

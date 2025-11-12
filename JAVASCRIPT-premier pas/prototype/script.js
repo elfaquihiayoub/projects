@@ -21,47 +21,47 @@ export let bibliotheque =[
 
 ];
 
-// display function(afficher les livres)
-let afficherLesLIvre=function(){
-console.log( "les livres disponibles sont :");
-bibliotheque.forEach(function(livre){
-  
-    if (livre.disponible==true) {
-        console.log( livre.titre);
-    }
-       
-})}
+  // display function(afficher les livres)
+  let afficherLesLIvre=function(){
+  console.log( "les livres disponibles sont :");
+  bibliotheque.forEach(function(livre){
+    
+      if (livre.disponible==true) {
+          console.log( livre.titre);
+      }
+        
+  })}
 
-// end of display function  
+  // end of display function  
 
 
-// afficher un livre avec ce code
-let inputeCodeAffich=document.getElementById("codeAfficheNUmber")
-let afficherUnLivre=function(inputeCodeAffich){
-    let indexToAfficher=-1;
-    for (let i = 0; i < bibliotheque.length; i++) {
-       
-        if (bibliotheque[i].code==inputeCodeAffich) {
-            indexToAfficher=i;
-            break;
-            
+  // afficher un livre avec ce code
+  let inputeCodeAffich=document.getElementById("codeAfficheNUmber")
+  let afficherUnLivre=function(inputeCodeAffich){
+      let indexToAfficher=-1;
+      for (let i = 0; i < bibliotheque.length; i++) {
+        
+          if (bibliotheque[i].code==inputeCodeAffich) {
+              indexToAfficher=i;
+              break;
+              
+          }
+
+      
+
+
+      }
+
+      if(indexToAfficher!=-1) {
+          return bibliotheque[indexToAfficher];
+
+        }
+        else{
+          return "ce code nest pas existe !!"
         }
 
-     
 
-
-    }
-
-    if(indexToAfficher!=-1) {
-        return bibliotheque[indexToAfficher];
-
-       }
-       else{
-        return "ce code nest pas existe !!"
-       }
-
-
-}
+  }
 
 
 
