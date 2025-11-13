@@ -61,10 +61,40 @@ if(
     bibliotheque.push(book);
     localStorage.setItem("bibliotheque", JSON.stringify(bibliotheque));
 
+
 }
 else{
-    console.log("not in codition")
+     if(titre.value=="" ){
+    let error = document.createElement("li");
+    error.innerText="tittle is empty"
+    errorText.appendChild(error)
+
 }
+if(auteur.value=="" ){
+    let error = document.createElement("li");
+    error.innerText="auteur is empty"
+    errorText.appendChild(error) 
+
+}
+if(isNaN(code.value) || code.value =="" ){
+    let error = document.createElement("li");
+    error.innerText="code is not a number or empty"
+    errorText.appendChild(error) 
+
+}
+if(isNaN(prix.value) || prix.value ==""  ){
+    let error = document.createElement("li");
+    error.innerText="prix is  not a numbre or empty"
+    errorText.appendChild(error) 
+
+}
+if(isNaN(annee.value) || annee.value<=2000 ){
+    let error = document.createElement("li");
+    error.innerText="anne is not a numbre  and less than 2000  or empty"
+    errorText.appendChild(error) 
+}
+
+};
 
 
 
