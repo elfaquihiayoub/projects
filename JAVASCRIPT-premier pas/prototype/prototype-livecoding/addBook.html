@@ -36,8 +36,34 @@ let prix = document.getElementById("prix")
 let annee = document.getElementById("annee")
 let disponible = document.getElementById("disponible")
 
-if(titre.value !== "" && auteur.value ){
 
+if(
+    
+  titre.value.trim() !== "" &&
+  auteur.value.trim() !== "" &&
+  !isNaN(code.value) &&
+  !isNaN(prix.value) &&
+  !isNaN(annee.value) &&
+  annee.value >= 2000
+
+){
+ 
+    let book ={
+        code: Number(code.value),
+        titre: titre.value.trim(),
+        auteur: auteur.value.trim(),
+        prix: Number(prix.value),
+        annee: Number(annee.value),
+        disponible: disponible.checked
+
+    }
+    
+    bibliotheque.push(book);
+    localStorage.setItem("bibliotheque", JSON.stringify(bibliotheque));
+
+}
+else{
+    console.log("not in codition")
 }
 
 

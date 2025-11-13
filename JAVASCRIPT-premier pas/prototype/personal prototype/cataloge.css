@@ -5,11 +5,12 @@
 }
 body{
     width: 100%;
-    height: 100vh;
+    height: 200vh;
     text-align: center;
     font-weight: lighter;
     font-size: small    ;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    position: relative;
 
 
 }
@@ -26,6 +27,7 @@ div.container1{
 
 header{
     background-color: #FCF9EA;
+    position: relative;
    
 }
 nav ul{
@@ -74,6 +76,7 @@ main{
     border-radius: 5px;
     box-shadow: 2px 2px 8px rgb(0, 0, 0);
     transition: transform 0.3s ease;
+    
 }
 .section-books:hover{
     transform: translateY(-5px);
@@ -85,17 +88,20 @@ main{
 .photo{
     width: 98%;
     margin:2px auto;
-    height: 60%;
+    height: 66%;
     background-color:white;
+  
 }
 .infos{
     width: 100%;
-    height: 37%;
-    background-color: beige;
+    height: 30%;
+    background-color: rgba(205, 205, 198, 0.049);
 }
 .infos h3,h4{
-    height: 50%;
-    padding: 5px;
+    height: 30%;
+    margin-bottom: 1vh;
+    margin-top: 2vh;
+    
     text-align: center;
     color: #2C2C2C;
     font-family: "Raleway", sans-serif; 
@@ -124,6 +130,7 @@ input{
   border-radius: 2px;
   object-fit: cover;
   box-shadow: 2px 2px 8px black;
+  position: relative;
 }
 h4{
     color: #2C2C2C;
@@ -143,8 +150,9 @@ transition: 0.4s;
 /* secound section */
 
 .delete{
-margin-top: 2vh;
-height: 5vh;
+margin-top: 1vh;
+margin-bottom: 2vh;
+height: 3vh;
 width: 10vw;
 border-radius: 2px;
 box-shadow: 2px 2px 8px black,-2px -2px 8px black   ;
@@ -155,6 +163,93 @@ border: none;
 button:hover{
     background-color: red;
     transform: translateY(-1px);
+    cursor: pointer;
+}
+
+/*   realisation container */
+
+.container2{
+    width: 50vw;
+    height: 70vh;
+    background-color: #FFA4A4;
+    position: absolute;
+    top: 125vh;
+    left: 25%;
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 2px 2px 6px black;
+
+}
+.book-cover-cart{
+    width: 25vw;
+    margin-top: 1vh;
+    height: 68vh;
+    box-shadow: 2px 2px 6px black;
+
+}
+h3{
+    
+    padding: 5px;
+    padding-top: 30px;
+    text-align: center;
+    color: #2C2C2C;
+    font-family: "Raleway", sans-serif; 
+    font-weight: 900;
+    font-size: larger;
+    width: 25vw;
+ 
+    line-height: 20vh;
+    text-shadow: 2px 2px 8px grey;
+  
+}
+.container2 h4{
+    color: #BADFDB;
+   width: 25vw;
+  
+   align-self: flex-end;
+}
+span{
+    display: block;
+    color: aliceblue;
+}
+.span-prix{
+    color: red;
+
+}
+.reserved{
+  width: 50%;
+    position: relative;
+    top: -180px;
+    left: 52px;
+  
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    
+   
+}
+.toReserver{
+    background-color: #28a745;
+    width: 50%;
+    height: 3vh;
+    width: 10vw;
+    border-radius: 2px;
+    box-shadow: 2px 2px 8px black,-2px -2px 8px black   ;
+    color: #FCF9EA;
+    border: none;
+}
+.toReserver:hover{
+    background-color: #75e08e;
+    color: #2C2C2C;
+
+}
+
+#sort{
+   position: absolute;
+   left: 1vw;
 }
 
 

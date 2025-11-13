@@ -1,9 +1,8 @@
 const bibliotheque = [
 
-  { code:12,titre: "Clean Code", auteur: "Robert C. Martin", annee: 2008, disponible: true, prix: 150 },
-
-  {code:45, titre: "Eloquent JavaScript", auteur: "Marijn Haverbeke", annee: 2018, disponible: true, prix: 200 },
-  {code:22,titre:"ice song and fire",auteur:"gorge martin",prix:100, disponible:false, annee: 1999, },
+        { code:12,titre: "Clean Code", auteur: "Robert C. Martin", annee: 2008, disponible: true, prix: 150 },
+        {code:45, titre: "Eloquent JavaScript", auteur: "Marijn Haverbeke", annee: 2018, disponible: true, prix: 200 },
+        {code:22,titre:"ice song and fire",auteur:"gorge martin",prix:100, disponible:false, annee: 1999, },
         {code:21,titre:"the prince",auteur:"Niccolo Machiavelli" , prix:99, disponible:false, annee: 1564,},
         {code:24,titre:"beyond good and devil ",auteur:"Friedrich Nietzsche", disponible:false,prix:200, annee: 1877,},
         {code:25,titre:"The Hobbit", auteur: "J.R.R. Tolkien", prix: 150, annee: 1983,disponible:false, },
@@ -13,6 +12,7 @@ const bibliotheque = [
 
 
 let boooks=document.getElementById("books");
+
 
 
 function checkbook (bookcode) {
