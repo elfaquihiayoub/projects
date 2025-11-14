@@ -25,7 +25,7 @@ rendringInfos();
 let option=document.querySelectorAll("option");
 
 let continent=function(data){
-    
+
     
 
 }
