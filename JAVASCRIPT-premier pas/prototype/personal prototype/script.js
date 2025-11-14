@@ -142,7 +142,7 @@ let searchingBook=function(bibliotheque){
 })};
  
 if(searchbar){
-    searchbar.addEventListener("inout",function(){
+    searchbar.addEventListener("input",function(){
         searchingBook(bibliotheque)
         })
         
