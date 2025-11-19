@@ -3,7 +3,8 @@ let container = document.getElementById("container");
 let select = document.querySelector("select");
 let selectedContinent = []; 
 
-//loading data for the the first use
+
+///////////////////                  loading data for the the first use                   /////////////////////////////////////
 
 
 fetch("https://countries-api-hsak.onrender.com/api/countries")
@@ -15,7 +16,7 @@ fetch("https://countries-api-hsak.onrender.com/api/countries")
 
 
 
-//rendring the cards by the data in our array
+//                   rendring the cards by the data in our array                    ////////////////////////
 function rendringCart(data) {
 
     container.innerHTML = ""; 
@@ -30,11 +31,20 @@ function rendringCart(data) {
             <p class="continent">${p.continent}</p>
         `;
         container.appendChild(cart);
+        cart.addEventListener("click",function(){
+            let number=p.id;
+
+            sessionStorage.setItem("countryID", number);
+
+            window.location.href = "country-details.html";
+
+            
+        })
     });
 }
 
 
-// showing condition///////////////////////////////////////////////
+//                        showing condition              ///////////////////////////////////////////////
 
 
 
@@ -50,6 +60,14 @@ select.addEventListener("change", function () {
         rendringCart(filtered);
     }
 });
+
+
+////////////              selecting by id                    ////////////////////////
+
+
+
+
+
 
 
 

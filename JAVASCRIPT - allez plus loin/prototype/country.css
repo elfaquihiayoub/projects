@@ -3,72 +3,49 @@
     padding: 0;
     font-size: large;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    
-}
-#container{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr ;
-    gap: 2vw;
 }
 
+#container{
+   height: 100vh;
+    position: relative;
+  background-color:cornflowerblue;
+}
 h1{
     color: #222;
     text-shadow: 6px 0px 8px rgb(151, 79, 79);
     font-family:fantasy;
     font-size: 40px;
     text-align: center;
-    position: absolute;
+    
+   
     
 }
-nav{
-    padding-top: 3vh;
-    position: relative;
-    display: flex;
-    justify-content: space-evenly;
-}
-.nav{
-    height: 20vh;
-    background-color: rgb(255, 255, 255);
- 
 
-}.nav ul{
-    list-style: none;
-    padding-top: 1vh;
-    position: absolute;
-    right: 2vw;
-}
-select{
-width: 10rem;
-text-align: center;
-padding: 10px 14px;
-border-radius: 8px;
-font-family :'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  
 
-}
-select:hover{
-    background-color: beige;
-}
-#container{
-    background-color: antiquewhite;
-}
 .cart{
     padding-top: 2vh;
     text-align: center;
     line-height: 2em;
     border: solid grey 2px;
     border-radius: 5px;
-    background-color: beige;
+    background-color: rgba(245, 245, 220, 0.695);
     box-shadow: 2px 2px 8px black;
+    width: 70%;
+    height: 80vh;
+    position: absolute;
+    left: 15%;
+    top: 10%;
 }
 .cart img{
-    width: 120px;
-    height: 70px;
+    width: 250px;
+    height: 150px;
     border-radius: 5px;
     box-shadow: 1px 1px 20px black;
 
 }
 .cart:hover{
-    background-color: rgb(255, 224, 183);
+    background-color: rgba(255, 224, 183, 0.675);
 }
 .name{
     color: #222;
@@ -86,6 +63,26 @@ select:hover{
     text-shadow: 2px 0px 8px ;
 }
 .continent{
+    color: red;
+    font-weight: 500;
+    text-shadow: 2px 0px 8px ;
+}
+.population{
+    color: #222;
+    font-weight: 700;
+    text-shadow: 2px 0px 8px ;
+}
+.area{
+    color: rgb(99, 99, 177);
+    font-weight: 700;
+    text-shadow: 2px 0px 8px ;
+}
+.currency{
+    color: rgb(99, 154, 177);
+    font-weight: 500;
+    text-shadow: 2px 0px 8px ;
+}
+.timezone{
     color: red;
     font-weight: 500;
     text-shadow: 2px 0px 8px ;
