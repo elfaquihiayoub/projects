@@ -1,0 +1,129 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-size: large;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+#container{
+   height: 100vh;
+    position: relative;
+ 
+}
+body{
+    background-image: url(/assets/world-map-geographic-3840x2743-16653.jpg) ;
+    background-size: cover;   
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+h1{
+    color: #222;
+    text-shadow: 6px 0px 8px rgb(151, 79, 79);
+    font-family:fantasy;
+    font-size: 40px;
+    text-align: center;
+    
+   
+    
+}
+
+  
+
+.cart{
+    padding-top: 2vh;
+    text-align: center;
+    line-height: 2em;
+    border: solid grey 2px;
+    border-radius: 5px;
+    background-color: rgba(255, 224, 183, 0.675);
+    box-shadow: 2px 2px 8px black;
+    width: 70%;
+    height: 80vh;
+    position: absolute;
+    left: 15%;
+    top: 10%;
+}
+nav{
+    width:15vw;
+    height: 10vh;
+    background-color: rgb(255, 255, 255);
+    left: 15.2%;
+    top: 10.5%;
+    border-radius: 2px;
+    position: absolute;
+  
+    text-shadow: 2px 0px 8px ;
+    z-index: 1;
+    box-shadow: 2px 2px 8px black;
+    
+}
+nav:hover{
+    background-color: rgba(0, 0, 0, 0.327);
+    box-shadow: 2px 2px 8px rgb(255, 255, 255);
+   
+}
+nav a{
+    display: inline-block;
+    width: 100%;
+    text-decoration: none;
+    color: #222;
+    height: 100%;
+    text-align: center;
+    align-content: center;
+    
+
+}
+nav a:hover{
+    color: aliceblue;
+}
+.cart img{
+    width: 250px;
+    height: 150px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 20px black;
+
+}
+.cart:hover{
+    background-color: rgba(250, 198, 130, 0.675);
+}
+.name{
+    color: #222;
+    text-shadow: 2px 0px 8px ;
+    
+}
+.capitale{
+    color: rgb(99, 99, 177);
+    font-weight: 700;
+    text-shadow: 2px 0px 8px ;
+}
+.language{
+    color: rgb(99, 154, 177);
+    font-weight: 500;
+    text-shadow: 2px 0px 8px ;
+}
+.continent{
+    color: red;
+    font-weight: 500;
+    text-shadow: 2px 0px 8px ;
+}
+.population{
+    color: #222;
+    font-weight: 700;
+    text-shadow: 2px 0px 8px ;
+}
+.area{
+    color: rgb(99, 99, 177);
+    font-weight: 700;
+    text-shadow: 2px 0px 8px ;
+}
+.currency{
+    color: rgb(99, 154, 177);
+    font-weight: 500;
+    text-shadow: 2px 0px 8px ;
+}
+.timezone{
+    color: red;
+    font-weight: 500;
+    text-shadow: 2px 0px 8px ;
+}

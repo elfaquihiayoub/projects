@@ -1,0 +1,150 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-size: large;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+    
+}
+body{
+    background-image: url(/assets/world-map-art-5k-golden-5120x2880-16647.jpg) ;
+    background-size: cover;   
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+#container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr ;
+    gap: 2vw;
+}
+
+h1{
+    color: #222;
+    text-shadow: 6px 0px 8px rgb(151, 79, 79);
+    font-family:fantasy;
+    font-size: 40px;
+    text-align: center;
+    position: absolute;
+    left: 2%;
+    top: 5%;
+    
+}
+nav{
+    padding-top: 3vh;
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+}
+.nav{
+    height: 20vh;
+    
+ 
+
+}.nav ul{
+    list-style: none;
+    padding-top: 1vh;
+    position: absolute;
+    right: 2vw;
+}
+select{
+width: 10rem;
+text-align: center;
+padding: 10px 14px;
+border-radius: 8px;
+font-family :'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+}
+select:hover{
+    background-color: beige;
+}
+#container{
+   
+}
+.cart{
+    padding-top: 2vh;
+    text-align: center;
+    line-height: 2em;
+    border: solid grey 2px;
+    border-radius: 5px;
+    background-color: rgba(245, 245, 220, 0.455);
+    box-shadow: 2px 2px 8px black;
+}
+.cart img{
+    width: 120px;
+    height: 70px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 20px black;
+
+}
+.cart:hover{
+    background-color: rgba(248, 182, 97, 0.445);
+}
+.name{
+    color: #222;
+    text-shadow: 2px 0px 8px ;
+    
+}
+.capitale{
+    color: rgb(99, 99, 177);
+    font-weight: 700;
+    text-shadow: 2px 0px 8px ;
+}
+.language{
+    color: rgb(99, 154, 177);
+    font-weight: 500;
+    text-shadow: 2px 0px 8px ;
+}
+.continent{
+    color: red;
+    font-weight: 500;
+    text-shadow: 2px 0px 8px ;
+}
+#search{
+    margin-top  : 1.3vh;
+    position: absolute;
+    width: 8rem;
+    text-align: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family :'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    right: 17%  ;
+    border: none;
+}
+#population{
+    margin-top  : 1.3vh;
+    position: absolute;
+    width: 8rem;
+    text-align: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family :'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    right: 2%  ;
+    top: 10%;
+    border: none;
+}
+.numberContries{
+    margin-top: 0;
+    width: 40%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+    border: solid grey 2px;
+    border-radius: 5px;
+    background-color: rgba(245, 245, 220, 0.455);
+    box-shadow: 2px 2px 8px black;
+    position: absolute;
+    left: 20%;
+    top: 1%;
+    
+}
+.numberContries li{
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    color: red;
+    font-weight: 500;
+    text-shadow: 2px 0px 8px black ;
+    
+}
+
+
