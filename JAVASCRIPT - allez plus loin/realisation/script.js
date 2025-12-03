@@ -175,9 +175,9 @@ searchCount.addEventListener('input', function() {
 
 function countriesCount(){
 
-    console.log(africaCount,EuropeCount,SouthAmericaCount,NorthAmericaCount,AsiaCount,OceaniaCount,)
+    
     let numberCart = document.createElement("div");
-        // numberCart.className = 'cart';
+        
         numberCart.innerHTML = `
                 <ul class="numberContries">
                             <li>Africa : ${africaCount} |</li>
