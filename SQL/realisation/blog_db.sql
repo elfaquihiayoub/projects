@@ -6,12 +6,16 @@ USE blog_db;
 	nom VARCHAR(100) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
 	mot_de_passe VARCHAR(255)  NOT NULL,
-	date_inscreption DATETIME DEFAULT CURRENT_TIMESTAMP
+	date_inscreption DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ALTER TABLE Utilisateur COMMENT = 'Table des utilisateurs du blog';
+
  )	;
  -- table CATEGORY
   CREATE TABLE category(
     id_category INT AUTO_INCREMENT PRIMARY KEY,
-	nom VARCHAR(100) NOT NULL UNIQUE
+	nom VARCHAR(100) NOT NULL UNIQUE,
+    ALTER TABLE category COMMENT = 'Table des categories du blog';
+
  )	;
  -- table ARTICLE
  CREATE TABLE article(
@@ -24,7 +28,9 @@ USE blog_db;
     id_utilisateur INT,
 	id_category INT,
      FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur),
-     FOREIGN KEY (id_category) REFERENCES category(id_category)
+     FOREIGN KEY (id_category) REFERENCES category(id_category),
+     ALTER TABLE article COMMENT = 'Table des articles du blog';
+
      
  )	;
  -- table COMMENTAIRE
@@ -34,6 +40,8 @@ USE blog_db;
     id_utilisateur INT,
 	id_article INT,
      FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur),
-     FOREIGN KEY (id_article) REFERENCES article(id_article)
+     FOREIGN KEY (id_article) REFERENCES article(id_article),
+     ALTER TABLE commentaire COMMENT = 'Table des commentaires du blog';
+
      
  )	;
