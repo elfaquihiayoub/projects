@@ -40,6 +40,7 @@
     CREATE TABLE commentaire(
         id_commentaire INT AUTO_INCREMENT PRIMARY KEY,
         date_commentaire DATETIME DEFAULT CURRENT_TIMESTAMP,
+        contenue TEXT NOT NULL,
         id_utilisateur INT,
         id_article INT,
         FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur),
