@@ -39,7 +39,6 @@ CREATE TABLE Emprunt(
     EmpruntID INT AUTO_INCREMENT PRIMARY KEY,
     DateEmprunt DATE DEFAULT (CURRENT_DATE) ,
     DateRetour DATE NOT NULL,
-    DateRetourPrevue DATE NOT NULL,
     DateRetourEffective DATE  NULL,
     LecteurID INT,
     OuvrageID INT,
