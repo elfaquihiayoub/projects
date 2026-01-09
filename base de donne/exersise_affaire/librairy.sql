@@ -154,3 +154,4 @@ INSERT INTO PERSONELL (Nom, email, tel, motDePasse, ChefID) VALUES
 
 
 SELECT * FROM emprunt;
+SELECT * FROM Ouvrage;
