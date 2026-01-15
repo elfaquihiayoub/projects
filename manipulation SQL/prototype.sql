@@ -297,8 +297,14 @@ WHERE ouvrage_id IN (SELECT * FROM(
 delete from ouvrage_auteur
 where ouvrage_id in (
 	select ouvrage_id
-    from ouvrage
-    where ouvrage_id = 2 or ouvrage_id = 11
+    from emprunt
+    where emprunt.ouvrage_id IS NULL
+);
+delete from ouvrage
+where ouvrage_id in (
+	select ouvrage_id
+    from emprunt
+    where emprunt.ouvrage_id IS NULL
 );
 
 
