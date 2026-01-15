@@ -284,16 +284,6 @@ WHERE emprunt.ouvrage_id IS NULL;
 
 
 
-DELETE FROM ouvrage_auteur
-WHERE ouvrage_id IN (SELECT * FROM(
-    SELECT ouvrage_id
-    FROM ouvrage
-    LEFT JOIN emprunt 
-        ON ouvrage.ouvrage_id = emprunt.ouvrage_id
-    WHERE emprunt.ouvrage_id IS NULL)
- AS sub_request);
-
-
 delete from ouvrage_auteur
 where ouvrage_id in (
 	select ouvrage_id
