@@ -50,36 +50,9 @@
         <button type="reset">Réinitialiser</button>
 
     </form>
-    <?php
-
- echo "<h2>Bulletin de l'étudiant</h2>";
-echo "<p><strong>Nom :</strong> $nom</p>";
-echo "<p><strong>Prénom :</strong> $prenom</p>";
-echo "<p><strong>Date de naissance :</strong> $dateNaissance</p>";
-echo "<p><strong>Filière :</strong> $filiere</p>";
-
-echo "<h3>Notes par matière</h3>";
-echo "<table border='1' cellpadding='5'>";
-echo "<tr><th>Matière</th><th>Note 1</th><th>Note 2</th><th>Moyenne</th></tr>";
-
-foreach ($notes as $matiere => $notesAll) {
-    $moyenne = $moyennesParMatiere[$matiere];
-    echo "<tr>";
-    echo "<td>$matiere</td>";
-    echo "<td>{$notesAll[0]}</td>";
-    echo "<td>{$notesAll[1]}</td>";
-    echo "<td>$moyenne</td>";
-    echo "</tr>";
-}
-
-echo "</table>";
-
-echo "<h3>Moyenne Générale : $moyenneGenerale</h3>";
-echo "<h3>Mention : $mention</h3>";
-echo "<h3>Décision Finale : $decision</h3>";
 
 
-    ?>
+
    
 
 </body>
