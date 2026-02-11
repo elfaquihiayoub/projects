@@ -8,6 +8,7 @@ if ($_SERVER["REQUEST_METHOD"]==="POST") {
     $dateNaissance =$_POST["date_naissance"];
     $filiere =$_POST["filiere"];
 
+    
 // notes of the current srudent !!!
         $notes = [
     "Frontend" => [$_POST['frontend1'], $_POST['frontend2']],

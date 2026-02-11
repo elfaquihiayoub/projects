@@ -49,11 +49,7 @@
         <button type="submit">Générer le bulletin</button>
         <button type="reset">Réinitialiser</button>
 
-    </form>
-
-
-
-   
+    </form>   
 
 </body>
 </html>
