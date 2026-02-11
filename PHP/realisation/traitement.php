@@ -24,7 +24,6 @@ if(!verifierNotes($notes)){
 }else{
     $moyenPerSubject= calculerMoyenPerSubject($notes);
     $moyenGeneral=moyenGeneral($moyenPerSubject);
-    $moyenGeneral=moyenGeneral($moyenPerSubject);
     $montion=getMention($moyenGeneral);
     $decision=decisionFinale($montion);
 
