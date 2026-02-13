@@ -18,12 +18,9 @@ if ($_SERVER["REQUEST_METHOD"]==="POST") {
                 break;
             }
         }
-           foreach ($notes as $note ) {
-        if ($note <=0  && $note >=20){
-            echo " les notes ne sont pas entre 0 et 20 ";
-            break;
-        }
-    }function calculerMoyenne($notes) {
+     
+    }
+    function calculerMoyenne($notes) {
         if(count($notes)>0){
          global $moyenne;
          $moyenne=0;
