@@ -1,0 +1,40 @@
+[
+    {
+        "id": "PAT-20260218-4814",
+        "patiend": {
+            "name": "aypub elfaquihi",
+            "sex": "male",
+            "birthday": "2005-12-01",
+            "tel": "0606265577"
+        },
+        "consultation": {
+            "date_cosultation": "2026-02-17",
+            "motif": "fievre",
+            "temperature": "37.5",
+            "tension_systolique": "81",
+            "tension_diastolique": "41",
+            "poids": "55",
+            "taille": "1.76",
+            "symptomes": "Headache"
+        }
+    },
+    {
+        "id": "PAT-20260218-3681",
+        "patiend": {
+            "name": "aypub elfaquihi",
+            "sex": "male",
+            "birthday": "2005-12-01",
+            "tel": "0606265577"
+        },
+        "consultation": {
+            "date_cosultation": "2026-02-17",
+            "motif": "fievre",
+            "temperature": "37.5",
+            "tension_systolique": "81",
+            "tension_diastolique": "41",
+            "poids": "55",
+            "taille": "1.76",
+            "symptomes": "Headache"
+        }
+    }
+]

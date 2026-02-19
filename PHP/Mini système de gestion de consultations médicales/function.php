@@ -1,8 +1,12 @@
 <?php
+$errors=[];
+
+define("DATA_FILE","data/consultations.json");
 
 function validation($name,$sex,$birth_date,$tel,$dateConsultation,$motif,$temperature,
-$tension_systolique,$tension_diastolique,$poids,$taille){
-    $errors=[];
+$tension_systolique,$tension_diastolique,$poids,$taille,
+$symptomes){
+     global $errors;
 
     if (empty($name)|| $name==="") {
         array_push($errors,"Name field invalid");
@@ -41,29 +45,44 @@ $tension_systolique,$tension_diastolique,$poids,$taille){
     }
      if ($taille===""|| !is_numeric($taille)|| $taille<0.5 || $taille>2.5) {
         array_push($errors,"taille field invalid");
+        
 
+    }
+
+    if ($symptomes === "") {
+        $errors[] = "Symptomes field invalid";
     }
 // need check
     if(empty($errors)){
-        return $errors;
-    }else{
         return true;
+    }else{
+        return $errors;
     }
-
-    
-
-
-    
-
-
-   
-   
-   
-   
-
 
 
 }
+
+
+function getConsultations(){
+    if (!file_exists(DATA_FILE)) {
+        return [];
+        
+    };
+
+    $data=file_get_contents(DATA_FILE);
+
+    if(empty($data)){
+        return[];
+    };
+
+    $consultation=json_decode($data,true);
+    return $consultation;
+
+
+};
+
+
+
 
 
 
