@@ -1,0 +1,110 @@
+[
+    {
+        "id": "PAT-20260224-1430",
+        "nom": "ayoube",
+        "prenom": "omarii",
+        "sexe": "Homme",
+        "telephone": "0701921708",
+        "age": 21,
+        "date_consultation": "2026-02-24",
+        "motif": "malade",
+        "symptomes": [
+            "Fi\u00e8vre",
+            "Toux",
+            "Fatigue",
+            "Douleur",
+            "Maux de t\u00eate"
+        ],
+        "temperature": {
+            "etat": "Temp\u00e9rature normale",
+            "level": 0,
+            "temp": "37"
+        },
+        "tension": {
+            "etat": "Tension normale",
+            "level": 0,
+            "sys": "100",
+            "dia": "70"
+        },
+        "poids": "75",
+        "taille": "1.75",
+        "imc_etat": {
+            "etat": "Poids normal",
+            "level": 0,
+            "imc": 24.49
+        },
+        "alert": "\u2705 \u00c9tat stable"
+    },
+    {
+        "id": "PAT-20260224-6496",
+        "nom": "AYOUB",
+        "prenom": "KHAMLI",
+        "sexe": "Femme",
+        "telephone": "0701921708",
+        "age": 21,
+        "date_consultation": "2026-02-24",
+        "motif": "malade",
+        "symptomes": [
+            "Fi\u00e8vre",
+            "Toux",
+            "Fatigue",
+            "Douleur",
+            "Maux de t\u00eate"
+        ],
+        "temperature": {
+            "etat": "Temp\u00e9rature normale",
+            "level": 0,
+            "temp": "36"
+        },
+        "tension": {
+            "etat": "Tension normale",
+            "level": 0,
+            "sys": "100",
+            "dia": "72"
+        },
+        "poids": "77.1",
+        "taille": "2",
+        "imc_etat": {
+            "etat": "Poids normal",
+            "level": 0,
+            "imc": 19.28
+        },
+        "alert": "\u2705 \u00c9tat stable"
+    },
+    {
+        "id": "PAT-20260224-2558",
+        "nom": "mouaade",
+        "prenom": "KHAMLI",
+        "sexe": "Femme",
+        "telephone": "0701921708",
+        "age": 21,
+        "date_consultation": "2026-02-24",
+        "motif": "malade",
+        "symptomes": [
+            "Fi\u00e8vre",
+            "Toux",
+            "Fatigue",
+            "Douleur",
+            "Maux de t\u00eate"
+        ],
+        "temperature": {
+            "etat": "Temp\u00e9rature normale",
+            "level": 0,
+            "temp": "36"
+        },
+        "tension": {
+            "etat": "Tension normale",
+            "level": 0,
+            "sys": "100",
+            "dia": "72"
+        },
+        "poids": "77.1",
+        "taille": "2",
+        "imc_etat": {
+            "etat": "Poids normal",
+            "level": 0,
+            "imc": 19.28
+        },
+        "alert": "\u2705 \u00c9tat stable"
+    }
+]
