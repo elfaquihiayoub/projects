@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consultations List</title>
     <style>
-        /* Style sghir bach yban l-jadwel mzyan */
+       
         table {
             width: 100%;
             border-collapse: collapse;
@@ -54,16 +54,17 @@ $consultations = get_consultation();
                     <th>Poids</th>
                     <th>Taille</th>
                     <th>Symptômes</th>
+                    <th>alert</th>
+
                 </tr>
               </thead>";
         echo "<tbody>";
         
         foreach ($consultations as $c) {
-            // Sécurisation des données affichées
+       
             $nom = htmlspecialchars($c["nom"] . " " . $c["prenom"]);
             $symptomes = htmlspecialchars(implode(", ", $c["symptomes"] ?? []));
-            
-            // Formatage des badges pour les constantes
+         
             $tempBadge = "<span class='badge badge-temp'>{$c['temperature']['temp']}°C ({$c['temperature']['etat']})</span>";
             $tensionVal = $c["tension"]["sys"] . "/" . $c["tension"]["dia"];
             $tensionBadge = "<span class='badge badge-tension'>{$tensionVal}</span>";
@@ -81,6 +82,8 @@ $consultations = get_consultation();
             echo "<td>" . htmlspecialchars($c["poids"]) . " kg</td>";
             echo "<td>" . htmlspecialchars($c["taille"]) . " m</td>";
             echo "<td>{$symptomes}</td>";
+            echo "<td>" . htmlspecialchars($c["alert"]) . "</td>";
+
             echo "</tr>";
         }
         

@@ -106,5 +106,38 @@
             "imc": 19.28
         },
         "alert": "\u2705 \u00c9tat stable"
+    },
+    {
+        "id": "PAT-20260225-1881",
+        "nom": "Elfaquihi",
+        "prenom": "Ayoub",
+        "sexe": "Homme",
+        "telephone": "0606265577",
+        "age": 15,
+        "date_consultation": "2026-02-25",
+        "motif": "Fievre ",
+        "symptomes": [
+            "Fi\u00e8vre",
+            "Maux de t\u00eate"
+        ],
+        "temperature": {
+            "etat": "Fi\u00e8vre \u00e9lev\u00e9e - Risque",
+            "level": 4,
+            "temp": "39"
+        },
+        "tension": {
+            "etat": "Hypertension art\u00e9rielle",
+            "level": 3,
+            "sys": "150",
+            "dia": "40"
+        },
+        "poids": "70",
+        "taille": "1.70",
+        "imc_etat": {
+            "etat": "Poids normal",
+            "level": 0,
+            "imc": 24.22
+        },
+        "alert": "\ud83d\udea8 \u00c9tat critique d\u00e9tect\u00e9 : Temp\u00e9rature"
     }
 ]
