@@ -139,5 +139,167 @@
             "imc": 24.22
         },
         "alert": "\ud83d\udea8 \u00c9tat critique d\u00e9tect\u00e9 : Temp\u00e9rature"
+    },
+    {
+        "id": "PAT-20260226-3242",
+        "nom": "Elfaquihi",
+        "prenom": "Ayoub",
+        "sexe": "Homme",
+        "telephone": "0606265577",
+        "age": 18,
+        "date_consultation": "2026-02-26",
+        "motif": "malade",
+        "symptomes": [
+            "Fi\u00e8vre",
+            "Toux",
+            "Maux de t\u00eate"
+        ],
+        "temperature": {
+            "etat": "Temp\u00e9rature normale",
+            "level": 0,
+            "temp": "37"
+        },
+        "tension": {
+            "etat": "Tension normale",
+            "level": 0,
+            "sys": "90",
+            "dia": "50"
+        },
+        "poids": "75",
+        "taille": "1.86",
+        "imc_etat": {
+            "etat": "Poids normal",
+            "level": 0,
+            "imc": 21.68
+        },
+        "alert": "\u2705 \u00c9tat stable"
+    },
+    {
+        "id": "PAT-20260226-8145",
+        "nom": "Elfaquihi",
+        "prenom": "Ayoub",
+        "sexe": "Femme",
+        "telephone": "0606265577",
+        "age": 11,
+        "date_consultation": "2026-02-26",
+        "motif": "malade",
+        "symptomes": [
+            "Douleur"
+        ],
+        "temperature": {
+            "etat": "\u00c9l\u00e9vation l\u00e9g\u00e8re",
+            "level": 2,
+            "temp": "37.8"
+        },
+        "tension": {
+            "etat": "Tension l\u00e9g\u00e8rement \u00e9lev\u00e9e",
+            "level": 1,
+            "sys": "90",
+            "dia": "80"
+        },
+        "poids": "225",
+        "taille": "1.51",
+        "imc_etat": {
+            "etat": "Valeur non r\u00e9aliste",
+            "level": 5
+        },
+        "alert": "\ud83d\udea8 \u00c9tat critique d\u00e9tect\u00e9 : IMC"
+    },
+    {
+        "id": "PAT-20260226-8969",
+        "nom": "Elfaquihi",
+        "prenom": "Ayoub",
+        "sexe": "Homme",
+        "telephone": "0606265577",
+        "age": 13,
+        "date_consultation": "2026-02-26",
+        "motif": "malade",
+        "symptomes": [
+            "Maux de t\u00eate"
+        ],
+        "temperature": {
+            "etat": "Fi\u00e8vre \u00e9lev\u00e9e - Risque",
+            "level": 4,
+            "temp": "39"
+        },
+        "tension": {
+            "etat": "Tension l\u00e9g\u00e8rement \u00e9lev\u00e9e",
+            "level": 1,
+            "sys": "120",
+            "dia": "80"
+        },
+        "poids": "75",
+        "taille": "1.75",
+        "imc_etat": {
+            "etat": "Poids normal",
+            "level": 0,
+            "imc": 24.49
+        },
+        "alert": "\ud83d\udea8 \u00c9tat critique d\u00e9tect\u00e9 : Temp\u00e9rature"
+    },
+    {
+        "id": "PAT-20260226-8066",
+        "nom": "Elfaquihi",
+        "prenom": "Ayoub",
+        "sexe": "Homme",
+        "telephone": "0606265577",
+        "age": 13,
+        "date_consultation": "2026-02-26",
+        "motif": "malade",
+        "symptomes": [
+            "Maux de t\u00eate"
+        ],
+        "temperature": {
+            "etat": "Fi\u00e8vre \u00e9lev\u00e9e - Risque",
+            "level": 4,
+            "temp": "39"
+        },
+        "tension": {
+            "etat": "Tension l\u00e9g\u00e8rement \u00e9lev\u00e9e",
+            "level": 1,
+            "sys": "120",
+            "dia": "80"
+        },
+        "poids": "75",
+        "taille": "1.75",
+        "imc_etat": {
+            "etat": "Poids normal",
+            "level": 0,
+            "imc": 24.49
+        },
+        "alert": "\ud83d\udea8 \u00c9tat critique d\u00e9tect\u00e9 : Temp\u00e9rature"
+    },
+    {
+        "id": "PAT-20260226-9252",
+        "nom": "Elfaquihi",
+        "prenom": "Ayoub",
+        "sexe": "Homme",
+        "telephone": "0606265577",
+        "age": 13,
+        "date_consultation": "2026-02-26",
+        "motif": "malade",
+        "symptomes": [
+            "Toux",
+            "Douleur"
+        ],
+        "temperature": {
+            "etat": "Fi\u00e8vre \u00e9lev\u00e9e - Risque",
+            "level": 4,
+            "temp": "39"
+        },
+        "tension": {
+            "etat": "Tension l\u00e9g\u00e8rement \u00e9lev\u00e9e",
+            "level": 1,
+            "sys": "120",
+            "dia": "80"
+        },
+        "poids": "75",
+        "taille": "1.75",
+        "imc_etat": {
+            "etat": "Poids normal",
+            "level": 0,
+            "imc": 24.49
+        },
+        "alert": "\ud83d\udea8 \u00c9tat critique d\u00e9tect\u00e9 : Temp\u00e9rature"
     }
 ]
