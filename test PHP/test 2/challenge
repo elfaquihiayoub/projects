@@ -1,0 +1,29 @@
+Challenge : Smart Shopping Cart Calculator
+Ayoub El Faquihi vs. Soukayna Asaas
+Créer un formulaire avec :
+• Prix du produit (text)
+• Quantité (text)
+• Code promo (text)
+• Mode de livraison (select avec 2 options : standard/express)
+• Bouton « Calculer »
+Validation du formulaire :
+• Le champ ‘Prix’ doit accepter les valeurs int ou float
+• Le champ ‘Quantité’ doit accepter les valeurs int
+• Refuser une valeur négative <=0 pour le champ ‘Prix’
+• Refuser une valeur négative <=0 pour la champ ‘Quantité’
+Calcul à réaliser :
+Calculer le prix total, en appliquant les réductions suivantes :
+• Quantité ≥ 5 → -10%
+• Total ≥ 1000 dh → -15%
+• Code promo "DEV10" → -10%
+• Code promo "SUPER20" → -20%
+Il faut aussi tenir en compte, le mode de livraison :
+• standard 0 dh
+• express 50 dh
+Si total après réduction ≥ 1500 dh → livraison gratuite
+Affichage attendu :
+• Total initial
+• Pourcentage total de réduction appliqué
+• Montant de la réduction
+• Frais de livraison
+• Total final
