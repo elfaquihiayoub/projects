@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="traitment.php" method="post">
+        <fieldset>
+            <select name="villeDepart" id="villeDepart">
+                <option value="">Select villeDepart</option>
+                <option value="Casablanca">Casablanca</option>
+                <option value="Rabat">Rabat</option>
+                <option value="Tanger">Tanger</option>
+            </select><br>
+            <select name="villeDarive" id="villeDarive">
+                <option value="">Select villeDarive</option>
+                <option value="Casablanca">Casablanca</option>
+                <option value="Rabat">Rabat</option>
+                <option value="Tanger">Tanger</option>
+            </select><br>
+            <p>type de livraisont</p>
+            <input type="radio" name="envoi" value="Standard" id="Standard">
+            <label for="Standard">Standard</label><br>
+            <input type="radio" name="envoi" value="Express" id="Express">
+            <label for="Express">Express</label><br>
+            <input type="number" name="poids" id="" placeholder="poids"><br>
+            <button type="submit">Calculer mon devis</button>
+        </fieldset>
+    </form>
+   
+    
+</body>
+</html>

@@ -1,0 +1,28 @@
+Semi-final 2 challenge: Soutenances 
+Ayoub El Faquihi vs. Alae Maghchich 
+Contexte 
+Une école doit organiser des soutenances de projets pour plusieurs groupes 
+d'étudiants. Vous devez créer un script qui valide si un créneau horaire est 
+disponible et calcule la fin de la session en fonction de contraintes strictes. 
+Créer un formulaire avec : 
+• Un champ datetime pour choisir la date et l’heure de début des 
+soutenances 
+• Un select pour choisir le nombre de groupes à faire passer (entre 1 et 5) 
+• Une checkbox pour l’option Jury VIP (nécessite une pause obligatoire de 15 
+min entre chaque groupe). 
+• Un bouton « Vérifier le planning » 
+Logique et contraintes : 
+• Durée fixe : Chaque groupe dispose de 30 minutes de passage. 
+• Plage horaire : Les soutenances ne peuvent avoir lieu qu'entre 09:30 et 
+18:00. Le script doit rejeter la demande si la session (tous les groupes + 
+pauses) dépasse 18:00. 
+• Interdiction du Week-end : La date choisie ne doit pas être un samedi ou 
+un dimanche. 
+• Calcul dynamique : Si Jury VIP est coché, il faut prendre en compte 15 min 
+entre chaque groupe de pause dans le calcul. 
+Affichage attendu : 
+Afficher : - - - 
+L’heure précise de la fin de la session 
+Le récapitulatif : « X groupes prévus, fin à HH:MM » 
+Un message d’erreur détaillant la règle non respectée (ex: "Fin de session 
+après 18h00", "La date choisie est un dimanche").  

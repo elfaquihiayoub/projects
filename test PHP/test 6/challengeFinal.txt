@@ -1,0 +1,28 @@
+Finale du tournoi PHP : Le navigateur de grille 
+Ahmed El Morabiti vs. Ayoub El Faquihi 
+Contexte 
+Vous devez créer une application de simulation de mouvement sur une surface 
+de 5x5 unités. Un utilisateur doit pouvoir définir sa position initiale, donner une 
+suite d'ordres, et voir le résultat final sur une grille visuelle. 
+Interface (le formulaire) : 
+Votre page doit comporter les champs suivants : 
+• Position de départ : 2 champs input (X et Y) acceptant des nombres entre 
+0 et 4. 
+• Instructions : champ textarea pour saisir les mouvements séparés par des 
+virgules (Ex: DROITE, BAS, DROITE, HAUT). 
+Les Contraintes Techniques : 
+• Validation :  
+o Si le point de départ choisi est hors de la grille (ex: 5,2), affichez une 
+erreur. 
+o Si un mouvement fait sortir le pion de la grille (ex: X < 0 ou X > 4), le 
+script doit s'arrêter et afficher : "Mouvement impossible : Sortie de 
+piste à l'étape [N] !". 
+• Nettoyage : Votre code doit ignorer les espaces inutiles (ex: DROITE ,  BAS 
+doit fonctionner). 
+Affichage attendu : 
+• Un Tableau HTML (5x5) représentant la grille. 
+• La case de départ doit avoir une couleur de fond bleue. 
+• La case d'arrivée doit avoir une couleur de fond verte. 
+• Si une erreur survient (sortie de piste), affichez un message d'alerte rouge 
+au-dessus de la grille. 
+• BONUS : Tracer tout le parcours du pion. 
