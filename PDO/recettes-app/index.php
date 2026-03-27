@@ -12,6 +12,7 @@
             border-radius: 8px;
     }
         .cards-container {
+            margin-top: 3%;
             display: flex;
             flex-wrap: wrap; /* allows multiple rows */
             gap: 20px; /* space between cards */
@@ -29,6 +30,24 @@
     </style>
 </head>
 <body>  
+
+<form  method="get">
+     <input type="text" name="search" placeholder="Search..." onchange="this.form.submit()">
+     <select name="category" onchange="this.form.submit()">
+         
+         <option value="">--------</option>
+         <option value="Entree">Entree</option>
+         <option value="Plat">Plat</option>
+         <option value="Dessert">Dessert</option>
+     </select>
+     <select name="sort" onchange="this.form.submit()">
+        <option value="">Default</option>
+        <option value="time_asc">croissant</option>
+        <option value="time_desc">décroissant</option>
+        <option value="new">récentes</option>
+        <option value="old">anciennes</option>
+    </select>
+</form>
     
 </body>
 </html>
@@ -36,7 +55,23 @@
 <?php
 require "functions.php";
 echo "<div class='cards-container'>";
-selectAllRecipes($pdo);
+$search = $_GET['search'] ?? '';
+$category=$_GET['category']?? "";
+$sort=$_GET['sort']?? "";
+
+if($category){
+    filterByCategory($pdo,$category);
+}
+elseif($search){
+    searchRecipes($pdo,$search);
+}elseif($sort){
+    sortRecipes($pdo,$sort);
+}
+else{
+     selectAllRecipes($pdo);
+}
+
+
 echo "</div>";
 
 
