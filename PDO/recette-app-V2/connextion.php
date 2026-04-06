@@ -3,7 +3,7 @@
 
 
 $host="localhost";
-$dbname="recettev2";
+$dbname="recettesv2";
 $user="root";
 $password="";
 
