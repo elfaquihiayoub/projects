@@ -7,7 +7,7 @@ if (!$id) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = $_POST['id'];
+    $name = $_POST['name'];
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
 
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sql = "UPDATE products SET price=?, quantity=?,name=? WHERE id=?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$price, $quantity, $name, $id]);
-        echo "Product updated successfully!";
+        echo "<p style='text-align:center; font-size:18px; color:white;'>Product added successfully!</p>";
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
@@ -109,18 +109,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </style>
 </head>
 <body>
-<<<<<<< HEAD
-    <h1>edit existing Product</h1>
-    <form method="POST" action="">
-        <label for="name">table id :</label>
-        <input type="text" id="id" name="id" required><br><br>
-=======
+
     <div class="card">
         <h1>Edit Product</h1>
         <form method="POST" action="">
             <label for="name">Product Name:</label>
             <input type="text" id="name" name="name" required>
->>>>>>> 3aa8ce2eba6da014539cfa2d3089abe8633b2d64
+
 
             <label for="price">New Price:</label>
             <input type="number" step="0.01" id="price" name="price" required>

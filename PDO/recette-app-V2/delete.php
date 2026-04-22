@@ -7,9 +7,7 @@ if (!$id) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = $_POST['name'];
-
-
+    
     try {
         $sql = "DELETE FROM products WHERE id=?";
         $stmt = $pdo->prepare($sql);
