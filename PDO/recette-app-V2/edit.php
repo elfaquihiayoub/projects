@@ -2,12 +2,12 @@
 require 'connextion.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = $_POST['name'];
+    $name = $_POST['id'];
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
 
     try {
-        $sql = "UPDATE products SET price=?, quantity=? WHERE name=?";
+        $sql = "UPDATE products SET price=?, quantity=? WHERE id=?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$price, $quantity, $name]);
         echo "Product updated successfully!";
@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <h1>edit existing Product</h1>
     <form method="POST" action="">
-        <label for="name">table name :</label>
-        <input type="text" id="name" name="name" required><br><br>
+        <label for="name">table id :</label>
+        <input type="text" id="id" name="id" required><br><br>
 
         <label for="price"> new Price:</label>
         <input type="number" step="0.01" id="price" name="price" required><br><br>
