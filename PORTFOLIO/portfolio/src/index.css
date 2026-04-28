@@ -1,0 +1,74 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply m-0 overflow-x-hidden bg-background font-body text-text-main antialiased transition-colors duration-300 dark:bg-dark-background dark:text-dark-text-main;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid #00cfff;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  .surface-card {
+    @apply rounded-2xl border border-text-secondary/15 bg-background-secondary/70 shadow-soft transition-all duration-300 ease-out
+           hover:-translate-y-1 hover:border-accent/30 hover:shadow-soft-lg
+           dark:border-white/5 dark:bg-dark-background-secondary/80 dark:shadow-soft-dark dark:hover:border-accent/40 dark:hover:shadow-soft-dark-lg;
+  }
+
+  .surface-card-static {
+    @apply rounded-2xl border border-text-secondary/15 bg-background-secondary/70 shadow-soft transition-colors duration-300
+           dark:border-white/5 dark:bg-dark-background-secondary/80 dark:shadow-soft-dark;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-[#04131a]
+           shadow-[0_8px_22px_-8px_rgba(0,207,255,0.65)] transition-all duration-200
+           hover:-translate-y-0.5 hover:bg-accent-strong hover:shadow-[0_14px_30px_-10px_rgba(0,207,255,0.75)]
+           focus-visible:outline-2 focus-visible:outline-accent
+           disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-text-secondary/30 bg-transparent px-5 py-2.5 text-sm font-semibold text-text-main
+           transition-all duration-200 hover:-translate-y-0.5 hover:border-accent hover:text-accent
+           dark:border-white/15 dark:text-dark-text-main;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl border border-text-secondary/25 bg-background px-4 py-3 text-sm text-text-main placeholder:text-text-secondary/70
+           outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-accent/20
+           dark:border-white/10 dark:bg-dark-background dark:text-dark-text-main dark:placeholder:text-dark-text-secondary/60;
+  }
+
+  .section-eyebrow {
+    @apply mb-3 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-accent;
+  }
+
+  .section-eyebrow::before {
+    content: "";
+    @apply inline-block h-px w-8 bg-accent/70;
+  }
+}
