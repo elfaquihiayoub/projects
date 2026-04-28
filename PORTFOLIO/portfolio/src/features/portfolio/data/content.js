@@ -16,14 +16,14 @@ export const profile = {
     "I’m a passionate Full Stack Web Developer focused on building modern, scalable, and user-friendly digital experiences. I enjoy turning ideas into real-world applications by combining clean frontend design with powerful backend functionality. From creating responsive interfaces to developing secure APIs and managing databases, I love every part of the development process. I’m always learning new technologies, improving performance, and aiming to deliver solutions that are both efficient and impactful",
   email: "elfaquihi.ayoub@gmail.com",
   phone: "+212 606 165 577",
+
   github: "https://github.com/elfaquihiayoub",
   linkedin: "https://www.linkedin.com/in/ayoub-elfaquihi/",
   location: "Tangier, Morocco",
   resumeFile: "/cv/AYOUB_ELFAQUIHI_CV.pdf",
   resumeFileName: "AYOUB_ELFAQUIHI_CV.pdf",
-  avatar:
-    "assets_photos\Personal_photo.png",
-};  
+  avatar: "/assets_photos/Personal_photo.png",
+};
 
 export const statCards = [
   { label: "Projects", value: "5+" },

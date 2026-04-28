@@ -1,4 +1,4 @@
-﻿import { memo } from "react";
+import { memo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Mail, Phone, MapPin, Send, Loader2, Github, CheckCircle2 } from "lucide-react";
 import SectionHeading from "./SectionHeading";
@@ -15,6 +15,8 @@ function FieldError({ message }) {
 function ContactSection({ form, profile }) {
   const { values, errors, status, isSubmitting, updateField, handleSubmit } = form;
   const prefersReducedMotion = useReducedMotion();
+  const safePhone = profile.phone || "";
+  const telHref = safePhone ? `tel:${safePhone.replace(/\s/g, "")}` : undefined;
 
   const successAnimation = prefersReducedMotion
     ? false
@@ -47,7 +49,7 @@ function ContactSection({ form, profile }) {
             </div>
           </a>
 
-          <a href={`tel:${profile.phone.replace(/\s/g, "")}`} className="surface-card flex items-center gap-4 p-5">
+          <a href={telHref} className="surface-card flex items-center gap-4 p-5">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 text-accent">
               <Phone className="h-5 w-5" aria-hidden="true" />
             </div>
@@ -56,7 +58,7 @@ function ContactSection({ form, profile }) {
                 Phone
               </p>
               <p className="text-sm font-medium text-text-main dark:text-dark-text-main">
-                {profile.phone}
+                {safePhone || "Not provided"}
               </p>
             </div>
           </a>

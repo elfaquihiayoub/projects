@@ -5,6 +5,12 @@ import CVDownloadButton from "./ui/CVDownloadButton";
 
 function Hero({ profile, onViewProjects }) {
   const prefersReducedMotion = useReducedMotion();
+  const isUnsplashAvatar =
+    typeof profile.avatar === "string" &&
+    profile.avatar.includes("images.unsplash.com");
+  const avatarSrcSet = isUnsplashAvatar
+    ? `${profile.avatar.replace(/w=\d+/, "w=600")} 600w, ${profile.avatar} 900w`
+    : undefined;
   const fadeIn = prefersReducedMotion
     ? { initial: false, animate: undefined }
     : {
@@ -82,7 +88,7 @@ function Hero({ profile, onViewProjects }) {
               alt={`${profile.fullName} workspace`}
               className="aspect-[4/5] w-full rounded-xl object-cover"
               src={profile.avatar}
-              srcSet={`${profile.avatar.replace(/w=\d+/, "w=600")} 600w, ${profile.avatar} 900w`}
+              srcSet={avatarSrcSet}
               sizes="(min-width: 768px) 28rem, 90vw"
               loading="eager"
               decoding="async"
