@@ -51,7 +51,8 @@ class user{
             echo " set name complete <br>" ;
             
         }else{
-            echo " invalide name  <br>";
+              throw new InvalidArgumentException(" invalide name");
+           
         }
     }
     public function setPrenom( string $NewPrenom){
@@ -61,7 +62,7 @@ class user{
             
             
         }else{
-            echo " invalide Prenom  <br>";
+            throw new InvalidArgumentException(" invalide prenom");
         }
     }
     public function setEmail( string $NewEmail){
@@ -69,7 +70,7 @@ class user{
              $this->email=$NewEmail;
               echo " set email complete  <br>";
         } else {
-        echo(" is not a valid email address  <br>");
+        throw new InvalidArgumentException(" invalide email");;
         }
     }
     public function setRole( string $NewRole){
@@ -77,7 +78,7 @@ class user{
             $this->role=$NewRole;
             echo "role updated  <br>";
         }else {
-            echo "Invalid role  <br>";
+            throw new InvalidArgumentException(" invalide role");
         }
     }
        public function setDateNaissance(string $newDateNaissance) {
@@ -91,11 +92,11 @@ class user{
                 $this->dateNaissance = $newDateNaissance;
                 echo "date de naissance changed succesfuly  <br>";
             } else {
-                echo "Âge invalide  <br>";
+                throw new InvalidArgumentException(" invalide age");
             }
 
         } else {
-            echo "Format invalide (YYYY-MM-DD)  <br>";
+            throw new InvalidArgumentException(" Format invalide (YYYY-MM-DD)");
         }
     }
            public function setDateInscription(string $NewDateInscription) {
@@ -106,14 +107,14 @@ class user{
             $diffrence = $today->diff($dateInscription)->days;
 
             if ($diffrence<0) {
-              echo "date inscription invalide invalide  <br>";
+             throw new InvalidArgumentException(" invalide dateInscreption");
             } else {
                   $this->dateInscription = $NewDateInscription;
                 echo "date d inscreption changed succesfuly  <br>";
             }
 
         } else {
-            echo "Format invalide (YYYY-MM-DD)  <br>";
+           throw new InvalidArgumentException("Format invalide (YYYY-MM-DD)");
         }
     }
        public function setActif(int $newActif) {
@@ -121,7 +122,7 @@ class user{
             $this->actif=$newActif;
              echo "actif changed   <br>";
         }else{
-            echo "enter 1 for actif or 0 for inactif  <br>";
+            throw new InvalidArgumentException(" 0 for inactif - 1 for actif");
         }
         
         //getters
