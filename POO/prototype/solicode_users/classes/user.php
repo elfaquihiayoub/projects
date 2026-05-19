@@ -45,6 +45,10 @@ class user{
     }
 
     // setters
+    public function setId($newID){
+        $this->id=$newID;
+
+    }
     public function setNom( string $newName){
         if(preg_match('/^[a-zA-Z\s]{2,}$/', $newName)){
             $this->nom=$newName;
