@@ -3,8 +3,8 @@ require "../classes/database.php";
 require "../classes/user.php";
 require "../classes/userRepository.php";
 
-$databases=new database();
-$pdo=$databases->getConnection();
+$database=new database();
+$pdo=$database->getConnection();
 $repository=new UserRepository($pdo);
 $users=$repository->findAll();
 ?>
@@ -50,9 +50,9 @@ $users=$repository->findAll();
             </td>
 
             <td>
-                <a href="profil.php">Voir</a>
+                <a href="profil.php?id=<?= $user->getId()?>">Voir</a>
 
-                <a href="modifier.php">Modifier</a>
+                  <a href="modifier.php?id=<?=  $user->getId() ?>">Modifier</a>
 
                 <a href="supprimer.php?id=<?= $user->getId() ?>">
                     Supprimer

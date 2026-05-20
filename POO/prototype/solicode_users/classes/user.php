@@ -52,7 +52,6 @@ class user{
     public function setNom( string $newName){
         if(preg_match('/^[a-zA-Z\s]{2,}$/', $newName)){
             $this->nom=$newName;
-            echo " set name complete <br>" ;
             
         }else{
               throw new InvalidArgumentException(" invalide name");
@@ -62,7 +61,6 @@ class user{
     public function setPrenom( string $NewPrenom){
         if(preg_match('/^[a-zA-Z\s]{2,}$/', $NewPrenom)){
             $this->prenom=$NewPrenom;
-             echo " set prenome complete  <br>";
             
             
         }else{
@@ -72,7 +70,7 @@ class user{
     public function setEmail( string $NewEmail){
         if (filter_var($NewEmail, FILTER_VALIDATE_EMAIL)) {
              $this->email=$NewEmail;
-              echo " set email complete  <br>";
+
         } else {
         throw new InvalidArgumentException(" invalide email");;
         }
@@ -80,7 +78,6 @@ class user{
     public function setRole( string $NewRole){
         if (in_array($NewRole, ['apprenant', 'formateur', 'admin'])) {
             $this->role=$NewRole;
-            echo "role updated  <br>";
         }else {
             throw new InvalidArgumentException(" invalide role");
         }
@@ -94,7 +91,6 @@ class user{
 
             if ($age >= 16 && $age <= 60) {
                 $this->dateNaissance = $newDateNaissance;
-                echo "date de naissance changed succesfuly  <br>";
             } else {
                 throw new InvalidArgumentException(" invalide age");
             }
@@ -114,7 +110,6 @@ class user{
              throw new InvalidArgumentException(" invalide dateInscreption");
             } else {
                   $this->dateInscription = $NewDateInscription;
-                echo "date d inscreption changed succesfuly  <br>";
             }
 
         } else {
@@ -124,7 +119,6 @@ class user{
        public function setActif(int $newActif) {
         if($newActif ==0 || $newActif ==1){
             $this->actif=$newActif;
-             echo "actif changed   <br>";
         }else{
             throw new InvalidArgumentException(" 0 for inactif - 1 for actif");
         }
