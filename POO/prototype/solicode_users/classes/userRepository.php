@@ -57,15 +57,14 @@ public function save(user $user):void{
 
         ]);
     }else{
-        $stmt=$this->pdo->prepare("UPDATE users SET nom=?,prenom=?,email=?,role=?,date_naissance=? , date_inscription=?,actif=? WHERE id=?");
+        $stmt=$this->pdo->prepare("UPDATE users SET nom=?,prenom=?,email=?,role=?,date_naissance=? ,actif=? WHERE id=?");
         $stmt->execute([
              $user->getNom(),
             $user->getPrenom(),
             $user->getEmail(),
             $user->getRole(),
             $user->getDateNaissance(),
-            $user->getDateInscription(),
-            $user->isActif(),
+            $user->getActive(),
             $user->getId()
         ]);
     }

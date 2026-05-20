@@ -47,8 +47,10 @@ $newUser=[
     if(!filter_var($newUser['email'],FILTER_VALIDATE_EMAIL)){
         $errors['email']="email invalide ";
     }
-    if($repository->findByEmail($newUser['email'])){
-        $errors['email']="this email already in use ";
+     $existingUser = $repository->findByEmail($newUser['email']);
+
+    if ($existingUser && $existingUser->getId() != $user->getId()) {
+        $errors['email'] = "this email already in use";
     }
     if(empty($newUser['role'])){
         $errors['role']="select a role ";
@@ -61,7 +63,8 @@ $newUser=[
     //start saving (if no errors )
     if (empty($errors)){
         $user=new user();
-         $user->setNom($newUser['nom']);
+        $user->setId($id);
+        $user->setNom($newUser['nom']);
         $user->setPrenom($newUser['prenom']);
         $user->setEmail($newUser['email']);
         $user->setRole($newUser['role']);
