@@ -10,6 +10,11 @@ class user{
     private string $dateInscription ; //(format YYYY-MM-DD)
     private int $actif ; // (0 ou 1)
 
+        public function __construct()
+    {
+        $this->id = 0;
+    }
+
 
     //getters 
 
@@ -36,11 +41,7 @@ class user{
         return $this->dateInscription;
     }
     public function getActive(){
-        if($this->actif==0){
-        return "not-active";
-        }else{
-            return "active";
-        }
+     return $this->actif;   
         
     }
 

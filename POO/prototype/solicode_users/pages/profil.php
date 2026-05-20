@@ -17,12 +17,103 @@ if(!$user){
     exit;
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>profil</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
 
-<h1><?= $user->getInitiales() ?></h1>
-<h2><?= $user->getNomComplet()?></h2>
-<p>Email : <?= $user->getEmail() ?></p>
-<p>Role : <?= $user->getRoleLabel() ?></p>
-<p>Age : <?= $user->getAge() ?> years old</p>
-<p>ancienneter : <?= $user->getAnciennete() ?> days</p>
-<p>status : <?= $user->getStatutLabel() ?> </p>
+.profile-card {
+    background: #1e293b;
+    width: 420px;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    text-align: center;
+    color: white;
+    transition: 0.3s;
+}
 
+.profile-card:hover {
+    transform: translateY(-5px);
+}
+
+.avatar {
+    width: 90px;
+    height: 90px;
+    margin: auto;
+    border-radius: 50%;
+    background: #3b82f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px rgba(59,130,246,0.4);
+}
+
+.profile-card h2 {
+    margin-bottom: 25px;
+    color: #e2e8f0;
+}
+
+.info {
+    text-align: left;
+}
+
+.info p {
+    background: #334155;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    color: #cbd5e1;
+}
+
+.status {
+    background: #22c55e33;
+    color: #22c55e;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+    </style>
+</head>
+<body>
+    <div class="profile-card">
+    
+        <div class="avatar">
+            <?= $user->getInitiales() ?>
+        </div>
+    
+        <h2><?= $user->getNomComplet() ?></h2>
+    
+        <div class="info">
+            <p><strong>Email :</strong> <?= $user->getEmail() ?></p>
+            <p><strong>Rôle :</strong> <?= $user->getRoleLabel() ?></p>
+            <p><strong>Age :</strong> <?= $user->getAge() ?> years old</p>
+            <p><strong>Ancienneté :</strong> <?= $user->getAnciennete() ?> days</p>
+            <p>
+                <strong>Status :</strong>
+                <span class="status">
+                    <?= $user->getStatutLabel() ?>
+                </span>
+            </p>
+        </div>
+    
+    </div>
+    
+</body>
+</html>
