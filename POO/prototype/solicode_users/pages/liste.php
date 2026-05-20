@@ -120,26 +120,26 @@ tbody td {
             <?php foreach($users as $user): ?>
             <tr>
 
-                <td><?= $user->getInitiales() ?></td>
+                <td><?= htmlspecialchars($user->getInitiales()) ?></td>
 
-                <td><?= $user->getNomComplet() ?></td>
+                <td><?= htmlspecialchars($user->getNomComplet()) ?></td>
 
-                <td><?= $user->getEmail() ?></td>
+                <td><?= htmlspecialchars($user->getEmail()) ?></td>
 
-                <td><?= $user->getRoleLabel() ?></td>
+                <td><?= htmlspecialchars($user->getRoleLabel()) ?></td>
 
                 <td>
                     <span class="status">
-                        <?= $user->getStatutLabel() ?>
+                        <?= htmlspecialchars($user->getStatutLabel()) ?>
                     </span>
                 </td>
 
                 <td class="actions">
-                    <a href="profil.php?id=<?= $user->getId()?>">Voir</a>
+                    <a href="profil.php?id=<?= htmlspecialchars($user->getId())?>">Voir</a>
 
-                    <a href="modifier.php?id=<?= $user->getId() ?>">Modifier</a>
+                    <a href="modifier.php?id=<?= htmlspecialchars($user->getId()) ?>">Modifier</a>
 
-                    <a href="supprimer.php?id=<?= $user->getId() ?>">
+                    <a href="supprimer.php?id=<?= htmlspecialchars($user->getId()) ?>">
                         Supprimer
                     </a>
                 </td>

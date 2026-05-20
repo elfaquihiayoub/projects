@@ -95,20 +95,20 @@ if(!$user){
     <div class="profile-card">
     
         <div class="avatar">
-            <?= $user->getInitiales() ?>
+            <?= htmlspecialchars($user->getInitiales()) ?>
         </div>
     
-        <h2><?= $user->getNomComplet() ?></h2>
+        <h2><?= htmlspecialchars($user->getNomComplet()) ?></h2>
     
         <div class="info">
-            <p><strong>Email :</strong> <?= $user->getEmail() ?></p>
-            <p><strong>Rôle :</strong> <?= $user->getRoleLabel() ?></p>
-            <p><strong>Age :</strong> <?= $user->getAge() ?> years old</p>
-            <p><strong>Ancienneté :</strong> <?= $user->getAnciennete() ?> days</p>
+            <p><strong>Email :</strong> <?= htmlspecialchars($user->getEmail()) ?></p>
+            <p><strong>Rôle :</strong> <?= htmlspecialchars($user->getRoleLabel()) ?></p>
+            <p><strong>Age :</strong> <?= htmlspecialchars( $user->getAge()) ?> years old</p>
+            <p><strong>Ancienneté :</strong> <?= htmlspecialchars($user->getAnciennete()) ?> days</p>
             <p>
                 <strong>Status :</strong>
                 <span class="status">
-                    <?= $user->getStatutLabel() ?>
+                    <?= htmlspecialchars($user->getStatutLabel()) ?>
                 </span>
             </p>
         </div>

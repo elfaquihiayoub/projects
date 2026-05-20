@@ -156,43 +156,43 @@ button:hover {
     <form method="POST" class="form-container">
     
     <label>Nom</label>
-    <input type="text" name="nom" value="<?= $newUser['nom'] ?>">
+    <input type="text" name="nom" value="<?=htmlspecialchars( $newUser['nom']) ?>">
     <span class="error"><?= $errors["nom"] ?? '' ?></span>
 
     <label>Prénom</label>
-    <input type="text" name="prenom" value="<?= $newUser['prenom'] ?>">
+    <input type="text" name="prenom" value="<?= htmlspecialchars($newUser['prenom']) ?>">
     <span class="error"><?= $errors["prenom"] ?? '' ?></span>
 
     <label>Email</label>
-    <input type="text" name="email" value="<?= $newUser['email'] ?>">
+    <input type="text" name="email" value="<?= htmlspecialchars($newUser['email']) ?>">
     <span class="error"><?= $errors["email"] ?? '' ?></span>
 
     <label>Role</label>
     <select name="role">
      <option value="admin"
-        <?= $newUser['role']=="admin" ? "selected" : "" ?>>
+        <?=htmlspecialchars( $newUser['role']=="admin" ? "selected" : "") ?>>
         Admin
     </option>
 
     <option value="apprenant"
-        <?= $newUser['role']=="apprenant" ? "selected" : "" ?>>
+        <?= htmlspecialchars($newUser['role']=="apprenant" ? "selected" : "") ?>>
         Apprenant
     </option>
 
     <option value="formateur"
-        <?= $newUser['role']=="formateur" ? "selected" : "" ?>>
+        <?= htmlspecialchars($newUser['role']=="formateur" ? "selected" : "") ?>>
         Formateur
     </option>
     </select>
 
     <label>Date naissance</label>
     <input type="date" name="date_naissance"
-    value="<?= $newUser['date_naissance'] ?>">
+    value="<?= htmlspecialchars($newUser['date_naissance']) ?>">
 
     <div class="checkbox-group">
         <label>Actif</label>
         <input type="checkbox" name="actif"
-        <?= $newUser['actif'] ? "checked" : "" ?>>
+        <?= htmlspecialchars($newUser['actif'] ? "checked" : "") ?>>
     </div>
 
     <button type="submit">Ajouter</button>
