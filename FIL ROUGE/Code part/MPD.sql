@@ -79,7 +79,7 @@ CREATE TABLE likes (
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE
-);d
+);
 
 
 
