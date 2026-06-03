@@ -4,16 +4,16 @@ require 'configue.php';
 class Database{
     private static $instatce=null;
     private $connection;
-     private $host = "DB_HOST";
-    private $db_name = "DB_NAME";
-    private $username = "DB_USERNAME";
-    private $password = "DB_PASSWORD";
+    private $host = DB_HOST;
+    private $dbname = DB_NAME;
+    private $username = DB_USER;
+    private $password = DB_PASS;
 
     private function __construct(){
         try {
                 $this->connection = new PDO(
 
-                "mysql:host={$this->host};dbname={$this->db_name};charset=utf8",
+                "mysql:host={$this->host};dbname={$this->dbname};charset=utf8",
                 $this->username,
                 $this->password
 
