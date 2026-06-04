@@ -1,0 +1,373 @@
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AYOUB ELFAQUIHI | Full Stack Web Developer</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#8aebff",
+              "primary-container": "#22d3ee",
+              "on-primary": "#00363e",
+              "on-surface": "#dde4e5",
+              "on-surface-variant": "#bbc9cd",
+            },
+            fontFamily: {
+              body: ["Inter"],
+              heading: ["Sora"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #0e1416;
+        color: #dde4e5;
+      }
+      .glass {
+        background: rgba(14, 20, 22, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .glow-cyan {
+        box-shadow: 0 0 20px rgba(34, 211, 238, 0.15);
+      }
+      .bg-orb {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(34, 211, 238, 0.05) 0%, rgba(34, 211, 238, 0) 70%);
+        border-radius: 50%;
+        z-index: -1;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+      }
+    </style>
+  </head>
+  <body class="font-body overflow-x-hidden">
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useEffect, useMemo, useState } = React;
+
+      const navItems = [
+        { id: "home", label: "Home" },
+        { id: "about", label: "About" },
+        { id: "skills", label: "Skills" },
+        { id: "projects", label: "Projects" },
+        { id: "stats", label: "GitHub Stats" },
+        { id: "contact", label: "Contact" },
+      ];
+
+      const projects = [
+        {
+          title: "NexGen E-Commerce Platform",
+          stack: ["Laravel", "MySQL"],
+          problem: "Fragmented inventory systems leading to data inconsistency.",
+          solution: "Centralized API-driven dashboard for real-time tracking.",
+          image:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuCz17IsWiXs8Qf4Mt5nJSeeew4c1SS_-kBBhu0UZxTHPwik3Deau-dlBvl9t_CaL42Xkev87czgkt1XqfbCTqWs-t3IxS6qtx_fQ1a5r4X3CUYnNLvug9SwiBdCvJHohnrXV2CEccLk78Jj5YSdeMSMyMt7GAVANXu-EFSP0zViV9vz5dAuSwOwJTKPIgePg7q53EVxmJEm-s6LcrmGd0DzjCfSslM79TGmv_UC5YI2XevdFaahhuXoX0tZS8PKCjSsh71LDzSu59df",
+          github: "#",
+          demo: "#",
+        },
+        {
+          title: "TaskFlow AI Manager",
+          stack: ["Python", "Flask"],
+          problem: "Inefficient project prioritization for remote engineering teams.",
+          solution: "Automated task scoring using lightweight ML models.",
+          image:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuAIFFpA1VNjUPI1XHZCQ_sVf44KgaPnWrb2nyZaDp3Wd7rizO-9Uo-aE6DxBXMUj6HSbSyCRpj1Moqjd9OrDUy4VwNnLKSVZCnTucvj0W1lVXAnq1ph65z5U9DHuYM4e-XsOSLLpoQlskybtxS8FVv7amqLfAbOj1VH8C6m__2z65k5uVYrqkJ0vHCHU91CH8w514oa_BM86mTWA8bAqMh7FULzova20kwr_uLqgkwKduFHnVJvloGI42QjDf4ZFjbkVGMQR1whgf1H",
+          github: "#",
+          demo: "#",
+        },
+      ];
+
+      function App() {
+        const [activeSection, setActiveSection] = useState("home");
+        const [menuOpen, setMenuOpen] = useState(false);
+        const [form, setForm] = useState({ name: "", email: "", message: "" });
+        const [formStatus, setFormStatus] = useState({ type: "", message: "" });
+
+        const contributionCells = useMemo(
+          () => Array.from({ length: 52 * 7 }, () => Math.floor(Math.random() * 5)),
+          []
+        );
+
+        useEffect(() => {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) setActiveSection(entry.target.id);
+              });
+            },
+            { threshold: 0.4 }
+          );
+
+          navItems.forEach(({ id }) => {
+            const el = document.getElementById(id);
+            if (el) observer.observe(el);
+          });
+
+          return () => observer.disconnect();
+        }, []);
+
+        const scrollToSection = (id) => {
+          const target = document.getElementById(id);
+          if (target) target.scrollIntoView({ behavior: "smooth" });
+          setMenuOpen(false);
+        };
+
+        const onSubmit = (e) => {
+          e.preventDefault();
+          if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+            setFormStatus({ type: "error", message: "Please fill all fields." });
+            return;
+          }
+          const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!validEmail.test(form.email)) {
+            setFormStatus({ type: "error", message: "Please provide a valid email." });
+            return;
+          }
+          setFormStatus({ type: "success", message: "Message sent successfully." });
+          setForm({ name: "", email: "", message: "" });
+        };
+
+        return (
+          <>
+            <nav className="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10">
+              <div className="flex justify-between items-center max-w-7xl mx-auto px-6 md:px-8 h-20">
+                <button onClick={() => scrollToSection("home")} className="text-2xl font-black tracking-tighter text-white">
+                  AF
+                </button>
+                <div className="hidden md:flex items-center gap-8 text-sm font-medium uppercase">
+                  {navItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => scrollToSection(item.id)}
+                      className={`transition-colors ${
+                        activeSection === item.id ? "text-cyan-400 border-b-2 border-cyan-400 pb-1" : "text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setMenuOpen((v) => !v)}
+                  className="md:hidden text-slate-300 hover:text-white"
+                  aria-label="Toggle menu"
+                >
+                  <span className="material-symbols-outlined">menu</span>
+                </button>
+              </div>
+              {menuOpen && (
+                <div className="md:hidden px-6 pb-4 space-y-2 bg-slate-950/95">
+                  {navItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => scrollToSection(item.id)}
+                      className="block w-full text-left text-slate-300 hover:text-white py-2"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </nav>
+
+            <main className="relative">
+              <section id="home" className="min-h-screen flex items-center pt-20 px-6 md:px-8 max-w-7xl mx-auto relative overflow-hidden">
+                <div className="bg-orb -top-20 -left-20"></div>
+                <div className="grid md:grid-cols-2 gap-12 items-center w-full">
+                  <div className="space-y-8">
+                    <span className="text-primary uppercase tracking-[0.2em] text-xs font-semibold">Full Stack Web Developer</span>
+                    <h1 className="font-heading text-5xl md:text-7xl text-white leading-none">
+                      AYOUB <br />
+                      <span className="text-primary">ELFAQUIHI</span>
+                    </h1>
+                    <p className="text-lg text-on-surface-variant max-w-md">
+                      I build digital experiences that solve real problems with high-performance applications.
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                      <button onClick={() => scrollToSection("contact")} className="bg-primary-container text-on-primary px-8 py-4 rounded-lg glow-cyan">
+                        Hire Me
+                      </button>
+                      <button onClick={() => scrollToSection("projects")} className="border border-primary text-primary px-8 py-4 rounded-lg">
+                        View Projects
+                      </button>
+                    </div>
+                  </div>
+                  <div className="glass p-4 rounded-2xl max-w-md mx-auto">
+                    <img
+                      alt="Professional coding visual"
+                      className="w-full h-full object-cover rounded-xl opacity-80"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk9ANVmqzUzmgGjnlgNurqekQdy1LnvEfN6wH6hJaoyy0gT5osQUGsZJqQLZ1eLDI9TCXk0xsFr-3BpbMBA0Yme9VXUBW8iHmqozJjImYPBXvucTb50RxSA6SYCYwEcw4Vq-IXdxadT7didrKKu6dJq_WOSHyYQMF3wQccJRahxryVBnUpos_UsA9Elm7cdKOOk3EvcBN40twM7vn1ALgHTsCD8e1Y7lVBPUruSoXxUsXV5T7i8fAl-8yc_lVwUnIYYm_GeZVWbaMD"
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <section id="about" className="py-24 px-6 md:px-8 max-w-7xl mx-auto">
+                <h2 className="font-heading text-4xl text-white mb-6">About Me</h2>
+                <p className="text-on-surface-variant max-w-3xl">
+                  I am a dedicated student at <span className="text-primary font-semibold">Solicode Tanger</span>, focused on becoming a world-class software engineer.
+                </p>
+              </section>
+
+              <section id="skills" className="py-24 px-6 md:px-8 bg-slate-900/40">
+                <div className="max-w-7xl mx-auto">
+                  <h2 className="font-heading text-4xl text-center text-white mb-12">Skills Matrix</h2>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {[
+                      { name: "HTML/CSS", level: 95 },
+                      { name: "JavaScript", level: 85 },
+                      { name: "React", level: 88 },
+                    ].map((skill) => (
+                      <div key={skill.name} className="glass p-6 rounded-2xl">
+                        <div className="flex justify-between mb-2">
+                          <span>{skill.name}</span>
+                          <span className="text-primary">{skill.level}%</span>
+                        </div>
+                        <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                          <div className="h-full bg-primary-container" style={{ width: `${skill.level}%` }}></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
+              <section id="projects" className="py-24 px-6 md:px-8 max-w-7xl mx-auto">
+                <h2 className="font-heading text-4xl text-white mb-12 text-center">Featured Projects</h2>
+                <div className="space-y-12">
+                  {projects.map((project) => (
+                    <article key={project.title} className="grid md:grid-cols-12 gap-6 items-center">
+                      <div className="md:col-span-7 glass rounded-3xl overflow-hidden">
+                        <img src={project.image} alt={project.title} className="w-full aspect-video object-cover" />
+                      </div>
+                      <div className="md:col-span-5 space-y-4">
+                        <div className="flex gap-2 flex-wrap">
+                          {project.stack.map((s) => (
+                            <span key={s} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-bold uppercase tracking-wider">
+                              {s}
+                            </span>
+                          ))}
+                        </div>
+                        <h3 className="font-heading text-2xl text-white">{project.title}</h3>
+                        <p className="text-sm text-on-surface-variant">
+                          <span className="text-primary">Problem:</span> {project.problem}
+                        </p>
+                        <p className="text-sm text-on-surface-variant">
+                          <span className="text-primary">Solution:</span> {project.solution}
+                        </p>
+                        <div className="flex gap-4">
+                          <a href={project.demo} className="text-white hover:text-primary">Live Demo</a>
+                          <a href={project.github} className="text-white hover:text-primary">GitHub</a>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section id="stats" className="py-24 px-6 md:px-8 bg-slate-950/60">
+                <div className="max-w-7xl mx-auto">
+                  <h2 className="font-heading text-4xl text-white mb-8 text-center">Developer Activity</h2>
+                  <div className="glass p-6 rounded-3xl">
+                    <div className="grid grid-cols-52 gap-1 overflow-x-auto pb-2">
+                      {contributionCells.map((level, index) => (
+                        <div
+                          key={index}
+                          className={`w-3 h-3 rounded-sm ${
+                            level === 0
+                              ? "bg-white/5"
+                              : level === 1
+                              ? "bg-cyan-900"
+                              : level === 2
+                              ? "bg-cyan-700"
+                              : level === 3
+                              ? "bg-cyan-500"
+                              : "bg-cyan-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="contact" className="py-24 px-6 md:px-8 max-w-7xl mx-auto">
+                <div className="grid md:grid-cols-2 gap-12 items-start">
+                  <div>
+                    <h2 className="font-heading text-4xl text-white mb-4">Let's build something extraordinary.</h2>
+                    <p className="text-on-surface-variant">Available for internships and freelance opportunities.</p>
+                  </div>
+                  <form onSubmit={onSubmit} className="glass p-8 rounded-3xl space-y-4">
+                    <input
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 focus:border-primary outline-none"
+                      placeholder="Full Name"
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    />
+                    <input
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 focus:border-primary outline-none"
+                      placeholder="Email Address"
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    />
+                    <textarea
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 focus:border-primary outline-none"
+                      rows="4"
+                      placeholder="Tell me about your project..."
+                      value={form.message}
+                      onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    ></textarea>
+                    <button className="w-full bg-primary-container text-on-primary py-3 rounded-lg glow-cyan">Send Message</button>
+                    {formStatus.message && (
+                      <p className={formStatus.type === "success" ? "text-green-400 text-sm" : "text-red-400 text-sm"}>
+                        {formStatus.message}
+                      </p>
+                    )}
+                  </form>
+                </div>
+              </section>
+            </main>
+
+            <footer className="bg-slate-950 py-10 border-t border-white/5">
+              <div className="max-w-7xl mx-auto px-6 md:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p className="text-xs text-slate-500 uppercase tracking-widest">
+                  {new Date().getFullYear()} AYOUB ELFAQUIHI. Crafted with precision.
+                </p>
+                <div className="flex gap-6">
+                  {["LinkedIn", "GitHub", "Twitter", "Dribbble"].map((social) => (
+                    <a key={social} href="#" className="text-slate-500 hover:text-cyan-400 text-xs uppercase">
+                      {social}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </footer>
+          </>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
