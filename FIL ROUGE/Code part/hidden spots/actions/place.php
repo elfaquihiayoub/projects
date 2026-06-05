@@ -1,7 +1,8 @@
 <?php 
 
 session_start();
-require_once '/../classes/Place.php';
+require_once __DIR__ . '/../classes/Place.php';
+require_once __DIR__ . '/../config/Database.php'; // for adding images to database
 
 
 // check if user is logged in
@@ -12,6 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $place = new Place();
+$db = Database::getInstance()->getConnection(); // for adding images to database
 
 // add new place;
 
@@ -35,7 +37,7 @@ if (isset($_POST['action']) && $_POST['action'] === "add") {
 
     //create place ;
 
-        $success = $place->create(
+        $place_id = $place->create(
         $user_id,
         $category_id,
         $name,
@@ -44,16 +46,43 @@ if (isset($_POST['action']) && $_POST['action'] === "add") {
         $latitude,
         $longitude
     );
+      if (!empty($_FILES['images']['name'][0])) {
 
-            if ($success) {
-        $_SESSION['success'] = "Place added successfully!";
-        header("Location: ../pages/places/list.php");
-    } else {
-        $_SESSION['error'] = "Failed to add place.";
-        header("Location: ../pages/places/add.php");
+        $uploadDir = __DIR__ . "/../uploads/";
+
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+
+            $fileName = time() . "_" . $_FILES['images']['name'][$key];
+            $targetFile = $uploadDir . $fileName;
+
+            $ext = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+
+            if (!in_array($ext, $allowed)) continue;
+
+            if (move_uploaded_file($tmp_name, $targetFile)) {
+
+                $imagePath = "uploads/" . $fileName;
+
+                // insert image into DB
+                $stmt = $db->prepare("
+                    INSERT INTO place_images (place_id, image_path)
+                    VALUES (:place_id, :image_path)
+                ");
+
+                $stmt->execute([
+                    'place_id' => $place_id,
+                    'image_path' => $imagePath
+                ]);
+            }
+        }
     }
 
-    exit;
+        $_SESSION['success'] = "Place added successfully!";
+        header("Location: ../pages/places/list.php");
+        exit;
+        // result add place with or without images ( ading placeholder after in ui)
+
 }
 //  update place
 

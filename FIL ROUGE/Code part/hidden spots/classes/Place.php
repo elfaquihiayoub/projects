@@ -8,28 +8,50 @@ class Place{
         $this->DbConn = Database::getInstance()->getConnection();
     }
 
-    // get all places
+    // get all places( with only one image)
 
     public function getAllPlaces(){
-        $sql= "SELECT places.*, users.username, categories.name AS category_name
-                FROM places
-                JOIN users ON places.user_id = users.id
-                JOIN categories ON places.category_id = categories.id
-                ORDER BY places.created_at DESC";
+       $sql = "SELECT p.*, 
+                       u.username,c.name AS category_name,
+                       (SELECT image_path FROM place_images WHERE place_id = p.id  LIMIT 1) AS image
+                FROM places p
+                JOIN users u ON p.user_id = u.id
+                JOIN categories c ON p.category_id = c.id
+                ORDER BY p.created_at DESC";
             $stmt = $this->DbConn->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll();
     }
 
-    // get place by id
+    // get place by id (with all images)
       public function getPlaceById($id) {
-        $sql = "SELECT * FROM places WHERE id = :id LIMIT 1";
+         $sql = "SELECT p.*, u.username, c.name AS category_name
+                FROM places p
+                JOIN users u ON p.user_id = u.id
+                JOIN categories c ON p.category_id = c.id
+                WHERE p.id = :id
+                LIMIT 1";
         $stmt = $this->DbConn->prepare($sql);
         $stmt->execute(['id' => $id]);
 
-        return $stmt->fetch();
-    
+        $place = $stmt->fetch();
+               if (!$place) return null;
+
+        //  Get ALL images
+        $imgSql = "SELECT image_path 
+                   FROM place_images 
+                   WHERE place_id = :id";
+
+        $imgStmt = $this->DbConn->prepare($imgSql);
+        $imgStmt->execute(['id' => $id]);
+
+        $place['images'] = $imgStmt->fetchAll(PDO::FETCH_COLUMN);
+
+        return $place;
     }
+
+    
+    
 
 
     //owner of place  check
@@ -60,7 +82,7 @@ class Place{
 
         $stmt = $this->DbConn->prepare($sql);
 
-        return $stmt->execute([
+        $stmt->execute([
             'user_id' => $user_id,
             'category_id' => $category_id,
             'name' => $name,
@@ -69,6 +91,7 @@ class Place{
             'latitude' => $latitude,
             'longitude' => $longitude
         ]);
+        return $this->DbConn->lastInsertId();
     }
 
        // Update place
@@ -103,12 +126,6 @@ class Place{
 
         return $stmt->execute(['id' => $id]);
     }
-    
-    
-    
-    
-    
-    
     
     
     
