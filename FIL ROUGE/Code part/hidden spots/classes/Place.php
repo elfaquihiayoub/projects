@@ -22,6 +22,15 @@ class Place{
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    //get all categories for dropdowns
+    public function getAllCategories() {
+
+    $sql = "SELECT * FROM categories ORDER BY name ASC";
+    $stmt = $this->DbConn->prepare($sql);
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+}
 
     // get place by id (with all images)
       public function getPlaceById($id) {
@@ -50,6 +59,25 @@ class Place{
         return $place;
     }
 
+
+    public function getPlacesByUser($user_id) {
+
+    $sql = "SELECT p.*, 
+                   c.name AS category_name,
+                   (SELECT image_path 
+                    FROM place_images 
+                    WHERE place_id = p.id 
+                    LIMIT 1) AS image
+            FROM places p
+            JOIN categories c ON p.category_id = c.id
+            WHERE p.user_id = :user_id
+            ORDER BY p.created_at DESC";
+
+    $stmt = $this->DbConn->prepare($sql);
+    $stmt->execute(['user_id' => $user_id]);
+
+    return $stmt->fetchAll();
+}
     
     
 
