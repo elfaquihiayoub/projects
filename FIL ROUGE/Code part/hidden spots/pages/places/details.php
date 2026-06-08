@@ -1,7 +1,7 @@
 <?php
 require_once "../../includes/auth_check.php";
 require_once "../../classes/Place.php";
-
+require_once "../../classes/Favorite.php";
 // get place id from url
 
 $id=$_GET['id'] ?? null;
@@ -11,7 +11,10 @@ if(!$id){
 }
 
 $placeObj=new Place();
+$favoriteObj = new Favorite();
+
 $place=$placeObj->getPlaceById($id);
+$isFavorite = $favoriteObj->isFavorite($_SESSION['user_id'], $place['id']);
 
 if(!$place){
    echo "place not found";
@@ -48,7 +51,20 @@ if(!$place){
             <img src="../../assets/images/placeholder.jpg" width="200">
 
         <?php endif; ?>
+        <?php if ($isFavorite): ?>
 
+    `        <a href="../../actions/favorite.php?action=remove&place_id=<?php echo $place['id']; ?>">
+                Remove from Favorites ❌
+            </a>
+
+        <?php else: ?>
+
+            <a href="../../actions/favorite.php?action=add&place_id=<?php echo $place['id']; ?>">
+                Add to Favorites ❤️
+            </a>
+
+        <?php endif; ?>
+`
         <hr>
 
         <a href="list.php">← Back to list</a>

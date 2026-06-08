@@ -155,8 +155,7 @@ class Place{
         return $stmt->execute(['id' => $id]);
     }
     
+
     
     
     }
-
-    
