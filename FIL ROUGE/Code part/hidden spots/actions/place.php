@@ -2,7 +2,7 @@
 
 session_start();
 require_once __DIR__ . '/../classes/Place.php';
-require_once __DIR__ . '/../config/Database.php'; // for adding images to database
+require_once __DIR__ . '/../config/database.php'; // for adding images to database
 
 
 // check if user is logged in

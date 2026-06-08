@@ -18,7 +18,7 @@ class User{
         public function register($username,$email,$password){
             // check if email already exists
             if($this->findByEmail($email)){
-                return false;
+                return ["success" => false, "message" => "Email already exists"];
             // email already exists
             }
             // hash the password

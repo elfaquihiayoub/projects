@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../config/Database.php';
+require_once __DIR__ . '/../config/database.php';
 
 class Place{
     private $DbConn;
@@ -20,7 +20,7 @@ class Place{
                 ORDER BY p.created_at DESC";
             $stmt = $this->DbConn->prepare($sql);
             $stmt->execute();
-            return $stmt->fetchAll();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // get place by id (with all images)
@@ -34,7 +34,7 @@ class Place{
         $stmt = $this->DbConn->prepare($sql);
         $stmt->execute(['id' => $id]);
 
-        $place = $stmt->fetch();
+        $place = $stmt->fetch(PDO::FETCH_ASSOC);
                if (!$place) return null;
 
         //  Get ALL images
