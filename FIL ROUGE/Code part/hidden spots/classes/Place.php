@@ -158,4 +158,42 @@ class Place{
 
     
     
+    //searh functions
+
+    public function search($keyword = null, $category_id = null) {
+
+    $sql = "SELECT p.*, 
+                   u.username, 
+                   c.name AS category_name,
+                   (SELECT image_path 
+                    FROM place_images 
+                    WHERE place_id = p.id 
+                    LIMIT 1) AS image
+            FROM places p
+            JOIN users u ON p.user_id = u.id
+            JOIN categories c ON p.category_id = c.id
+            WHERE 1=1";
+
+    $params = [];
+
+    // 🔍 search by name
+    if (!empty($keyword)) {
+        $sql .= " AND p.name LIKE :keyword";
+        $params['keyword'] = "%" . $keyword . "%";
     }
+
+    // 📂 filter by category
+    if (!empty($category_id)) {
+        $sql .= " AND p.category_id = :category_id";
+        $params['category_id'] = $category_id;
+    }
+
+    $sql .= " ORDER BY p.created_at DESC";
+
+    $stmt = $this->DbConn->prepare($sql);
+    $stmt->execute($params);
+
+    return $stmt->fetchAll();
+}
+    }
+

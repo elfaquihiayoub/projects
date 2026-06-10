@@ -72,16 +72,7 @@ CREATE TABLE favorites (
 );
 
 
-CREATE TABLE likes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    place_id INT NOT NULL,
 
-    UNIQUE (user_id, place_id),
-
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE
-);
 
 
 
