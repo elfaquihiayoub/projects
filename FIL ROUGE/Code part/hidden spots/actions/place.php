@@ -103,6 +103,11 @@ if (isset($_POST['action']) && $_POST['action'] === "update") {
         header("Location: ../pages/places/edit.php?id=" . $id);
         exit;
     }
+        if (!$place->isOwner($id, $_SESSION['user_id'])) {
+        $_SESSION['error'] = "Unauthorized action.";
+        header("Location: ../pages/places/list.php");
+    exit;
+    }
 
     $success = $place->update(
         $id,
@@ -131,6 +136,12 @@ if (isset($_GET['action']) && $_GET['action'] === "delete") {
     $id = $_GET['id'] ?? null;
 
     if (!$id) {
+        header("Location: ../pages/places/list.php");
+        exit;
+    }
+    // 🔒 OWNER CHECK
+    if (!$place->isOwner($id, $_SESSION['user_id'])) {
+        $_SESSION['error'] = "Unauthorized action.";
         header("Location: ../pages/places/list.php");
         exit;
     }
