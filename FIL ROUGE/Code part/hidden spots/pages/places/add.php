@@ -1,6 +1,10 @@
 <?php
 require_once "../../includes/auth_check.php";
+require_once "../../includes/csrf.php";
+require_once "../../classes/Place.php";
 
+$placeObj = new Place();
+$categories = $placeObj->getAllCategories();
 ?>
 
 <!DOCTYPE html>
@@ -8,10 +12,8 @@ require_once "../../includes/auth_check.php";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>add place</title>
+    <title>Add Place</title>
 </head>
-<body>
-
 <body>
 
 <h2>Add New Place</h2>
@@ -26,6 +28,7 @@ if (isset($_SESSION['error'])) {
 <form action="../../actions/place.php" method="POST" enctype="multipart/form-data">
 
     <input type="hidden" name="action" value="add">
+    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
     <!-- NAME -->
     <label>place name :</label><br>
@@ -34,11 +37,11 @@ if (isset($_SESSION['error'])) {
     <label>Category:</label><br>
     <select name="category_id" required>
         <option value="">Select category</option>
-        <option value="1">Chill</option>
-        <option value="2">Study</option>
-        <option value="3">Date</option>
-        <option value="4">Nature</option>
-        <option value="5">View</option>
+        <?php foreach ($categories as $cat): ?>
+            <option value="<?php echo $cat['id']; ?>">
+                <?php echo htmlspecialchars($cat['name']); ?>
+            </option>
+        <?php endforeach; ?>
     </select><br><br>
 
     <!-- LOCATION NAME -->
@@ -65,7 +68,8 @@ if (isset($_SESSION['error'])) {
 </form>
 <br>
 
-<a href="list.php">← Back to list</a>
+<a href="list.php">← Back to list</a> |
+<a href="../../actions/logout.php">Logout</a>
 
     
 </body>

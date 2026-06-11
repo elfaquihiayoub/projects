@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../../includes/csrf.php';
 
 // If already logged in → redirect
 if (isset($_SESSION['user_id'])) {
@@ -29,6 +30,7 @@ if (isset($_SESSION['success'])) {
 <form method="POST" action="../../actions/auth.php">
 
     <input type="hidden" name="action" value="register">
+    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
     <label>Username:</label>
     <input type="text" name="username" required

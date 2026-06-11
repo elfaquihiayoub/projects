@@ -1,8 +1,8 @@
 <?php 
 
 session_start();
+require_once __DIR__ . '/../includes/csrf.php';
 require_once __DIR__ . '/../classes/Place.php';
-require_once __DIR__ . '/../config/database.php'; // for adding images to database
 
 
 // check if user is logged in
@@ -13,11 +13,16 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $place = new Place();
-$db = Database::getInstance()->getConnection(); // for adding images to database
+
+// Upload limits
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
+const MAX_IMAGES_PER_PLACE = 5;
 
 // add new place;
 
 if (isset($_POST['action']) && $_POST['action'] === "add") {
+    requireCsrfToken('../pages/places/add.php');
+
     $user_id = $_SESSION['user_id'];
     $category_id   = $_POST['category_id'] ?? null;
     $name= trim($_POST['name'] ?? '');
@@ -49,8 +54,21 @@ if (isset($_POST['action']) && $_POST['action'] === "add") {
       if (!empty($_FILES['images']['name'][0])) {
 
         $uploadDir = __DIR__ . "/../uploads/";
+        $imageCount = 0; // For new places, start at 0
 
         foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+
+            // Check max image count
+            if ($imageCount >= MAX_IMAGES_PER_PLACE) {
+                $_SESSION['error'] = "Maximum " . MAX_IMAGES_PER_PLACE . " images allowed per place.";
+                break;
+            }
+
+            // Check file size (5 MB max)
+            if ($_FILES['images']['size'][$key] > MAX_FILE_SIZE) {
+                $_SESSION['error'] = "File '" . $_FILES['images']['name'][$key] . "' exceeds 5 MB limit.";
+                continue;
+            }
 
             $fileName = time() . "_" . $_FILES['images']['name'][$key];
             $targetFile = $uploadDir . $fileName;
@@ -64,16 +82,9 @@ if (isset($_POST['action']) && $_POST['action'] === "add") {
 
                 $imagePath = "uploads/" . $fileName;
 
-                // insert image into DB
-                $stmt = $db->prepare("
-                    INSERT INTO place_images (place_id, image_path)
-                    VALUES (:place_id, :image_path)
-                ");
-
-                $stmt->execute([
-                    'place_id' => $place_id,
-                    'image_path' => $imagePath
-                ]);
+                // insert image into DB via Place class
+                $place->addImage($place_id, $imagePath);
+                $imageCount++;
             }
         }
     }
@@ -88,6 +99,7 @@ if (isset($_POST['action']) && $_POST['action'] === "add") {
 
 
 if (isset($_POST['action']) && $_POST['action'] === "update") {
+    requireCsrfToken('../pages/places/list.php');
 
     $id = $_POST['id'] ?? null;
 
@@ -119,6 +131,42 @@ if (isset($_POST['action']) && $_POST['action'] === "update") {
         $longitude
     );
 
+    // Handle new image uploads
+    if (!empty($_FILES['images']['name'][0])) {
+        $uploadDir = __DIR__ . "/../uploads/";
+        $existingCount = $place->countImages($id);
+        $newCount = 0;
+
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+
+            // Check max image count (existing + new)
+            if (($existingCount + $newCount) >= MAX_IMAGES_PER_PLACE) {
+                $_SESSION['error'] = "Maximum " . MAX_IMAGES_PER_PLACE . " images allowed per place.";
+                break;
+            }
+
+            // Check file size (5 MB max)
+            if ($_FILES['images']['size'][$key] > MAX_FILE_SIZE) {
+                $_SESSION['error'] = "File '" . $_FILES['images']['name'][$key] . "' exceeds 5 MB limit.";
+                continue;
+            }
+
+            $fileName = time() . "_" . $_FILES['images']['name'][$key];
+            $targetFile = $uploadDir . $fileName;
+
+            $ext = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+
+            if (!in_array($ext, $allowed)) continue;
+
+            if (move_uploaded_file($tmp_name, $targetFile)) {
+                $imagePath = "uploads/" . $fileName;
+                $place->addImage($id, $imagePath);
+                $newCount++;
+            }
+        }
+    }
+
     if ($success) {
         $_SESSION['success'] = "Place updated!";
         header("Location: ../pages/places/details.php?id=" . $id);
@@ -129,11 +177,12 @@ if (isset($_POST['action']) && $_POST['action'] === "update") {
 
     exit;
 }
-// delete place
+// delete place (POST only)
 
-if (isset($_GET['action']) && $_GET['action'] === "delete") {
+if (isset($_POST['action']) && $_POST['action'] === "delete") {
+    requireCsrfToken('../pages/places/list.php');
 
-    $id = $_GET['id'] ?? null;
+    $id = $_POST['id'] ?? null;
 
     if (!$id) {
         header("Location: ../pages/places/list.php");
@@ -155,6 +204,47 @@ if (isset($_GET['action']) && $_GET['action'] === "delete") {
     }
 
     header("Location: ../pages/places/list.php");
+    exit;
+}
+
+// delete single image
+
+if (isset($_POST['action']) && $_POST['action'] === "delete_image") {
+    requireCsrfToken('../pages/places/edit.php');
+
+    $id = $_POST['place_id'] ?? null;
+    $image_path = $_POST['image_path'] ?? null;
+
+    if (!$id || !$image_path) {
+        header("Location: ../pages/places/list.php");
+        exit;
+    }
+
+    // 🔒 Prevent path traversal — image_path must start with "uploads/"
+    if (!str_starts_with($image_path, 'uploads/')) {
+        $_SESSION['error'] = "Invalid image path.";
+        header("Location: ../pages/places/list.php");
+        exit;
+    }
+
+    // OWNER CHECK
+    if (!$place->isOwner($id, $_SESSION['user_id'])) {
+        $_SESSION['error'] = "Unauthorized action.";
+        header("Location: ../pages/places/list.php");
+        exit;
+    }
+
+    // Delete from DB
+    $place->deleteImage($id, $image_path);
+
+    // Delete physical file
+    $fullPath = __DIR__ . "/../" . $image_path;
+    if (file_exists($fullPath)) {
+        unlink($fullPath);
+    }
+
+    $_SESSION['success'] = "Image deleted.";
+    header("Location: ../pages/places/edit.php?id=" . $id);
     exit;
 }
 

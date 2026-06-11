@@ -2,6 +2,7 @@
 
 session_start();
 
+require_once __DIR__ . '/../includes/csrf.php';
 require_once __DIR__ . '/../classes/Review.php';
 
 // 🔒 check login
@@ -21,6 +22,9 @@ if (!$place_id || !$action) {
     header("Location: ../pages/home.php");
     exit;
 }
+
+// 🔒 CSRF check
+requireCsrfToken('../pages/home.php');
 
 /* ⭐ ADD / UPDATE REVIEW */
 if ($action === "save") {

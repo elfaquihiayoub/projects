@@ -1,5 +1,14 @@
 <?php
 
+session_start();
+
+// 🔒 check login
+if (!isset($_SESSION['user_id'])) {
+    header("Content-Type: application/json", true, 401);
+    echo json_encode(["success" => false, "error" => "Unauthorized"]);
+    exit;
+}
+
 require_once __DIR__ . '/../classes/Place.php';
 
 header("Content-Type: application/json");

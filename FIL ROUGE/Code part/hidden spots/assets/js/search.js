@@ -6,6 +6,14 @@ const container = document.getElementById("placesContainer");
 // simple debounce timer
 let timer = null;
 
+// Escape HTML to prevent XSS
+function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 // listen to typing in search box
 keywordInput.addEventListener("input", function () {
     triggerSearch();
@@ -27,7 +35,7 @@ function triggerSearch() {
         const keyword = keywordInput.value;
         const category = categorySelect.value;
 
-        fetch(`../../actions/search_api.php?keyword=${keyword}&category_id=${category}`)
+        fetch(`../../actions/search_api.php?keyword=${encodeURIComponent(keyword)}&category_id=${encodeURIComponent(category)}`)
             .then(response => response.json())
             .then(data => {
 
@@ -55,29 +63,23 @@ function renderPlaces(places) {
     places.forEach(place => {
 
         const image = place.image 
-            ? `../../${place.image}` 
+            ? `../../${escapeHtml(place.image)}` 
             : "../../assets/images/placeholder.jpg";
 
-        const html = `
-            <div style="border:1px solid #ccc; padding:10px; margin:10px; width:300px; display:inline-block;">
+        const div = document.createElement('div');
+        div.style.cssText = 'border:1px solid #ccc; padding:10px; margin:10px; width:300px; display:inline-block;';
 
-                <img src="${image}" width="100%" height="150">
-
-                <h3>${place.name}</h3>
-
-                <p>${place.category_name}</p>
-
-                <small>By ${place.username}</small>
-
-                <br><br>
-
-                <a href="details.php?id=${place.id}">
-                    View Details →
-                </a>
-
-            </div>
+        div.innerHTML = `
+            <img src="${image}" width="100%" height="150">
+            <h3>${escapeHtml(place.name)}</h3>
+            <p>${escapeHtml(place.category_name)}</p>
+            <small>By ${escapeHtml(place.username)}</small>
+            <br><br>
+            <a href="details.php?id=${parseInt(place.id, 10)}">
+                View Details →
+            </a>
         `;
 
-        container.innerHTML += html;
+        container.appendChild(div);
     });
 }

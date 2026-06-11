@@ -3,7 +3,19 @@ require_once "../../includes/auth_check.php";
 require_once "../../classes/Place.php";
 
 $placeObj = new Place();
-$places = $placeObj->getAllPlaces();
+
+// Pagination
+$perPage = 12;
+$currentPage = max(1, (int) ($_GET['page'] ?? 1));
+$totalPlaces = $placeObj->countAllPlaces();
+$totalPages = max(1, (int) ceil($totalPlaces / $perPage));
+
+// Clamp page to valid range
+if ($currentPage > $totalPages) {
+    $currentPage = $totalPages;
+}
+
+$places = $placeObj->getAllPlaces($currentPage, $perPage);
 $categories = $placeObj->getAllCategories();
 ?>
 
@@ -17,7 +29,9 @@ $categories = $placeObj->getAllCategories();
 
 <h2>All Places</h2>
 
-<a href="add.php">Add New Place</a>
+<a href="add.php">Add New Place</a> |
+<a href="../profil.php">My Profile</a> |
+<a href="../../actions/logout.php">Logout</a>
 
 <hr>
 
@@ -71,6 +85,29 @@ $categories = $placeObj->getAllCategories();
     <?php endforeach; ?>
 
 </div>
+
+<!-- PAGINATION -->
+<?php if ($totalPages > 1): ?>
+    <div style="margin: 20px 0; text-align: center;">
+
+        <?php if ($currentPage > 1): ?>
+            <a href="?page=<?php echo $currentPage - 1; ?>">&laquo; Prev</a>
+        <?php endif; ?>
+
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <?php if ($i === $currentPage): ?>
+                <strong><?php echo $i; ?></strong>
+            <?php else: ?>
+                <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+            <?php endif; ?>
+        <?php endfor; ?>
+
+        <?php if ($currentPage < $totalPages): ?>
+            <a href="?page=<?php echo $currentPage + 1; ?>">Next &raquo;</a>
+        <?php endif; ?>
+
+    </div>
+<?php endif; ?>
 
 </body>
 </html>

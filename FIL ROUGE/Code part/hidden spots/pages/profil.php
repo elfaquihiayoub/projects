@@ -1,6 +1,7 @@
 <?php
 
 require_once "../includes/auth_check.php";
+require_once "../includes/csrf.php";
 require_once "../classes/Place.php";
 require_once "../classes/Favorite.php";
 
@@ -10,8 +11,8 @@ $favoriteObj = new Favorite();
 $user_id = $_SESSION['user_id'];
 
 /* USER PLACES */
-$myPlaces = $placeObj->getPlacesByUser($user_id);
-$placesCount = count($myPlaces);
+$placesCount = $placeObj->countPlacesByUser($user_id);
+$myPlaces = $placeObj->getPlacesByUser($user_id, 1, 5); // show latest 5 on profile
 
 /* FAVORITES */
 $favoritePlaces = $favoriteObj->getUserFavorites($user_id);
@@ -66,9 +67,13 @@ $favoriteCount = count($favoritePlaces);
                 Edit
             </a>
 
-            <a href="../actions/place.php?action=delete&id=<?php echo $place['id']; ?>">
-                Delete
-            </a>
+            <form method="POST" action="../actions/place.php" style="display:inline;"
+              onsubmit="return confirm('Are you sure?')">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="id" value="<?php echo $place['id']; ?>">
+                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+                <button type="submit">Delete</button>
+            </form>
 
         </div>
 
@@ -103,9 +108,12 @@ $favoriteCount = count($favoritePlaces);
                 View
             </a>
 
-            <a href="../actions/favorite.php?action=remove&place_id=<?php echo $place['id']; ?>">
-                Remove from Favorites 
-            </a>
+            <form method="POST" action="../actions/favorite.php" style="display:inline;">
+                <input type="hidden" name="action" value="remove">
+                <input type="hidden" name="place_id" value="<?php echo $place['id']; ?>">
+                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+                <button type="submit">Remove from Favorites</button>
+            </form>
 
         </div>
 
@@ -122,8 +130,10 @@ $favoriteCount = count($favoritePlaces);
 <!-- ACTIONS -->
 <h3>Quick Actions</h3>
 
+<a href="profile/edit.php">Edit Profile</a><br>
 <a href="user_places.php">My Places Page</a><br>
-<a href="places/add.php">Add New Place</a>
+<a href="places/add.php">Add New Place</a><br>
+<a href="../actions/logout.php">Logout</a>
 
 </body>
 </html>

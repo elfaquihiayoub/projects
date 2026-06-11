@@ -1,6 +1,7 @@
 <?php
 
 require_once "../../includes/auth_check.php";
+require_once "../../includes/csrf.php";
 require_once "../../classes/Place.php";
 require_once "../../classes/Favorite.php";
 require_once "../../classes/Review.php";
@@ -90,15 +91,21 @@ $avgRating = $reviewObj->getAverageRating($place['id']);
 
 <?php if ($isFavorite): ?>
 
-    <a href="../../actions/favorite.php?action=remove&place_id=<?php echo $place['id']; ?>">
-        Remove from Favorites ❌
-    </a>
+    <form method="POST" action="../../actions/favorite.php" style="display:inline;">
+        <input type="hidden" name="action" value="remove">
+        <input type="hidden" name="place_id" value="<?php echo $place['id']; ?>">
+        <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+        <button type="submit">Remove from Favorites</button>
+    </form>
 
 <?php else: ?>
 
-    <a href="../../actions/favorite.php?action=add&place_id=<?php echo $place['id']; ?>">
-        Add to Favorites ❤️
-    </a>
+    <form method="POST" action="../../actions/favorite.php" style="display:inline;">
+        <input type="hidden" name="action" value="add">
+        <input type="hidden" name="place_id" value="<?php echo $place['id']; ?>">
+        <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+        <button type="submit">Add to Favorites</button>
+    </form>
 
 <?php endif; ?>
 
@@ -110,6 +117,7 @@ $avgRating = $reviewObj->getAverageRating($place['id']);
 <form method="POST" action="../../actions/review.php">
 
     <input type="hidden" name="place_id" value="<?php echo $place['id']; ?>">
+    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
     <label>Rating (1-5):</label>
     <input type="number" name="rating"
@@ -136,6 +144,7 @@ $avgRating = $reviewObj->getAverageRating($place['id']);
 <form method="POST" action="../../actions/review.php">
     <input type="hidden" name="place_id" value="<?php echo $place['id']; ?>">
     <input type="hidden" name="action" value="delete">
+    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
     <button type="submit">Delete My Review</button>
 </form>
@@ -175,7 +184,9 @@ $avgRating = $reviewObj->getAverageRating($place['id']);
 
 <hr>
 
-<a href="list.php">← Back to list</a>
+<a href="list.php">← Back to list</a> |
+<a href="../profil.php">My Profile</a> |
+<a href="../../actions/logout.php">Logout</a>
 
 </body>
 </html>

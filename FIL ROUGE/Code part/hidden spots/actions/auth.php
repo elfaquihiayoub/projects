@@ -1,15 +1,21 @@
 <?php
 session_start();
+require_once __DIR__.'/../includes/csrf.php';
 require_once __DIR__.'/../classes/user.php';
 $userObj=new User();
 
-//handling login 
+//handling login
 
     if (isset($_POST['action']) && $_POST['action'] === "login") {
-        $email=$_POST['email' ?? ''];
-        $password=$_POST['password' ?? ''];
+        requireCsrfToken('../pages/auth/login.php');
+
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
         $result=$userObj->login($email,$password);
         if($result['success']){
+            // 🔒 Regenerate session ID to prevent session fixation
+            session_regenerate_id(true);
+
             $_SESSION['user_id'] = $result['user']['id'];
             $_SESSION['username'] = $result['user']['username'];
             $_SESSION['email'] = $result['user']['email'];
@@ -28,9 +34,11 @@ $userObj=new User();
 
 //handling registration
 if (isset($_POST['action']) && $_POST['action'] === "register") {
-    $username=$_POST['username' ?? ''];
-    $email=$_POST['email' ?? ''];
-    $password=$_POST['password' ?? ''];
+    requireCsrfToken('../pages/auth/register.php');
+
+    $username = $_POST['username'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
 
     $result=$userObj->register($username,$email,$password);
     

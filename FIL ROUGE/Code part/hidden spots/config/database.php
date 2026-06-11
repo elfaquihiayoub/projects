@@ -2,7 +2,7 @@
 require 'configue.php';
 
 class Database{
-    private static $instatce=null;
+    private static $instance=null;
     private $connection;
     private $host = DB_HOST;
     private $dbname = DB_NAME;
@@ -22,15 +22,16 @@ class Database{
             $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
              }
              catch(PDOException $e) {
-                echo " Database connection error: " . $e->getMessage();
+                error_log("Database connection error: " . $e->getMessage());
+                die("Database connection failed. Please try again later.");
+    }
+    }
 
-    
-}}
     public static function getInstance(){
-        if (self::$instatce==null){
-            self::$instatce=new Database();
+        if (self::$instance==null){
+            self::$instance=new Database();
         }
-        return self::$instatce;
+        return self::$instance;
     }
     public function getConnection(){
         return $this->connection;

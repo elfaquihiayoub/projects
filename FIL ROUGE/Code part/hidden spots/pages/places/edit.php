@@ -1,6 +1,7 @@
 <?php
 
 require_once "../../includes/auth_check.php";
+require_once "../../includes/csrf.php";
 require_once "../../classes/Place.php";
 
 $placeObj = new Place();
@@ -21,7 +22,7 @@ if (!$place) {
 }
 
 /* SECURITY: only owner can edit */
-if ($place['user_id'] != $_SESSION['user_id']) {
+if (!$placeObj->isOwner($id, $_SESSION['user_id'])) {
     $_SESSION['error'] = "Unauthorized access.";
     header("Location: ../user_places.php");
     exit;
@@ -46,10 +47,11 @@ if (isset($_SESSION['error'])) {
 }
 ?>
 
-<form action="../../actions/place.php" method="POST">
+<form action="../../actions/place.php" method="POST" enctype="multipart/form-data">
 
     <input type="hidden" name="action" value="update">
     <input type="hidden" name="id" value="<?php echo $place['id']; ?>">
+    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
     <!-- NAME -->
     <label>Name:</label><br>
@@ -92,13 +94,54 @@ if (isset($_SESSION['error'])) {
     <label>Description:</label><br>
     <textarea name="description"><?php echo htmlspecialchars($place['description']); ?></textarea><br><br>
 
+    <!-- NEW IMAGES -->
+    <label>Add New Images:</label><br>
+    <input type="file" name="images[]" multiple><br><br>
+
     <button type="submit">Update Place</button>
 
 </form>
 
+<hr>
+
+<!-- EXISTING IMAGES -->
+<h3>Current Images</h3>
+
+<?php if (!empty($place['images'])): ?>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+
+    <?php foreach ($place['images'] as $img): ?>
+
+        <div style="border: 1px solid #ccc; padding: 10px; text-align: center;">
+
+            <img src="../../<?php echo htmlspecialchars($img); ?>" width="150" style="display: block; margin-bottom: 10px;">
+
+            <form method="POST" action="../../actions/place.php" style="display: inline;"
+                  onsubmit="return confirm('Delete this image?')">
+                <input type="hidden" name="action" value="delete_image">
+                <input type="hidden" name="place_id" value="<?php echo $place['id']; ?>">
+                <input type="hidden" name="image_path" value="<?php echo htmlspecialchars($img); ?>">
+                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+                <button type="submit" style="color: red;">Delete</button>
+            </form>
+
+        </div>
+
+    <?php endforeach; ?>
+
+    </div>
+
+<?php else: ?>
+
+    <p>No images uploaded yet.</p>
+
+<?php endif; ?>
+
 <br>
 
-<a href="../user_places.php">← Back</a>
+<a href="../user_places.php">← Back</a> |
+<a href="../../actions/logout.php">Logout</a>
 
 </body>
 </html>
