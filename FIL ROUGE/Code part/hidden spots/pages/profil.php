@@ -1,139 +1,147 @@
 <?php
+require_once __DIR__ . '/../includes/auth_check.php';
+require_once __DIR__ . '/../classes/Place.php';
+require_once __DIR__ . '/../classes/favorite.php';
 
-require_once "../includes/auth_check.php";
-require_once "../includes/csrf.php";
-require_once "../classes/Place.php";
-require_once "../classes/Favorite.php";
+$place = new Place();
+$favorite = new Favorite();
 
-$placeObj = new Place();
-$favoriteObj = new Favorite();
+$userId = $_SESSION['user_id'];
+$username = $_SESSION['username'] ?? 'User';
+$email = $_SESSION['email'] ?? '';
 
-$user_id = $_SESSION['user_id'];
+// Get user's places
+$myPlaces = $place->getPlacesByUser($userId, 1, 6);
+$myPlacesCount = $place->countPlacesByUser($userId);
 
-/* USER PLACES */
-$placesCount = $placeObj->countPlacesByUser($user_id);
-$myPlaces = $placeObj->getPlacesByUser($user_id, 1, 5); // show latest 5 on profile
+// Get user's favorites
+$myFavorites = $favorite->getUserFavorites($userId);
 
-/* FAVORITES */
-$favoritePlaces = $favoriteObj->getUserFavorites($user_id);
-$favoriteCount = count($favoritePlaces);
-
+$pageTitle = 'My Profile - Hidden Spots Finder';
 ?>
+<?php require_once __DIR__ . '/../includes/header.php'; ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Profile</title>
-</head>
-<body>
-
-<h2>My Profile</h2>
-
-<!-- USER INFO -->
-<p><strong>Username:</strong> <?php echo htmlspecialchars($_SESSION['username']); ?></p>
-<p><strong>Email:</strong> <?php echo htmlspecialchars($_SESSION['email']); ?></p>
-
-<hr>
-
-<!-- STATS -->
-<p><strong>Total Places:</strong> <?php echo $placesCount; ?></p>
-<p><strong>Favorites:</strong> <?php echo $favoriteCount; ?></p>
-
-<hr>
-
-<!-- MY PLACES -->
-<h3>My Places</h3>
-
-<?php if (!empty($myPlaces)): ?>
-
-    <?php foreach ($myPlaces as $place): ?>
-
-        <div>
-
-            <h4><?php echo htmlspecialchars($place['name']); ?></h4>
-
-            <?php if (!empty($place['image'])): ?>
-                <img src="../<?php echo htmlspecialchars($place['image']); ?>" width="120">
-            <?php endif; ?>
-
-            <br>
-
-            <a href="places/details.php?id=<?php echo $place['id']; ?>">
-                View
-            </a>
-
-            <a href="places/edit.php?id=<?php echo $place['id']; ?>">
-                Edit
-            </a>
-
-            <form method="POST" action="../actions/place.php" style="display:inline;"
-              onsubmit="return confirm('Are you sure?')">
-                <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="id" value="<?php echo $place['id']; ?>">
-                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
-                <button type="submit">Delete</button>
-            </form>
-
+<div class="container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <?php echo strtoupper(substr($username, 0, 1)); ?>
         </div>
-
-        <hr>
-
-    <?php endforeach; ?>
-
-<?php else: ?>
-    <p>You haven't added any places yet.</p>
-<?php endif; ?>
-
-<hr>
-
-<!-- FAVORITES -->
-<h3>My Favorites</h3>
-
-<?php if (!empty($favoritePlaces)): ?>
-
-    <?php foreach ($favoritePlaces as $place): ?>
-
-        <div>
-
-            <h4><?php echo htmlspecialchars($place['name']); ?></h4>
-
-            <?php if (!empty($place['image'])): ?>
-                <img src="../<?php echo htmlspecialchars($place['image']); ?>" width="120">
-            <?php endif; ?>
-
-            <br>
-
-            <a href="places/details.php?id=<?php echo $place['id']; ?>">
-                View
-            </a>
-
-            <form method="POST" action="../actions/favorite.php" style="display:inline;">
-                <input type="hidden" name="action" value="remove">
-                <input type="hidden" name="place_id" value="<?php echo $place['id']; ?>">
-                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
-                <button type="submit">Remove from Favorites</button>
-            </form>
-
+        <div class="profile-info">
+            <h1><?php echo htmlspecialchars($username); ?></h1>
+            <p><?php echo htmlspecialchars($email); ?></p>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-number"><?php echo $myPlacesCount; ?></span>
+                    <span class="stat-label">Places Shared</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number"><?php echo count($myFavorites); ?></span>
+                    <span class="stat-label">Favorites</span>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <hr>
+    <!-- Quick Actions -->
+    <div style="display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;">
+        <a href="profile/edit.php" class="btn btn-secondary">Edit Profile</a>
+        <a href="places/add.php" class="btn btn-primary">+ Share New Spot</a>
+    </div>
 
-    <?php endforeach; ?>
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('places')">My Places</button>
+        <button class="tab" onclick="showTab('favorites')">Favorites</button>
+    </div>
 
-<?php else: ?>
-    <p>No favorite places yet.</p>
-<?php endif; ?>
+    <!-- My Places Tab -->
+    <div id="places-tab" class="tab-content">
+        <?php if (!empty($myPlaces)): ?>
+            <div class="places-grid">
+                <?php foreach ($myPlaces as $p): ?>
+                    <div class="place-card">
+                        <a href="places/details.php?id=<?php echo $p['id']; ?>">
+                            <img src="<?php echo !empty($p['image']) ? '' . htmlspecialchars($p['image']) : 'assets/images/placeholder.jpg'; ?>"
+                                 alt="<?php echo htmlspecialchars($p['name']); ?>"
+                                 class="place-card-img">
+                        </a>
+                        <div class="place-card-body">
+                            <h3 class="place-card-title">
+                                <a href="places/details.php?id=<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['name']); ?></a>
+                            </h3>
+                            <div class="place-card-info">
+                                <span>📍</span>
+                                <span><?php echo htmlspecialchars($p['location'] ?? 'Unknown'); ?></span>
+                            </div>
+                            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                <a href="places/edit.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
+                                <a href="places/details.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">View</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
 
-<hr>
+            <?php if ($myPlacesCount > 6): ?>
+                <div class="text-center mt-3">
+                    <a href="places/user_places.php" class="btn btn-secondary">View All My Places</a>
+                </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="empty-state">
+                <p>You haven't shared any places yet.</p>
+                <a href="places/add.php" class="btn btn-primary">Share Your First Hidden Spot</a>
+            </div>
+        <?php endif; ?>
+    </div>
 
-<!-- ACTIONS -->
-<h3>Quick Actions</h3>
+    <!-- Favorites Tab -->
+    <div id="favorites-tab" class="tab-content" style="display: none;">
+        <?php if (!empty($myFavorites)): ?>
+            <div class="places-grid">
+                <?php foreach ($myFavorites as $fav): ?>
+                    <div class="place-card">
+                        <a href="places/details.php?id=<?php echo $fav['id']; ?>">
+                            <img src="<?php echo !empty($fav['image']) ? '' . htmlspecialchars($fav['image']) : 'assets/images/placeholder.jpg'; ?>"
+                                 alt="<?php echo htmlspecialchars($fav['name']); ?>"
+                                 class="place-card-img">
+                        </a>
+                        <div class="place-card-body">
+                            <h3 class="place-card-title">
+                                <a href="places/details.php?id=<?php echo $fav['id']; ?>"><?php echo htmlspecialchars($fav['name']); ?></a>
+                            </h3>
+                            <div class="place-card-info">
+                                <span>📍</span>
+                                <span><?php echo htmlspecialchars($fav['location'] ?? 'Unknown'); ?></span>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <div class="empty-state">
+                <p>You haven't added any favorites yet.</p>
+                <a href="places/list.php" class="btn btn-primary">Explore Places</a>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
 
-<a href="profile/edit.php">Edit Profile</a><br>
-<a href="user_places.php">My Places Page</a><br>
-<a href="places/add.php">Add New Place</a><br>
-<a href="../actions/logout.php">Logout</a>
+<script>
+function showTab(tabName) {
+    // Hide all tab content
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
 
-</body>
-</html>
+    // Remove active class from all tabs
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+
+    // Show selected tab
+    document.getElementById(tabName + '-tab').style.display = 'block';
+
+    // Add active class to clicked tab
+    event.target.classList.add('active');
+}
+</script>
+
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

@@ -1,85 +1,92 @@
+// Live search functionality
+const searchInput = document.getElementById('searchInput');
+const placesGrid = document.getElementById('placesGrid');
+const filterTabs = document.querySelectorAll('.filter-tab');
 
-const keywordInput = document.getElementById("keyword");
-const categorySelect = document.getElementById("category_id");
-const container = document.getElementById("placesContainer");
+let currentCategory = 'all';
+let searchTimeout;
 
-// simple debounce timer
-let timer = null;
-
-// Escape HTML to prevent XSS
-function escapeHtml(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+// Search input handler
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            performSearch(this.value, currentCategory);
+        }, 300);
+    });
 }
 
-// listen to typing in search box
-keywordInput.addEventListener("input", function () {
-    triggerSearch();
+// Filter tabs handler
+filterTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+        filterTabs.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+
+        currentCategory = this.dataset.category;
+
+        if (searchInput) {
+            performSearch(searchInput.value, currentCategory);
+        }
+    });
 });
 
-// listen to category change
-categorySelect.addEventListener("change", function () {
-    triggerSearch();
-});
+// Perform search via API
+function performSearch(keyword, categoryId) {
+    let url = '../../actions/search_api.php?keyword=' + encodeURIComponent(keyword);
 
-// main function
-function triggerSearch() {
+    if (categoryId && categoryId !== 'all') {
+        url += '&category_id=' + encodeURIComponent(categoryId);
+    }
 
-    // clear old timer (debounce)
-    clearTimeout(timer);
-
-    timer = setTimeout(() => {
-
-        const keyword = keywordInput.value;
-        const category = categorySelect.value;
-
-        fetch(`../../actions/search_api.php?keyword=${encodeURIComponent(keyword)}&category_id=${encodeURIComponent(category)}`)
-            .then(response => response.json())
-            .then(data => {
-
-                if (data.success) {
-                    renderPlaces(data.data);
-                }
-            })
-            .catch(error => {
-                console.log("Search error:", error);
-            });
-
-    }, 300); // wait 300ms after typing
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            displayResults(data);
+        })
+        .catch(error => {
+            console.error('Search error:', error);
+        });
 }
 
-// render results in HTML
-function renderPlaces(places) {
-
-    container.innerHTML = ""; // clear old results
+// Display search results
+function displayResults(places) {
+    if (!placesGrid) return;
 
     if (places.length === 0) {
-        container.innerHTML = "<p>No places found.</p>";
+        placesGrid.innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><p>No places found.</p></div>';
         return;
     }
 
-    places.forEach(place => {
-
-        const image = place.image 
-            ? `../../${escapeHtml(place.image)}` 
-            : "../../assets/images/placeholder.jpg";
-
-        const div = document.createElement('div');
-        div.style.cssText = 'border:1px solid #ccc; padding:10px; margin:10px; width:300px; display:inline-block;';
-
-        div.innerHTML = `
-            <img src="${image}" width="100%" height="150">
-            <h3>${escapeHtml(place.name)}</h3>
-            <p>${escapeHtml(place.category_name)}</p>
-            <small>By ${escapeHtml(place.username)}</small>
-            <br><br>
-            <a href="details.php?id=${parseInt(place.id, 10)}">
-                View Details →
+    placesGrid.innerHTML = places.map(place => `
+        <div class="place-card" data-category="${escapeHtml(place.category_id)}">
+            <a href="details.php?id=${escapeHtml(place.id)}">
+                <img src="${place.image ? '../../' + escapeHtml(place.image) : '../../assets/images/placeholder.jpg'}"
+                     alt="${escapeHtml(place.name)}"
+                     class="place-card-img">
             </a>
-        `;
+            <div class="place-card-body">
+                <h3 class="place-card-title">
+                    <a href="details.php?id=${escapeHtml(place.id)}">${escapeHtml(place.name)}</a>
+                </h3>
+                <div class="place-card-info">
+                    <span>📍</span>
+                    <span>${escapeHtml(place.location || 'Unknown')}</span>
+                </div>
+                <span class="card-category mt-1">${escapeHtml(place.category_name || '')}</span>
+            </div>
+        </div>
+    `).join('');
+}
 
-        container.appendChild(div);
-    });
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    if (!text) return '';
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
 }

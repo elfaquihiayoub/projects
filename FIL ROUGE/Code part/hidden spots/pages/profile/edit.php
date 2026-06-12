@@ -1,86 +1,89 @@
 <?php
+require_once __DIR__ . '/../../includes/auth_check.php';
+require_once __DIR__ . '/../../includes/csrf.php';
 
-require_once "../../includes/auth_check.php";
-require_once "../../includes/csrf.php";
-require_once "../../classes/user.php";
-
-$userObj = new User();
-$user_id = $_SESSION['user_id'];
-
-// Fetch fresh user data from DB
-$user = $userObj->findById($user_id);
-
-if (!$user) {
-    $_SESSION['error'] = "User not found.";
-    header("Location: ../profil.php");
-    exit;
-}
-
+$pageTitle = 'Edit Profile - Hidden Spots Finder';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Profile</title>
-</head>
-<body>
+<?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
-<h2>Edit Profile</h2>
+<div class="container">
+    <div class="page-header">
+        <h1>Edit Profile</h1>
+        <p>Update your account information</p>
+    </div>
 
-<?php
-if (isset($_SESSION['success'])): ?>
-    <p style="color:green;"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></p>
-<?php endif;
+    <div style="max-width: 600px;">
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
+        <?php endif; ?>
 
-if (isset($_SESSION['error'])): ?>
-    <p style="color:red;"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></p>
-<?php endif; ?>
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+        <?php endif; ?>
 
-<hr>
+        <!-- Update Profile Info -->
+        <div style="background: var(--white); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); margin-bottom: 24px;">
+            <h3 style="margin-bottom: 16px;">Profile Information</h3>
 
-<!-- ── EDIT PROFILE (username + email) ── -->
-<h3>Update Profile</h3>
+            <form method="POST" action="<?php echo $base; ?>actions/profile.php">
+                <input type="hidden" name="action" value="update_profile">
+                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
-<form action="../../actions/profile.php" method="POST">
-    <input type="hidden" name="action" value="update_profile">
-    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" class="form-control"
+                           value="<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>"
+                           required maxlength="25">
+                </div>
 
-    <label>Username:</label><br>
-    <input type="text" name="username" required maxlength="25"
-           value="<?php echo htmlspecialchars($user['username']); ?>"><br><br>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control"
+                           value="<?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?>"
+                           required maxlength="60">
+                </div>
 
-    <label>Email:</label><br>
-    <input type="email" name="email" required maxlength="60"
-           value="<?php echo htmlspecialchars($user['email']); ?>"><br><br>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+            </form>
+        </div>
 
-    <button type="submit">Update Profile</button>
-</form>
+        <!-- Change Password -->
+        <div style="background: var(--white); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card);">
+            <h3 style="margin-bottom: 16px;">Change Password</h3>
 
-<hr>
+            <form method="POST" action="<?php echo $base; ?>actions/profile.php">
+                <input type="hidden" name="action" value="change_password">
+                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
-<!-- ── CHANGE PASSWORD ── -->
-<h3>Change Password</h3>
+                <div class="form-group">
+                    <label for="current_password">Current Password</label>
+                    <input type="password" id="current_password" name="current_password" class="form-control" required>
+                </div>
 
-<form action="../../actions/profile.php" method="POST">
-    <input type="hidden" name="action" value="change_password">
-    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+                <div class="form-group">
+                    <label for="new_password">New Password</label>
+                    <input type="password" id="new_password" name="new_password" class="form-control"
+                           required minlength="6" placeholder="At least 6 characters">
+                </div>
 
-    <label>Current Password:</label><br>
-    <input type="password" name="current_password" required><br><br>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm New Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control"
+                           required minlength="6">
+                </div>
 
-    <label>New Password:</label><br>
-    <input type="password" name="new_password" required minlength="6"><br><br>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </div>
+            </form>
+        </div>
 
-    <label>Confirm New Password:</label><br>
-    <input type="password" name="confirm_password" required minlength="6"><br><br>
+        <div style="margin-top: 24px; text-align: center;">
+            <a href="../profil.php" class="btn btn-secondary">&larr; Back to Profile</a>
+        </div>
+    </div>
+</div>
 
-    <button type="submit">Change Password</button>
-</form>
-
-<hr>
-
-<a href="../profil.php">← Back to Profile</a> |
-<a href="../../actions/logout.php">Logout</a>
-
-</body>
-</html>
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>

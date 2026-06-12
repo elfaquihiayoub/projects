@@ -1,76 +1,114 @@
 <?php
-require_once "../../includes/auth_check.php";
-require_once "../../includes/csrf.php";
-require_once "../../classes/Place.php";
+require_once __DIR__ . '/../../includes/auth_check.php';
+require_once __DIR__ . '/../../includes/csrf.php';
+require_once __DIR__ . '/../../classes/Place.php';
 
-$placeObj = new Place();
-$categories = $placeObj->getAllCategories();
+$place = new Place();
+$categories = $place->getAllCategories();
+
+$pageTitle = 'Share a Hidden Spot - Hidden Spots Finder';
 ?>
+<?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Place</title>
-</head>
-<body>
+<div class="container">
+    <div class="page-header">
+        <h1>Share a Hidden Spot</h1>
+        <p>Help others discover the beauty you've found</p>
+    </div>
 
-<h2>Add New Place</h2>
-<!-- if there is an error message , show it and clear session error -->
-<?php
-if (isset($_SESSION['error'])) {
-    echo "<p>" . htmlspecialchars($_SESSION['error']) . "</p>";
-    unset($_SESSION['error']);
-}
-?>
+    <div style="max-width: 700px;">
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
+        <?php endif; ?>
 
-<form action="../../actions/place.php" method="POST" enctype="multipart/form-data">
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+        <?php endif; ?>
 
-    <input type="hidden" name="action" value="add">
-    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+        <form method="POST" action="<?php echo $base; ?>actions/place.php" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="add">
+            <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
-    <!-- NAME -->
-    <label>place name :</label><br>
-    <input type="text" name="name" required><br><br>
-      <!-- CATEGORY -->
-    <label>Category:</label><br>
-    <select name="category_id" required>
-        <option value="">Select category</option>
-        <?php foreach ($categories as $cat): ?>
-            <option value="<?php echo $cat['id']; ?>">
-                <?php echo htmlspecialchars($cat['name']); ?>
-            </option>
-        <?php endforeach; ?>
-    </select><br><br>
+            <div class="form-group">
+                <label for="name">Place Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="e.g., Secret Beach Cove" required>
+            </div>
 
-    <!-- LOCATION NAME -->
-    <label>Location Name:</label><br>
-    <input type="text" name="location_name"><br><br>
-     <!-- LATITUDE -->
-    <label>Latitude:</label><br>
-    <input type="text" name="latitude" required><br><br>
+            <div class="form-group">
+                <label for="category_id">Category</label>
+                <select id="category_id" name="category_id" class="form-control" required>
+                    <option value="">Select a category</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?php echo $category['id']; ?>"><?php echo htmlspecialchars($category['name']); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-    <!-- LONGITUDE -->
-    <label>Longitude:</label><br>
-    <input type="text" name="longitude" required><br><br>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" class="form-control" placeholder="City, Country">
+            </div>
 
-    <!-- DESCRIPTION -->
-    <label>Description:</label><br>
-    <textarea name="description"></textarea><br><br>
-    <!-- IMAGES -->
-    <label>Images:</label><br>
-    <input type="file" name="images[]" multiple><br><br>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                    <label for="latitude">Latitude</label>
+                    <input type="number" step="any" id="latitude" name="latitude" class="form-control" placeholder="e.g., 40.7128">
+                </div>
 
-    <!-- SUBMIT -->
-    <button type="submit">Add Place</button>
+                <div class="form-group">
+                    <label for="longitude">Longitude</label>
+                    <input type="number" step="any" id="longitude" name="longitude" class="form-control" placeholder="e.g., -74.0060">
+                </div>
+            </div>
 
-</form>
-<br>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control" rows="5" placeholder="Tell us what makes this place special..."></textarea>
+            </div>
 
-<a href="list.php">← Back to list</a> |
-<a href="../../actions/logout.php">Logout</a>
+            <div class="form-group">
+                <label>Upload Images</label>
+                <div class="upload-area">
+                    <p>📷 Click to upload or drag and drop</p>
+                    <p class="hint">PNG, JPG, WEBP (max 5MB each, up to 5 images)</p>
+                    <input type="file" name="images[]" id="imageInput" accept="image/*" multiple style="display: none;">
+                </div>
+                <div id="imagePreview" class="image-grid"></div>
+            </div>
 
-    
-</body>
-</html>
+            <div class="info-box">
+                <p>💡 <strong>Curation Tip:</strong> Share places that are truly hidden and deserve protection. Help preserve their beauty by encouraging respectful visits.</p>
+            </div>
+
+            <div class="form-actions">
+                <a href="list.php" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Share Hidden Spot</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Image upload preview
+const uploadArea = document.querySelector('.upload-area');
+const imageInput = document.getElementById('imageInput');
+const imagePreview = document.getElementById('imagePreview');
+
+uploadArea.addEventListener('click', () => imageInput.click());
+
+imageInput.addEventListener('change', function(e) {
+    imagePreview.innerHTML = '';
+    Array.from(e.target.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'image-grid-item';
+            div.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+            imagePreview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+});
+</script>
+
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>

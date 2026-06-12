@@ -1,110 +1,104 @@
 <?php
+require_once __DIR__ . '/../../includes/auth_check.php';
+require_once __DIR__ . '/../../includes/csrf.php';
+require_once __DIR__ . '/../../classes/Place.php';
 
-require_once "../includes/auth_check.php";
-require_once "../includes/csrf.php";
-require_once "../classes/Place.php";
+$place = new Place();
+$userId = $_SESSION['user_id'];
 
-$placeObj = new Place();
+// Get current page number
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$placesPerPage = 12;
 
-$user_id = $_SESSION['user_id'];
+// Get user's places
+$places = $place->getPlacesByUser($userId, $page, $placesPerPage);
+$totalPlaces = $place->countPlacesByUser($userId);
+$totalPages = ceil($totalPlaces / $placesPerPage);
 
-// Pagination
-$perPage = 12;
-$currentPage = max(1, (int) ($_GET['page'] ?? 1));
-$totalPlaces = $placeObj->countPlacesByUser($user_id);
-$totalPages = max(1, (int) ceil($totalPlaces / $perPage));
-
-if ($currentPage > $totalPages) {
-    $currentPage = $totalPages;
-}
-
-$places = $placeObj->getPlacesByUser($user_id, $currentPage, $perPage);
-
+$pageTitle = 'My Places - Hidden Spots Finder';
 ?>
+<?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>My Places</title>
-</head>
-<body>
+<div class="container">
+    <div class="page-header">
+        <div class="flex-between">
+            <div>
+                <h1>My Places</h1>
+                <p>Manage your shared hidden spots</p>
+            </div>
+            <a href="add.php" class="btn btn-primary">+ Add New Place</a>
+        </div>
+    </div>
 
-<h2>My Places</h2>
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert alert-success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+    <?php endif; ?>
 
-<?php
-if (isset($_SESSION['success'])) {
-    echo "<p>" . htmlspecialchars($_SESSION['success']) . "</p>";
-    unset($_SESSION['success']);
-}
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
+    <?php endif; ?>
 
-if (isset($_SESSION['error'])) {
-    echo "<p>" . htmlspecialchars($_SESSION['error']) . "</p>";
-    unset($_SESSION['error']);
-}
-?>
+    <?php if (!empty($places)): ?>
+        <div class="places-grid">
+            <?php foreach ($places as $p): ?>
+                <div class="place-card">
+                    <a href="details.php?id=<?php echo $p['id']; ?>">
+                        <img src="<?php echo !empty($p['image']) ? '../../' . htmlspecialchars($p['image']) : '../../assets/images/placeholder.jpg'; ?>"
+                             alt="<?php echo htmlspecialchars($p['name']); ?>"
+                             class="place-card-img">
+                    </a>
+                    <div class="place-card-body">
+                        <h3 class="place-card-title">
+                            <a href="details.php?id=<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['name']); ?></a>
+                        </h3>
+                        <div class="place-card-info">
+                            <span>📍</span>
+                            <span><?php echo htmlspecialchars($p['location'] ?? 'Unknown'); ?></span>
+                        </div>
+                        <span class="card-category mt-1"><?php echo htmlspecialchars($p['category_name'] ?? ''); ?></span>
 
-<a href="places/add.php">Add New Place</a> |
-<a href="../profil.php">My Profile</a> |
-<a href="../../actions/logout.php">Logout</a>
-
-<hr>
-
-<?php if (!empty($places)): ?>
-
-    <?php foreach ($places as $place): ?>
-
-        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
-
-            <img src="../<?php echo htmlspecialchars($place['image']); ?>" width="120">
-
-            <h3><?php echo htmlspecialchars($place['name']); ?></h3>
-
-            <p><?php echo htmlspecialchars($place['category_name']); ?></p>
-
-            <a href="places/details.php?id=<?php echo $place['id']; ?>">View</a>
-            <a href="places/edit.php?id=<?php echo $place['id']; ?>">Edit</a>
-
-           <form method="POST" action="../../actions/place.php" style="display:inline;"
-             onsubmit="return confirm('Are you sure?')">
-                <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="id" value="<?php echo $place['id']; ?>">
-                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
-                <button type="submit">Delete</button>
-            </form>
-
+                        <div style="display: flex; gap: 8px; margin-top: 12px;">
+                            <a href="details.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">View</a>
+                            <a href="edit.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
+                            <form method="POST" action="../../actions/place.php" style="flex: 1;" onsubmit="return confirm('Are you sure you want to delete this place?');">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="place_id" value="<?php echo $p['id']; ?>">
+                                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+                                <button type="submit" class="btn btn-danger btn-sm" style="width: 100%;">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
 
-    <?php endforeach; ?>
+        <!-- Pagination -->
+        <?php if ($totalPages > 1): ?>
+            <div class="pagination">
+                <?php if ($page > 1): ?>
+                    <a href="?page=<?php echo $page - 1; ?>">Previous</a>
+                <?php endif; ?>
 
-<?php else: ?>
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <?php if ($i === $page): ?>
+                        <span class="active"><?php echo $i; ?></span>
+                    <?php else: ?>
+                        <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                    <?php endif; ?>
+                <?php endfor; ?>
 
-    <p>You have no places yet.</p>
-
-<?php endif; ?>
-
-<!-- PAGINATION -->
-<?php if ($totalPages > 1): ?>
-    <div style="margin: 20px 0; text-align: center;">
-
-        <?php if ($currentPage > 1): ?>
-            <a href="?page=<?php echo $currentPage - 1; ?>">&laquo; Prev</a>
+                <?php if ($page < $totalPages): ?>
+                    <a href="?page=<?php echo $page + 1; ?>">Next</a>
+                <?php endif; ?>
+            </div>
         <?php endif; ?>
 
-        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-            <?php if ($i === $currentPage): ?>
-                <strong><?php echo $i; ?></strong>
-            <?php else: ?>
-                <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-            <?php endif; ?>
-        <?php endfor; ?>
+    <?php else: ?>
+        <div class="empty-state">
+            <p>You haven't shared any places yet.</p>
+            <a href="add.php" class="btn btn-primary">Share Your First Hidden Spot</a>
+        </div>
+    <?php endif; ?>
+</div>
 
-        <?php if ($currentPage < $totalPages): ?>
-            <a href="?page=<?php echo $currentPage + 1; ?>">Next &raquo;</a>
-        <?php endif; ?>
-
-    </div>
-<?php endif; ?>
-
-</body>
-</html>
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>

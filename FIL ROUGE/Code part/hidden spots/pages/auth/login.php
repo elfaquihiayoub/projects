@@ -3,47 +3,63 @@
 session_start();
 require_once __DIR__ . '/../../includes/csrf.php';
 
-// If already logged in , redirect him into home page
-
+// If already logged in, redirect to home page
 if (isset($_SESSION['user_id'])) {
     header("Location: ../home.php");
     exit;
 }
 
+$pageTitle = 'Sign In - Hidden Spots Finder';
 ?>
+<?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
-<h2>Login</h2>
+<div class="auth-wrapper">
+    <div class="auth-image">
+        <img src="<?php echo $base; ?>assets/images/placeholder.jpg" alt="Hidden spot">
+        <div class="auth-image-overlay">
+            <h2>Hidden Spots Finder</h2>
+            <p>Discover the quiet corners of the world, curated for those who seek serenity beyond the noise.</p>
+        </div>
+    </div>
 
-<?php
-// Show error if exists
-if (isset($_SESSION['error'])) {
-    echo "<p style='color:red'>" . htmlspecialchars($_SESSION['error']) . "</p>";
-    unset($_SESSION['error']);
-}
-?>
+    <div class="auth-form-side">
+        <div class="auth-form-box">
+            <h2>Welcome Back</h2>
+            <p>Find your next favorite quiet space.</p>
 
-<form method="POST" action="../../actions/auth.php">
+            <div class="tabs mb-3">
+                <button class="tab active">Sign In</button>
+                <a href="register.php" class="tab" style="text-decoration:none; color:inherit;">Create Account</a>
+            </div>
 
-    <input type="hidden" name="action" value="login">
-    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
+            <?php endif; ?>
 
-    <label>Email:</label>
-    <input type="email" name="email" required
-           value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+            <?php endif; ?>
 
-    <br><br>
+            <form method="POST" action="<?php echo $base; ?>actions/auth.php">
+                <input type="hidden" name="action" value="login">
+                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
-    <label>Password:</label>
-    <input type="password" name="password" required>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" required>
+                </div>
 
-    <br><br>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                </div>
 
-    <button type="submit">Login</button>
+                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+            </form>
 
-</form>
+            <p class="auth-footer-text">By continuing, you agree to our Terms of Service and Privacy Policy.</p>
+        </div>
+    </div>
+</div>
 
-<br>
-<a href="forgot_password.php">Forgot password?</a>
-
-
-
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>

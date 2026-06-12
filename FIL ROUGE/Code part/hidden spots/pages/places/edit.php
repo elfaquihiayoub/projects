@@ -1,147 +1,151 @@
 <?php
+require_once __DIR__ . '/../../includes/auth_check.php';
+require_once __DIR__ . '/../../includes/csrf.php';
+require_once __DIR__ . '/../../classes/Place.php';
 
-require_once "../../includes/auth_check.php";
-require_once "../../includes/csrf.php";
-require_once "../../classes/Place.php";
+$place = new Place();
+$categories = $place->getAllCategories();
 
-$placeObj = new Place();
-
-$id = $_GET['id'] ?? null;
-
-if (!$id) {
-    header("Location: ../user_places.php");
+if (!isset($_GET['id'])) {
+    header("Location: list.php");
     exit;
 }
 
-$place = $placeObj->getPlaceById($id);
-$categories = $placeObj->getAllCategories();
+$placeId = (int)$_GET['id'];
+$placeData = $place->getPlaceById($placeId);
 
-if (!$place) {
-    echo "Place not found";
+if (!$placeData) {
+    header("Location: list.php");
     exit;
 }
 
-/* SECURITY: only owner can edit */
-if (!$placeObj->isOwner($id, $_SESSION['user_id'])) {
-    $_SESSION['error'] = "Unauthorized access.";
-    header("Location: ../user_places.php");
+if (!$place->isOwner($placeId, $_SESSION['user_id'])) {
+    header("Location: list.php");
     exit;
 }
 
+$pageTitle = 'Edit Place - Hidden Spots Finder';
 ?>
+<?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Place</title>
-</head>
-<body>
-
-<h2>Edit Place</h2>
-
-<?php
-if (isset($_SESSION['error'])) {
-    echo "<p>" . htmlspecialchars($_SESSION['error']) . "</p>";
-    unset($_SESSION['error']);
-}
-?>
-
-<form action="../../actions/place.php" method="POST" enctype="multipart/form-data">
-
-    <input type="hidden" name="action" value="update">
-    <input type="hidden" name="id" value="<?php echo $place['id']; ?>">
-    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
-
-    <!-- NAME -->
-    <label>Name:</label><br>
-    <input type="text" name="name"
-           value="<?php echo htmlspecialchars($place['name']); ?>" required><br><br>
-
-    <!-- CATEGORY -->
-   <label>Category:</label><br>
-    <select name="category_id" required>
-
-        <?php foreach ($categories as $cat): ?>
-
-            <option value="<?php echo $cat['id']; ?>"
-                <?php echo ($cat['id'] == $place['category_id']) ? 'selected' : ''; ?>>
-
-                <?php echo htmlspecialchars($cat['name']); ?>
-
-            </option>
-
-        <?php endforeach; ?>
-
-    </select><br><br>
-
-    <!-- LOCATION NAME -->
-    <label>Location Name:</label><br>
-    <input type="text" name="location_name"
-           value="<?php echo htmlspecialchars($place['location_name']); ?>"><br><br>
-
-    <!-- LATITUDE -->
-    <label>Latitude:</label><br>
-    <input type="text" name="latitude"
-           value="<?php echo htmlspecialchars($place['latitude']); ?>"><br><br>
-
-    <!-- LONGITUDE -->
-    <label>Longitude:</label><br>
-    <input type="text" name="longitude"
-           value="<?php echo htmlspecialchars($place['longitude']); ?>"><br><br>
-
-    <!-- DESCRIPTION -->
-    <label>Description:</label><br>
-    <textarea name="description"><?php echo htmlspecialchars($place['description']); ?></textarea><br><br>
-
-    <!-- NEW IMAGES -->
-    <label>Add New Images:</label><br>
-    <input type="file" name="images[]" multiple><br><br>
-
-    <button type="submit">Update Place</button>
-
-</form>
-
-<hr>
-
-<!-- EXISTING IMAGES -->
-<h3>Current Images</h3>
-
-<?php if (!empty($place['images'])): ?>
-
-    <div style="display: flex; flex-wrap: wrap; gap: 15px;">
-
-    <?php foreach ($place['images'] as $img): ?>
-
-        <div style="border: 1px solid #ccc; padding: 10px; text-align: center;">
-
-            <img src="../../<?php echo htmlspecialchars($img); ?>" width="150" style="display: block; margin-bottom: 10px;">
-
-            <form method="POST" action="../../actions/place.php" style="display: inline;"
-                  onsubmit="return confirm('Delete this image?')">
-                <input type="hidden" name="action" value="delete_image">
-                <input type="hidden" name="place_id" value="<?php echo $place['id']; ?>">
-                <input type="hidden" name="image_path" value="<?php echo htmlspecialchars($img); ?>">
-                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
-                <button type="submit" style="color: red;">Delete</button>
-            </form>
-
-        </div>
-
-    <?php endforeach; ?>
-
+<div class="container">
+    <div class="page-header">
+        <h1>Edit Place</h1>
+        <p>Update your hidden spot details</p>
     </div>
 
-<?php else: ?>
+    <div style="max-width: 700px;">
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
+        <?php endif; ?>
 
-    <p>No images uploaded yet.</p>
+        <form method="POST" action="<?php echo $base; ?>actions/place.php" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="place_id" value="<?php echo $placeId; ?>">
+            <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
 
-<?php endif; ?>
+            <div class="form-group">
+                <label for="name">Place Name</label>
+                <input type="text" id="name" name="name" class="form-control"
+                       value="<?php echo htmlspecialchars($placeData['name']); ?>" required>
+            </div>
 
-<br>
+            <div class="form-group">
+                <label for="category_id">Category</label>
+                <select id="category_id" name="category_id" class="form-control" required>
+                    <option value="">Select a category</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?php echo $category['id']; ?>"
+                            <?php echo ($placeData['category_id'] == $category['id']) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($category['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-<a href="../user_places.php">← Back</a> |
-<a href="../../actions/logout.php">Logout</a>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" class="form-control"
+                       value="<?php echo htmlspecialchars($placeData['location'] ?? ''); ?>">
+            </div>
 
-</body>
-</html>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                    <label for="latitude">Latitude</label>
+                    <input type="number" step="any" id="latitude" name="latitude" class="form-control"
+                           value="<?php echo htmlspecialchars($placeData['latitude'] ?? ''); ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="longitude">Longitude</label>
+                    <input type="number" step="any" id="longitude" name="longitude" class="form-control"
+                           value="<?php echo htmlspecialchars($placeData['longitude'] ?? ''); ?>">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control" rows="5"><?php echo htmlspecialchars($placeData['description'] ?? ''); ?></textarea>
+            </div>
+
+            <!-- Existing Images -->
+            <?php if (!empty($placeData['images'])): ?>
+                <div class="form-group">
+                    <label>Current Images</label>
+                    <div class="image-grid">
+                        <?php foreach ($placeData['images'] as $img): ?>
+                            <div class="image-grid-item">
+                                <img src="../../<?php echo htmlspecialchars($img['image_path']); ?>" alt="Place image">
+                                <button type="submit" name="action" value="delete_image"
+                                        onclick="return confirm('Delete this image?');"
+                                        class="delete-img" title="Delete image">
+                                    <input type="hidden" name="image_id" value="<?php echo $img['id']; ?>">
+                                    <input type="hidden" name="image_path" value="<?php echo htmlspecialchars($img['image_path']); ?>">
+                                    ✕
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="form-group">
+                <label>Add More Images</label>
+                <div class="upload-area">
+                    <p>📷 Click to upload or drag and drop</p>
+                    <p class="hint">PNG, JPG, WEBP (max 5MB each)</p>
+                    <input type="file" name="images[]" id="imageInput" accept="image/*" multiple style="display: none;">
+                </div>
+                <div id="imagePreview" class="image-grid"></div>
+            </div>
+
+            <div class="form-actions">
+                <a href="details.php?id=<?php echo $placeId; ?>" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+const uploadArea = document.querySelector('.upload-area');
+const imageInput = document.getElementById('imageInput');
+const imagePreview = document.getElementById('imagePreview');
+
+uploadArea.addEventListener('click', () => imageInput.click());
+
+imageInput.addEventListener('change', function(e) {
+    Array.from(e.target.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'image-grid-item';
+            div.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+            imagePreview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+});
+</script>
+
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
