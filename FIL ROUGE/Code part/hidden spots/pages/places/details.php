@@ -72,7 +72,7 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
 
             <div class="place-card-info mb-2">
                 <span>📍</span>
-                <span><?php echo htmlspecialchars($placeData['location'] ?? 'Location not specified'); ?></span>
+                <span><?php echo htmlspecialchars($placeData['location_name'] ?? 'Location not specified'); ?></span>
             </div>
 
             <div style="background: var(--white); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); margin-top: 16px;">

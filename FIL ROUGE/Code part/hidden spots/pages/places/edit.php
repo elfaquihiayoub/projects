@@ -34,7 +34,7 @@ $pageTitle = 'Edit Place - Hidden Spots Finder';
         <p>Update your hidden spot details</p>
     </div>
 
-    <div style="max-width: 700px;">
+    <div class="form-wrapper">
         <?php if (isset($_SESSION['error'])): ?>
             <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
         <?php endif; ?>
@@ -65,8 +65,8 @@ $pageTitle = 'Edit Place - Hidden Spots Finder';
 
             <div class="form-group">
                 <label for="location">Location</label>
-                <input type="text" id="location" name="location" class="form-control"
-                       value="<?php echo htmlspecialchars($placeData['location'] ?? ''); ?>">
+                <input type="text" id="location" name="location_name" class="form-control"
+                       value="<?php echo htmlspecialchars($placeData['location_name'] ?? ''); ?>">
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">

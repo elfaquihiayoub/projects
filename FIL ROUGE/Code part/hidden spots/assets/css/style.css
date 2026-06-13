@@ -20,12 +20,16 @@
     --success: #2E7D32;
     --font-heading: 'Be Vietnam Pro', sans-serif;
     --font-body: 'Inter', sans-serif;
-    --shadow-card: 0px 4px 20px rgba(29, 53, 87, 0.05);
-    --shadow-hover: 0px 12px 40px rgba(29, 53, 87, 0.12);
+    --shadow-sm: 0 1px 3px rgba(29, 53, 87, 0.04), 0 1px 2px rgba(29, 53, 87, 0.06);
+    --shadow-card: 0 4px 6px -1px rgba(29, 53, 87, 0.06), 0 2px 4px -2px rgba(29, 53, 87, 0.04);
+    --shadow-hover: 0 20px 40px -8px rgba(29, 53, 87, 0.12), 0 8px 16px -4px rgba(29, 53, 87, 0.06);
+    --shadow-lg: 0 24px 48px -12px rgba(29, 53, 87, 0.15);
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
+    --radius-xl: 24px;
     --radius-full: 9999px;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Reset */
@@ -165,14 +169,15 @@ img {
 }
 
 .btn-primary {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, #FFA733 100%);
     color: var(--text);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
-    background: #FFA733;
+    background: linear-gradient(135deg, #FFA733 0%, var(--primary) 100%);
     color: var(--text);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-card);
 }
 
@@ -213,12 +218,14 @@ img {
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-card);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: var(--transition);
+    border: 1px solid var(--border-light);
 }
 
 .card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
     box-shadow: var(--shadow-hover);
+    border-color: transparent;
 }
 
 .card-img {
@@ -280,20 +287,21 @@ img {
 
 .form-control {
     width: 100%;
-    padding: 10px 14px;
+    padding: 12px 16px;
     font-family: var(--font-body);
     font-size: 1rem;
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
     border-radius: var(--radius-md);
-    background: var(--surface);
+    background: var(--white);
     color: var(--text);
-    transition: border-color 0.2s;
+    transition: var(--transition);
 }
 
 .form-control:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.15);
+    box-shadow: 0 0 0 4px rgba(255, 179, 71, 0.12);
+    background: var(--white);
 }
 
 textarea.form-control {
@@ -415,15 +423,20 @@ select.form-control {
 /* Page Header */
 .page-header {
     padding: 48px 0 32px;
+    text-align: center;
 }
 
 .page-header h1 {
     margin-bottom: 8px;
+    font-size: 2.25rem;
+    letter-spacing: -0.02em;
 }
 
 .page-header p {
     color: var(--text-light);
     font-size: 1.125rem;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 /* Page Content */
@@ -447,11 +460,18 @@ select.form-control {
     align-items: center;
     gap: 12px;
     background: var(--white);
-    padding: 12px 20px;
+    padding: 14px 24px;
     border-radius: var(--radius-full);
     box-shadow: var(--shadow-card);
-    max-width: 500px;
-    margin-bottom: 24px;
+    max-width: 520px;
+    margin: 0 auto 28px;
+    border: 1px solid var(--border-light);
+    transition: var(--transition);
+}
+
+.search-bar:focus-within {
+    box-shadow: var(--shadow-hover);
+    border-color: var(--primary);
 }
 
 .search-bar input {
@@ -461,10 +481,11 @@ select.form-control {
     font-size: 1rem;
     font-family: var(--font-body);
     background: transparent;
+    color: var(--text);
 }
 
-.search-bar input:focus {
-    box-shadow: none;
+.search-bar input::placeholder {
+    color: var(--text-muted);
 }
 
 /* Filter Tabs */
@@ -472,33 +493,44 @@ select.form-control {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 24px;
+    justify-content: center;
+    margin-bottom: 32px;
 }
 
 .filter-tab {
-    padding: 6px 16px;
+    padding: 8px 20px;
     border: 1px solid var(--border);
     border-radius: var(--radius-full);
-    background: transparent;
+    background: var(--white);
     font-family: var(--font-body);
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
-    color: var(--text);
+    transition: var(--transition);
+    color: var(--text-light);
 }
 
-.filter-tab:hover,
+.filter-tab:hover {
+    border-color: var(--primary);
+    color: var(--primary-dark);
+    background: rgba(255, 179, 71, 0.08);
+}
+
 .filter-tab.active {
     background: var(--primary);
     border-color: var(--primary);
+    color: var(--text);
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
 }
 
 /* Places Grid (for cards) */
 .places-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 28px;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
 /* Place Card (specific) */
@@ -507,12 +539,14 @@ select.form-control {
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-card);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: var(--transition);
+    border: 1px solid var(--border-light);
 }
 
 .place-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
     box-shadow: var(--shadow-hover);
+    border-color: transparent;
 }
 
 .place-card-img {
@@ -522,18 +556,20 @@ select.form-control {
 }
 
 .place-card-body {
-    padding: 16px;
+    padding: 18px;
+    text-align: center;
 }
 
 .place-card-title {
     font-size: 1.125rem;
     font-family: var(--font-heading);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .place-card-title a {
     color: var(--text);
     text-decoration: none;
+    transition: color 0.2s;
 }
 
 .place-card-title a:hover {
@@ -543,6 +579,7 @@ select.form-control {
 .place-card-info {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     font-size: 0.875rem;
     color: var(--text-light);
@@ -678,16 +715,17 @@ select.form-control {
 .upload-area {
     border: 2px dashed var(--border);
     border-radius: var(--radius-lg);
-    padding: 32px;
+    padding: 36px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition);
     background: var(--surface);
 }
 
 .upload-area:hover {
     border-color: var(--primary);
-    background: rgba(255, 179, 71, 0.05);
+    background: rgba(255, 179, 71, 0.06);
+    transform: scale(1.01);
 }
 
 .upload-area p {
@@ -814,27 +852,39 @@ select.form-control {
 .info-box {
     display: flex;
     gap: 12px;
-    background: rgba(162, 210, 255, 0.1);
+    background: linear-gradient(135deg, rgba(162, 210, 255, 0.12) 0%, rgba(162, 210, 255, 0.06) 100%);
     border-left: 3px solid var(--secondary);
-    padding: 16px;
+    padding: 18px 20px;
     border-radius: var(--radius-md);
-    margin: 16px 0;
+    margin: 20px 0;
 }
 
 .info-box p {
     font-size: 0.875rem;
     color: var(--text-light);
     margin: 0;
+    line-height: 1.6;
 }
 
 /* Form Actions */
 .form-actions {
     display: flex;
     gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
+    justify-content: center;
+    margin-top: 28px;
     padding-top: 24px;
     border-top: 1px solid var(--border-light);
+}
+
+/* Form Wrapper - centered form */
+.form-wrapper {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: 36px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-light);
 }
 
 /* Footer */
@@ -944,6 +994,10 @@ select.form-control {
 
     .filter-tab {
         white-space: nowrap;
+    }
+
+    .form-wrapper {
+        padding: 24px 18px;
     }
 }
 

@@ -16,7 +16,7 @@ $pageTitle = 'Share a Hidden Spot - Hidden Spots Finder';
         <p>Help others discover the beauty you've found</p>
     </div>
 
-    <div style="max-width: 700px;">
+    <div class="form-wrapper">
         <?php if (isset($_SESSION['error'])): ?>
             <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
         <?php endif; ?>
@@ -46,7 +46,7 @@ $pageTitle = 'Share a Hidden Spot - Hidden Spots Finder';
 
             <div class="form-group">
                 <label for="location">Location</label>
-                <input type="text" id="location" name="location" class="form-control" placeholder="City, Country">
+                <input type="text" id="location" name="location_name" class="form-control" placeholder="City, Country">
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">

@@ -40,8 +40,12 @@ function performSearch(keyword, categoryId) {
 
     fetch(url)
         .then(response => response.json())
-        .then(data => {
-            displayResults(data);
+        .then(response => {
+            if (response.success) {
+                displayResults(response.data);
+            } else {
+                console.error('Search failed:', response.error);
+            }
         })
         .catch(error => {
             console.error('Search error:', error);
@@ -70,7 +74,7 @@ function displayResults(places) {
                 </h3>
                 <div class="place-card-info">
                     <span>📍</span>
-                    <span>${escapeHtml(place.location || 'Unknown')}</span>
+                    <span>${escapeHtml(place.location_name || 'Unknown')}</span>
                 </div>
                 <span class="card-category mt-1">${escapeHtml(place.category_name || '')}</span>
             </div>

@@ -71,7 +71,7 @@ class Place{
         $imgStmt = $this->DbConn->prepare($imgSql);
         $imgStmt->execute(['id' => $id]);
 
-        $place['images'] = $imgStmt->fetchAll(PDO::FETCH_COLUMN);
+        $place['images'] = $imgStmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $place;
     }

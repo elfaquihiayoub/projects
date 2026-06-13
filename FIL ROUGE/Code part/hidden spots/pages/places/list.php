@@ -14,7 +14,7 @@ $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $category_id = isset($_GET['category']) ? (int)$_GET['category'] : 0;
 
 // Get places with search
-$places = $place->search($keyword, $category_id, $page);
+$places = $place->search($keyword, $category_id);
 
 $pageTitle = 'Explore Places - Hidden Spots Finder';
 ?>
@@ -58,7 +58,7 @@ $pageTitle = 'Explore Places - Hidden Spots Finder';
                         </h3>
                         <div class="place-card-info">
                             <span>📍</span>
-                            <span><?php echo htmlspecialchars($p['location'] ?? 'Unknown'); ?></span>
+                            <span><?php echo htmlspecialchars($p['location_name'] ?? 'Unknown'); ?></span>
                         </div>
                         <span class="card-category mt-1"><?php echo htmlspecialchars($p['category_name'] ?? ''); ?></span>
                     </div>
