@@ -69,7 +69,7 @@ $pageTitle = 'Edit Place - Hidden Spots Finder';
                        value="<?php echo htmlspecialchars($placeData['location_name'] ?? ''); ?>">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                 <div class="form-group">
                     <label for="latitude">Latitude</label>
                     <input type="number" step="any" id="latitude" name="latitude" class="form-control"
@@ -101,7 +101,7 @@ $pageTitle = 'Edit Place - Hidden Spots Finder';
                                         class="delete-img" title="Delete image">
                                     <input type="hidden" name="image_id" value="<?php echo $img['id']; ?>">
                                     <input type="hidden" name="image_path" value="<?php echo htmlspecialchars($img['image_path']); ?>">
-                                    ✕
+                                    &#10005;
                                 </button>
                             </div>
                         <?php endforeach; ?>
@@ -112,7 +112,7 @@ $pageTitle = 'Edit Place - Hidden Spots Finder';
             <div class="form-group">
                 <label>Add More Images</label>
                 <div class="upload-area">
-                    <p>📷 Click to upload or drag and drop</p>
+                    <p>&#128247; Click to upload or drag and drop</p>
                     <p class="hint">PNG, JPG, WEBP (max 5MB each)</p>
                     <input type="file" name="images[]" id="imageInput" accept="image/*" multiple style="display: none;">
                 </div>

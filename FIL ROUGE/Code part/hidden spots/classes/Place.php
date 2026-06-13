@@ -258,15 +258,15 @@ class Place{
     $params = [];
 
     // 🔍 search by name
-    if (!empty($keyword)) {
+    if (isset($keyword) && $keyword !== '' && $keyword !== null) {
         $sql .= " AND p.name LIKE :keyword";
         $params['keyword'] = "%" . $keyword . "%";
     }
 
-    // 📂 filter by category
-    if (!empty($category_id)) {
+    // 📂 filter by category — skip if null, empty, or 'all'
+    if (isset($category_id) && $category_id !== '' && $category_id !== 'all') {
         $sql .= " AND p.category_id = :category_id";
-        $params['category_id'] = $category_id;
+        $params['category_id'] = (int)$category_id;
     }
 
     $sql .= " ORDER BY p.created_at DESC LIMIT :limit";

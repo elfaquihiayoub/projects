@@ -12,7 +12,7 @@ $pageTitle = 'Edit Profile - Hidden Spots Finder';
         <p>Update your account information</p>
     </div>
 
-    <div style="max-width: 600px;">
+    <div class="form-wrapper">
         <?php if (isset($_SESSION['error'])): ?>
             <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
         <?php endif; ?>
@@ -22,8 +22,8 @@ $pageTitle = 'Edit Profile - Hidden Spots Finder';
         <?php endif; ?>
 
         <!-- Update Profile Info -->
-        <div style="background: var(--white); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); margin-bottom: 24px;">
-            <h3 style="margin-bottom: 16px;">Profile Information</h3>
+        <div style="margin-bottom: 32px;">
+            <h3 style="margin-bottom: 20px;">Profile Information</h3>
 
             <form method="POST" action="<?php echo $base; ?>actions/profile.php">
                 <input type="hidden" name="action" value="update_profile">
@@ -43,15 +43,17 @@ $pageTitle = 'Edit Profile - Hidden Spots Finder';
                            required maxlength="60">
                 </div>
 
-                <div class="form-actions">
+                <div class="form-actions" style="justify-content: flex-start; border-top: none; padding-top: 0; margin-top: 8px;">
                     <button type="submit" class="btn btn-primary">Update Profile</button>
                 </div>
             </form>
         </div>
 
+        <hr style="border: none; border-top: 1px solid var(--border-light); margin: 32px 0;">
+
         <!-- Change Password -->
-        <div style="background: var(--white); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card);">
-            <h3 style="margin-bottom: 16px;">Change Password</h3>
+        <div>
+            <h3 style="margin-bottom: 20px;">Change Password</h3>
 
             <form method="POST" action="<?php echo $base; ?>actions/profile.php">
                 <input type="hidden" name="action" value="change_password">
@@ -74,13 +76,13 @@ $pageTitle = 'Edit Profile - Hidden Spots Finder';
                            required minlength="6">
                 </div>
 
-                <div class="form-actions">
+                <div class="form-actions" style="justify-content: flex-start; border-top: none; padding-top: 0; margin-top: 8px;">
                     <button type="submit" class="btn btn-primary">Change Password</button>
                 </div>
             </form>
         </div>
 
-        <div style="margin-top: 24px; text-align: center;">
+        <div style="margin-top: 32px; text-align: center;">
             <a href="../profil.php" class="btn btn-secondary">&larr; Back to Profile</a>
         </div>
     </div>

@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../classes/Place.php';
+require_once __DIR__ . '/../includes/csrf.php';
 
 $place = new Place();
 $categories = $place->getAllCategories();
@@ -10,68 +11,183 @@ $pageTitle = 'Home - Hidden Spots Finder';
 ?>
 <?php require_once __DIR__ . '/../includes/header.php'; ?>
 
-<div class="container">
-    <!-- Hero Section -->
-    <section style="text-align: center; padding: 64px 0 48px;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 12px;">Welcome, <?php echo htmlspecialchars($_SESSION['username'] ?? 'Explorer'); ?>!</h1>
-        <p style="font-size: 1.125rem; color: var(--text-light); max-width: 500px; margin: 0 auto 32px;">
-            Discover hidden gems or share your own secret spots with the community.
-        </p>
-        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-            <a href="places/add.php" class="btn btn-primary">+ Share a Hidden Spot</a>
-            <a href="places/list.php" class="btn btn-secondary">Explore Places</a>
+<!-- Hero Section -->
+<section class="hero-section container">
+    <div class="hero-content">
+        <div class="hero-badge">
+            &#127807; Curated Serenity for Urban Explorers
         </div>
-    </section>
+        <h1 class="hero-title">Discover places only <span>locals know</span>.</h1>
+        <p class="hero-description">
+            Uncover the hidden gems, quiet corners, and secret sanctuaries tucked away in the bustle of the city. Hand-picked spots for those who seek peace.
+        </p>
+        <div class="hero-buttons">
+            <a href="places/list.php" class="btn btn-primary">Start Exploring &rarr;</a>
+            <a href="places/add.php" class="btn btn-outline-dark">Add a Spot &#9825;</a>
+        </div>
+    </div>
+    <div class="hero-image-wrapper">
+        <?php if (!empty($recentPlaces)): ?>
+            <a href="places/details.php?id=<?php echo $recentPlaces[0]['id']; ?>">
+                <img src="<?php echo !empty($recentPlaces[0]['image']) ? '../' . htmlspecialchars($recentPlaces[0]['image']) : $base . 'assets/images/placeholder.jpg'; ?>" alt="<?php echo htmlspecialchars($recentPlaces[0]['name']); ?>">
+            </a>
+        <?php else: ?>
+            <img src="<?php echo $base; ?>assets/images/placeholder.jpg" alt="Featured hidden spot">
+        <?php endif; ?>
+        <div class="hero-image-label">
+            <small>SPOT OF THE MONTH</small>
+            <?php if (!empty($recentPlaces)): ?>
+                <h3><?php echo htmlspecialchars($recentPlaces[0]['name']); ?></h3>
+            <?php else: ?>
+                <h3>The Verant Conservatory</h3>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
 
-    <!-- Categories Section -->
-    <section class="section">
-        <h2 class="section-title">Explore by Category</h2>
+<!-- Categories Section -->
+<section class="categories-section">
+    <div class="container">
+        <div class="section-header">
+            <div>
+                <h2>Find Your Vibe</h2>
+                <p>Filter by the atmosphere you're craving today.</p>
+            </div>
+            <a href="places/list.php" class="view-all">View All Categories &rsaquo;</a>
+        </div>
+
         <?php if (!empty($categories)): ?>
-            <div class="grid grid-4">
-                <?php foreach ($categories as $category): ?>
-                    <a href="places/list.php?category=<?php echo $category['id']; ?>" class="card" style="text-align: center; padding: 24px; text-decoration: none;">
-                        <h3 style="color: var(--text);"><?php echo htmlspecialchars($category['name']); ?></h3>
+            <div class="categories-grid">
+                <?php
+                $categoryIcons = ['chill', 'nature', 'study', 'date'];
+                $categorySymbols = ['&#9790;', '&#9968;', '&#128214;', '&#9829;'];
+                $idx = 0;
+                foreach ($categories as $category):
+                    $iconClass = $categoryIcons[$idx % 4];
+                    $symbol = $categorySymbols[$idx % 4];
+                ?>
+                    <a href="places/list.php?category=<?php echo $category['id']; ?>" class="category-card">
+                        <div class="category-icon <?php echo $iconClass; ?>">
+                            <?php echo $symbol; ?>
+                        </div>
+                        <h3><?php echo htmlspecialchars($category['name']); ?></h3>
                     </a>
-                <?php endforeach; ?>
+                <?php
+                    $idx++;
+                endforeach;
+                ?>
             </div>
         <?php else: ?>
             <p class="text-muted">No categories available yet.</p>
         <?php endif; ?>
-    </section>
+    </div>
+</section>
 
-    <!-- Recent Discoveries -->
-    <section class="section">
-        <div class="flex-between mb-3">
-            <h2 class="section-title" style="margin-bottom: 0;">Recent Discoveries</h2>
-            <a href="places/list.php" class="btn btn-secondary btn-sm">View All</a>
+<!-- Hand-Picked Discoveries -->
+<section class="discoveries-section">
+    <div class="container">
+        <div class="discoveries-header">
+            <h2>Hand-Picked Discoveries</h2>
+            <div class="discoveries-filters">
+                <a href="places/list.php?sort=trending" class="filter-icon-btn" title="Filter">&#9776;</a>
+                <a href="places/list.php?sort=trending" class="filter-pill active">Trending</a>
+                <a href="places/list.php?sort=newest" class="filter-pill">Newest</a>
+                <a href="places/list.php?sort=near" class="filter-pill">Near Me</a>
+            </div>
         </div>
 
         <?php if (!empty($recentPlaces)): ?>
-            <div class="places-grid">
-                <?php foreach ($recentPlaces as $p): ?>
-                    <div class="place-card">
-                        <a href="places/details.php?id=<?php echo $p['id']; ?>">
-                            <img src="<?php echo !empty($p['image']) ? '../../' . htmlspecialchars($p['image']) : '../../assets/images/placeholder.jpg'; ?>"
-                                 alt="<?php echo htmlspecialchars($p['name']); ?>"
-                                 class="place-card-img">
-                        </a>
-                        <div class="place-card-body">
-                            <h3 class="place-card-title">
+            <div class="discoveries-grid">
+                <?php
+                $displayPlaces = array_slice($recentPlaces, 0, 3);
+                foreach ($displayPlaces as $p):
+                ?>
+                    <div class="discovery-card">
+                        <div class="discovery-card-img">
+                            <a href="places/details.php?id=<?php echo $p['id']; ?>">
+                                <img src="<?php echo !empty($p['image']) ? '../' . htmlspecialchars($p['image']) : '../assets/images/placeholder.jpg'; ?>"
+                                     alt="<?php echo htmlspecialchars($p['name']); ?>">
+                            </a>
+                            <?php if (isset($_SESSION['user_id'])): ?>
+                                <form method="POST" action="<?php echo $base; ?>actions/favorite.php" style="position:absolute;top:12px;right:12px;margin:0;">
+                                    <input type="hidden" name="place_id" value="<?php echo $p['id']; ?>">
+                                    <input type="hidden" name="action" value="add">
+                                    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+                                    <button type="submit" class="discovery-bookmark" title="Save to Favorites">&#9744;</button>
+                                </form>
+                            <?php endif; ?>
+                            <span class="discovery-category-badge"><?php echo htmlspecialchars($p['category_name'] ?? ''); ?></span>
+                        </div>
+                        <div class="discovery-card-body">
+                            <h3 class="discovery-card-title">
                                 <a href="places/details.php?id=<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['name']); ?></a>
                             </h3>
-                            <div class="place-card-info">
-                                <span>📍</span>
-                                <span><?php echo htmlspecialchars($p['location'] ?? 'Unknown'); ?></span>
+                            <div class="discovery-card-meta">
+                                <span class="discovery-card-location">&#9679; <?php echo htmlspecialchars($p['location_name'] ?? 'Unknown'); ?></span>
+                                <span class="discovery-card-rating">&#9733; 4.9</span>
                             </div>
-                            <span class="card-category mt-1"><?php echo htmlspecialchars($p['category_name'] ?? ''); ?></span>
                         </div>
                     </div>
-                <?php endforeach; ?>
+                <?php
+                endforeach;
+                ?>
             </div>
+
+            <a href="places/list.php" class="explore-all-btn">Explore All Spots</a>
         <?php else: ?>
-            <p class="text-muted">No places shared yet. Be the first to share a hidden spot!</p>
+            <div class="empty-state">
+                <p>No places shared yet. Be the first to share a hidden spot!</p>
+                <a href="places/add.php" class="btn btn-primary">Share a Hidden Spot</a>
+            </div>
         <?php endif; ?>
-    </section>
-</div>
+    </div>
+</section>
+
+<!-- CTA / Newsletter Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box">
+            <div class="cta-content">
+                <h2>Be the first to find the quietest corners.</h2>
+                <p>Join our community of urban explorers and receive weekly curation of the most serene spots in your city.</p>
+                <form class="cta-form" onsubmit="return handleSubscribe(event);">
+                    <input type="email" name="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+            <div class="cta-features">
+                <div class="cta-feature">
+                    <span class="cta-feature-icon">&#10024;</span>
+                    <span>Curated by Locals</span>
+                </div>
+                <div class="cta-feature">
+                    <span class="cta-feature-icon">&#128737;</span>
+                    <span>Verified Spots</span>
+                </div>
+                <div class="cta-feature">
+                    <span class="cta-feature-icon">&#128172;</span>
+                    <span>Vibrant Community</span>
+                </div>
+                <div class="cta-feature">
+                    <span class="cta-feature-icon">&#128506;</span>
+                    <span>Offline Maps</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
+
+<script>
+function handleSubscribe(e) {
+    e.preventDefault();
+    var form = e.target;
+    var email = form.querySelector('input[name="email"]').value;
+    if (email) {
+        alert('Thank you for subscribing with: ' + email);
+        form.reset();
+    }
+    return false;
+}
+</script>

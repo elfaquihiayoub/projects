@@ -49,7 +49,7 @@ $pageTitle = 'Share a Hidden Spot - Hidden Spots Finder';
                 <input type="text" id="location" name="location_name" class="form-control" placeholder="City, Country">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                 <div class="form-group">
                     <label for="latitude">Latitude</label>
                     <input type="number" step="any" id="latitude" name="latitude" class="form-control" placeholder="e.g., 40.7128">
@@ -69,7 +69,7 @@ $pageTitle = 'Share a Hidden Spot - Hidden Spots Finder';
             <div class="form-group">
                 <label>Upload Images</label>
                 <div class="upload-area">
-                    <p>📷 Click to upload or drag and drop</p>
+                    <p>&#128247; Click to upload or drag and drop</p>
                     <p class="hint">PNG, JPG, WEBP (max 5MB each, up to 5 images)</p>
                     <input type="file" name="images[]" id="imageInput" accept="image/*" multiple style="display: none;">
                 </div>
@@ -77,7 +77,7 @@ $pageTitle = 'Share a Hidden Spot - Hidden Spots Finder';
             </div>
 
             <div class="info-box">
-                <p>💡 <strong>Curation Tip:</strong> Share places that are truly hidden and deserve protection. Help preserve their beauty by encouraging respectful visits.</p>
+                <p>&#128161; <strong>Curation Tip:</strong> Share places that are truly hidden and deserve protection. Help preserve their beauty by encouraging respectful visits.</p>
             </div>
 
             <div class="form-actions">
@@ -89,7 +89,6 @@ $pageTitle = 'Share a Hidden Spot - Hidden Spots Finder';
 </div>
 
 <script>
-// Image upload preview
 const uploadArea = document.querySelector('.upload-area');
 const imageInput = document.getElementById('imageInput');
 const imagePreview = document.getElementById('imagePreview');

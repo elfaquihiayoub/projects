@@ -21,7 +21,7 @@ $pageTitle = 'My Places - Hidden Spots Finder';
 
 <div class="container">
     <div class="page-header">
-        <div class="flex-between">
+        <div class="flex-between" style="max-width: 800px; margin: 0 auto; text-align: left;">
             <div>
                 <h1>My Places</h1>
                 <p>Manage your shared hidden spots</p>
@@ -48,14 +48,14 @@ $pageTitle = 'My Places - Hidden Spots Finder';
                              class="place-card-img">
                     </a>
                     <div class="place-card-body">
+                        <span class="card-category"><?php echo htmlspecialchars($p['category_name'] ?? ''); ?></span>
                         <h3 class="place-card-title">
                             <a href="details.php?id=<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['name']); ?></a>
                         </h3>
                         <div class="place-card-info">
-                            <span>📍</span>
-                            <span><?php echo htmlspecialchars($p['location'] ?? 'Unknown'); ?></span>
+                            <span>&#9679;</span>
+                            <span><?php echo htmlspecialchars($p['location_name'] ?? 'Unknown'); ?></span>
                         </div>
-                        <span class="card-category mt-1"><?php echo htmlspecialchars($p['category_name'] ?? ''); ?></span>
 
                         <div style="display: flex; gap: 8px; margin-top: 12px;">
                             <a href="details.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">View</a>

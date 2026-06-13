@@ -34,56 +34,56 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
 
 <div class="container">
     <!-- Back Button -->
-    <div style="margin-bottom: 16px;">
+    <div style="margin-bottom: 20px;">
         <a href="list.php" class="btn btn-secondary btn-sm">&larr; Back to Explore</a>
     </div>
 
     <!-- Place Images Gallery -->
     <?php if (!empty($placeData['images'])): ?>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-bottom: 24px;">
+        <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px;">
             <?php foreach ($placeData['images'] as $img): ?>
                 <img src="../../<?php echo htmlspecialchars($img['image_path']); ?>"
                      alt="<?php echo htmlspecialchars($placeData['name']); ?>"
-                     style="width: 100%; height: 250px; object-fit: cover; border-radius: var(--radius-lg);">
+                     style="width: 100%; height: 280px; object-fit: cover; border-radius: var(--radius-lg);">
             <?php endforeach; ?>
         </div>
     <?php else: ?>
         <img src="../../assets/images/placeholder.jpg"
              alt="<?php echo htmlspecialchars($placeData['name']); ?>"
-             style="width: 100%; max-height: 400px; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 24px;">
+             style="width: 100%; max-height: 420px; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 32px;">
     <?php endif; ?>
 
     <!-- Place Info -->
-    <div style="display: grid; grid-template-columns: 1fr 300px; gap: 32px; margin-bottom: 32px;">
+    <div style="display: grid; grid-template-columns: 1fr 320px; gap: 40px; margin-bottom: 40px;">
         <div>
-            <h1 style="margin-bottom: 8px;"><?php echo htmlspecialchars($placeData['name']); ?></h1>
+            <h1 style="margin-bottom: 12px; font-size: 2rem;"><?php echo htmlspecialchars($placeData['name']); ?></h1>
 
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
                 <span class="card-category"><?php echo htmlspecialchars($placeData['category_name'] ?? 'Uncategorized'); ?></span>
                 <?php if ($avgRating > 0): ?>
-                    <span style="color: var(--primary); font-weight: 600;">
-                        ★ <?php echo number_format($avgRating, 1); ?>
+                    <span style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">
+                        &#9733; <?php echo number_format($avgRating, 1); ?>
                     </span>
-                    <span style="color: var(--text-muted); font-size: 0.875rem;">
+                    <span style="color: var(--text-muted); font-size: 0.85rem;">
                         (<?php echo count($reviews); ?> reviews)
                     </span>
                 <?php endif; ?>
             </div>
 
             <div class="place-card-info mb-2">
-                <span>📍</span>
+                <span>&#9679;</span>
                 <span><?php echo htmlspecialchars($placeData['location_name'] ?? 'Location not specified'); ?></span>
             </div>
 
-            <div style="background: var(--white); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); margin-top: 16px;">
+            <div class="card" style="padding: 28px; margin-top: 20px;">
                 <h3 style="margin-bottom: 12px;">About this place</h3>
-                <p style="color: var(--text-light); line-height: 1.7;">
+                <p style="color: var(--text-light); line-height: 1.8;">
                     <?php echo nl2br(htmlspecialchars($placeData['description'] ?? 'No description provided.')); ?>
                 </p>
             </div>
 
             <?php if ($isOwner): ?>
-                <div style="margin-top: 16px; display: flex; gap: 8px;">
+                <div style="margin-top: 20px; display: flex; gap: 12px;">
                     <a href="edit.php?id=<?php echo $placeId; ?>" class="btn btn-secondary">Edit Place</a>
                     <form method="POST" action="../../actions/place.php" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this place?');">
                         <input type="hidden" name="action" value="delete">
@@ -98,7 +98,7 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
         <!-- Sidebar -->
         <div>
             <!-- Favorite Button -->
-            <div style="background: var(--white); padding: 20px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); margin-bottom: 16px;">
+            <div class="card" style="padding: 24px; margin-bottom: 16px;">
                 <form method="POST" action="../../actions/favorite.php">
                     <input type="hidden" name="place_id" value="<?php echo $placeId; ?>">
                     <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
@@ -106,12 +106,12 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
                     <?php if ($isFavorite): ?>
                         <input type="hidden" name="action" value="remove">
                         <button type="submit" class="btn btn-secondary btn-full" style="color: var(--error);">
-                            ♥ Remove from Favorites
+                            &#9829; Remove from Favorites
                         </button>
                     <?php else: ?>
                         <input type="hidden" name="action" value="add">
                         <button type="submit" class="btn btn-primary btn-full">
-                            ♡ Add to Favorites
+                            &#9825; Add to Favorites
                         </button>
                     <?php endif; ?>
                 </form>
@@ -119,7 +119,7 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
 
             <!-- Location Info -->
             <?php if (!empty($placeData['latitude']) && !empty($placeData['longitude'])): ?>
-                <div style="background: var(--white); padding: 20px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card);">
+                <div class="card" style="padding: 24px;">
                     <h3 style="margin-bottom: 12px;">Location</h3>
                     <p style="color: var(--text-light); font-size: 0.875rem;">
                         Lat: <?php echo htmlspecialchars($placeData['latitude']); ?><br>
@@ -132,11 +132,11 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
 
     <!-- Reviews Section -->
     <div style="margin-top: 48px;">
-        <h2 style="margin-bottom: 24px;">Reviews</h2>
+        <h2 style="margin-bottom: 28px;">Reviews</h2>
 
         <!-- Review Form -->
-        <div style="background: var(--white); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); margin-bottom: 24px;">
-            <h3 style="margin-bottom: 16px;">Write a Review</h3>
+        <div class="card" style="padding: 28px; margin-bottom: 28px;">
+            <h3 style="margin-bottom: 20px;">Write a Review</h3>
 
             <form method="POST" action="../../actions/review.php">
                 <input type="hidden" name="action" value="save">
@@ -149,7 +149,7 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
                         <?php for ($i = 5; $i >= 1; $i--): ?>
                             <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>"
                                    <?php echo ($userReview && $userReview['rating'] == $i) ? 'checked' : ''; ?> required>
-                            <label for="star<?php echo $i; ?>">★</label>
+                            <label for="star<?php echo $i; ?>">&#9733;</label>
                         <?php endfor; ?>
                     </div>
                 </div>
@@ -178,7 +178,7 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
                             </div>
                         </div>
                         <div class="review-stars" style="margin-left: auto;">
-                            <?php echo str_repeat('★', $r['rating']) . str_repeat('☆', 5 - $r['rating']); ?>
+                            <?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?>
                         </div>
                     </div>
                     <p class="review-text"><?php echo nl2br(htmlspecialchars($r['comment'] ?? '')); ?></p>
@@ -198,5 +198,40 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
         <?php endif; ?>
     </div>
 </div>
+
+<script>
+// Star rating logic
+(function() {
+    var starsContainer = document.querySelector('.stars-input');
+    if (!starsContainer) return;
+
+    var labels = starsContainer.querySelectorAll('label');
+    var radios = starsContainer.querySelectorAll('input[name="rating"]');
+
+    function highlightStars(value) {
+        labels.forEach(function(label) {
+            var starVal = parseInt(label.getAttribute('for').replace('star', ''));
+            if (starVal <= value) {
+                label.classList.add('selected');
+            } else {
+                label.classList.remove('selected');
+            }
+        });
+    }
+
+    labels.forEach(function(label) {
+        label.addEventListener('click', function() {
+            var val = parseInt(this.getAttribute('for').replace('star', ''));
+            highlightStars(val);
+        });
+    });
+
+    radios.forEach(function(radio) {
+        if (radio.checked) {
+            highlightStars(parseInt(radio.value));
+        }
+    });
+})();
+</script>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

@@ -36,6 +36,11 @@ if ($action === "remove") {
     $favorite->remove($user_id, $place_id);
 }
 
-//  redirect back to place details
-header("Location: ../pages/places/details.php?id=" . intval($place_id));
+//  redirect back to the referring page
+$_referer = $_SERVER['HTTP_REFERER'] ?? '../pages/home.php';
+// If referer is the favorite action itself, fall back to home
+if (strpos($_referer, 'favorite.php') !== false) {
+    $_referer = '../pages/home.php';
+}
+header("Location: " . $_referer);
 exit;

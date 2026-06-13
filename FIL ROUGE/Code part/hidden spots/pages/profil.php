@@ -19,6 +19,7 @@ $myFavorites = $favorite->getUserFavorites($userId);
 
 $pageTitle = 'My Profile - Hidden Spots Finder';
 ?>
+
 <?php require_once __DIR__ . '/../includes/header.php'; ?>
 
 <div class="container">
@@ -44,7 +45,7 @@ $pageTitle = 'My Profile - Hidden Spots Finder';
     </div>
 
     <!-- Quick Actions -->
-    <div style="display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;">
+    <div style="display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; justify-content: center;">
         <a href="profile/edit.php" class="btn btn-secondary">Edit Profile</a>
         <a href="places/add.php" class="btn btn-primary">+ Share New Spot</a>
     </div>
@@ -62,7 +63,7 @@ $pageTitle = 'My Profile - Hidden Spots Finder';
                 <?php foreach ($myPlaces as $p): ?>
                     <div class="place-card">
                         <a href="places/details.php?id=<?php echo $p['id']; ?>">
-                            <img src="<?php echo !empty($p['image']) ? '' . htmlspecialchars($p['image']) : 'assets/images/placeholder.jpg'; ?>"
+                            <img src="<?php echo !empty($p['image']) ? '../' . htmlspecialchars($p['image']) : '../assets/images/placeholder.jpg'; ?>"
                                  alt="<?php echo htmlspecialchars($p['name']); ?>"
                                  class="place-card-img">
                         </a>
@@ -71,8 +72,8 @@ $pageTitle = 'My Profile - Hidden Spots Finder';
                                 <a href="places/details.php?id=<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['name']); ?></a>
                             </h3>
                             <div class="place-card-info">
-                                <span>📍</span>
-                                <span><?php echo htmlspecialchars($p['location'] ?? 'Unknown'); ?></span>
+                                <span>&#9679;</span>
+                                <span><?php echo htmlspecialchars($p['location_name'] ?? 'Unknown'); ?></span>
                             </div>
                             <div style="display: flex; gap: 8px; margin-top: 12px;">
                                 <a href="places/edit.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
@@ -103,7 +104,7 @@ $pageTitle = 'My Profile - Hidden Spots Finder';
                 <?php foreach ($myFavorites as $fav): ?>
                     <div class="place-card">
                         <a href="places/details.php?id=<?php echo $fav['id']; ?>">
-                            <img src="<?php echo !empty($fav['image']) ? '' . htmlspecialchars($fav['image']) : 'assets/images/placeholder.jpg'; ?>"
+                            <img src="<?php echo !empty($fav['image']) ? '../' . htmlspecialchars($fav['image']) : '../assets/images/placeholder.jpg'; ?>"
                                  alt="<?php echo htmlspecialchars($fav['name']); ?>"
                                  class="place-card-img">
                         </a>
@@ -112,8 +113,8 @@ $pageTitle = 'My Profile - Hidden Spots Finder';
                                 <a href="places/details.php?id=<?php echo $fav['id']; ?>"><?php echo htmlspecialchars($fav['name']); ?></a>
                             </h3>
                             <div class="place-card-info">
-                                <span>📍</span>
-                                <span><?php echo htmlspecialchars($fav['location'] ?? 'Unknown'); ?></span>
+                                <span>&#9679;</span>
+                                <span><?php echo htmlspecialchars($fav['location_name'] ?? 'Unknown'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -130,18 +131,22 @@ $pageTitle = 'My Profile - Hidden Spots Finder';
 
 <script>
 function showTab(tabName) {
-    // Hide all tab content
     document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-
-    // Remove active class from all tabs
     document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-
-    // Show selected tab
     document.getElementById(tabName + '-tab').style.display = 'block';
-
-    // Add active class to clicked tab
     event.target.classList.add('active');
 }
+
+// Auto-open favorites tab if URL has #favorites hash
+(function() {
+    if (window.location.hash === '#favorites') {
+        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+        document.getElementById('favorites-tab').style.display = 'block';
+        var tabs = document.querySelectorAll('.tab');
+        if (tabs[1]) tabs[1].classList.add('active');
+    }
+})();
 </script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

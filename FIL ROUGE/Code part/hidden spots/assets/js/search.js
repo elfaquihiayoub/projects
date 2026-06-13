@@ -69,14 +69,14 @@ function displayResults(places) {
                      class="place-card-img">
             </a>
             <div class="place-card-body">
+                <span class="card-category">${escapeHtml(place.category_name || '')}</span>
                 <h3 class="place-card-title">
                     <a href="details.php?id=${escapeHtml(place.id)}">${escapeHtml(place.name)}</a>
                 </h3>
                 <div class="place-card-info">
-                    <span>📍</span>
+                    <span>&#9679;</span>
                     <span>${escapeHtml(place.location_name || 'Unknown')}</span>
                 </div>
-                <span class="card-category mt-1">${escapeHtml(place.category_name || '')}</span>
             </div>
         </div>
     `).join('');
@@ -84,7 +84,8 @@ function displayResults(places) {
 
 // Escape HTML to prevent XSS
 function escapeHtml(text) {
-    if (!text) return '';
+    if (text == null || text === '') return '';
+    const str = String(text);
     const map = {
         '&': '&amp;',
         '<': '&lt;',
@@ -92,5 +93,5 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    return str.replace(/[&<>"']/g, m => map[m]);
 }

@@ -101,7 +101,7 @@ if (isset($_POST['action']) && $_POST['action'] === "add") {
 if (isset($_POST['action']) && $_POST['action'] === "update") {
     requireCsrfToken('../pages/places/list.php');
 
-    $id = $_POST['id'] ?? null;
+    $id = $_POST['place_id'] ?? null;
 
     $category_id   = $_POST['category_id'] ?? null;
     $name          = trim($_POST['name'] ?? '');
@@ -182,7 +182,7 @@ if (isset($_POST['action']) && $_POST['action'] === "update") {
 if (isset($_POST['action']) && $_POST['action'] === "delete") {
     requireCsrfToken('../pages/places/list.php');
 
-    $id = $_POST['id'] ?? null;
+    $id = $_POST['place_id'] ?? null;
 
     if (!$id) {
         header("Location: ../pages/places/list.php");

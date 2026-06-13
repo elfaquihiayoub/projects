@@ -2,12 +2,8 @@
 $pageTitle = isset($pageTitle) ? $pageTitle : 'Hidden Spots Finder';
 
 // Auto-compute relative path from current page to project root
-// header.php is in: project_root/includes/header.php
-// So __DIR__ = project_root/includes
-// We need to go up 1 level from there to reach project_root
 $_rootPath = dirname(__DIR__) . '/';
 
-// Compute the relative path from the current script's directory to project root
 $_scriptDir = dirname($_SERVER['SCRIPT_FILENAME']) . '/';
 $_rootNormalized = str_replace('\\', '/', $_rootPath);
 $_scriptNormalized = str_replace('\\', '/', $_scriptDir);
@@ -19,6 +15,10 @@ if (strpos($_scriptNormalized, $_rootNormalized) === 0) {
 } else {
     $base = '';
 }
+
+// Determine active page for nav highlighting
+$_currentPage = basename($_SERVER['SCRIPT_FILENAME'], '.php');
+$_currentDir = basename(dirname($_SERVER['SCRIPT_FILENAME']));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,13 +27,15 @@ if (strpos($_scriptNormalized, $_rootNormalized) === 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
     <link rel="stylesheet" href="<?php echo $base; ?>assets/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <nav class="navbar">
     <div class="nav-container">
-        <a href="<?php echo $base; ?>pages/home.php" class="nav-logo">Hidden Spots</a>
+        <a href="<?php echo $base; ?>pages/home.php" class="nav-logo">
+            Hidden Spots Finder
+        </a>
 
         <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')" aria-label="Toggle menu">
             <span></span>
@@ -43,16 +45,21 @@ if (strpos($_scriptNormalized, $_rootNormalized) === 0) {
 
         <ul class="nav-links">
             <?php if (isset($_SESSION['user_id'])): ?>
-                <li><a href="<?php echo $base; ?>pages/home.php">Home</a></li>
-                <li><a href="<?php echo $base; ?>pages/places/list.php">Explore</a></li>
-                <li><a href="<?php echo $base; ?>pages/places/add.php">Share a Spot</a></li>
-                <li><a href="<?php echo $base; ?>pages/profil.php">Profile</a></li>
-                <li><a href="<?php echo $base; ?>actions/logout.php">Logout</a></li>
-            <?php else: ?>
-                <li><a href="<?php echo $base; ?>pages/auth/login.php">Login</a></li>
-                <li><a href="<?php echo $base; ?>pages/auth/register.php">Register</a></li>
+                <li><a href="<?php echo $base; ?>pages/home.php" class="<?php echo ($_currentPage === 'home') ? 'active' : ''; ?>">Home</a></li>
+                <li><a href="<?php echo $base; ?>pages/places/list.php" class="<?php echo ($_currentDir === 'places' && $_currentPage === 'list') ? 'active' : ''; ?>">Places</a></li>
+                <li><a href="<?php echo $base; ?>pages/places/add.php" class="<?php echo ($_currentDir === 'places' && $_currentPage === 'add') ? 'active' : ''; ?>">Add Place</a></li>
+                <li><a href="<?php echo $base; ?>pages/profil.php#favorites" class="<?php echo ($_currentPage === 'profil') ? 'active' : ''; ?>">Favorites</a></li>
+                <li><a href="<?php echo $base; ?>pages/profil.php" class="<?php echo ($_currentPage === 'profil') ? 'active' : ''; ?>">Profile</a></li>
             <?php endif; ?>
         </ul>
+
+        <div class="nav-right">
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="<?php echo $base; ?>actions/logout.php" class="nav-signin-btn" style="background:transparent;color:var(--text-light);border:1px solid var(--border);">Logout</a>
+            <?php else: ?>
+                <a href="<?php echo $base; ?>pages/auth/login.php" class="nav-signin-btn">Sign In</a>
+            <?php endif; ?>
+        </div>
     </div>
 </nav>
 
