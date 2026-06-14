@@ -1,5 +1,5 @@
 <?php
-$pageTitle = isset($pageTitle) ? $pageTitle : 'Hidden Spots Finder';
+$pageTitle = isset($pageTitle) ? $pageTitle : 'HiddenSpots';
 
 // Auto-compute relative path from current page to project root
 $_rootPath = dirname(__DIR__) . '/';
@@ -34,28 +34,32 @@ $_currentDir = basename(dirname($_SERVER['SCRIPT_FILENAME']));
 <nav class="navbar">
     <div class="nav-container">
         <a href="<?php echo $base; ?>pages/home.php" class="nav-logo">
-            Hidden Spots Finder
+            <img src="<?php echo $base; ?>assets/images/logo.png" alt="HiddenSpots" class="nav-logo-img">
         </a>
 
-        <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')" aria-label="Toggle menu">
+        <button class="nav-toggle" aria-label="Toggle menu">
             <span></span>
             <span></span>
             <span></span>
         </button>
+
+        <div class="nav-overlay"></div>
 
         <ul class="nav-links">
             <?php if (isset($_SESSION['user_id'])): ?>
                 <li><a href="<?php echo $base; ?>pages/home.php" class="<?php echo ($_currentPage === 'home') ? 'active' : ''; ?>">Home</a></li>
                 <li><a href="<?php echo $base; ?>pages/places/list.php" class="<?php echo ($_currentDir === 'places' && $_currentPage === 'list') ? 'active' : ''; ?>">Places</a></li>
                 <li><a href="<?php echo $base; ?>pages/places/add.php" class="<?php echo ($_currentDir === 'places' && $_currentPage === 'add') ? 'active' : ''; ?>">Add Place</a></li>
-                <li><a href="<?php echo $base; ?>pages/profil.php#favorites" class="<?php echo ($_currentPage === 'profil') ? 'active' : ''; ?>">Favorites</a></li>
                 <li><a href="<?php echo $base; ?>pages/profil.php" class="<?php echo ($_currentPage === 'profil') ? 'active' : ''; ?>">Profile</a></li>
+                <li class="nav-mobile-logout">
+                    <a href="<?php echo $base; ?>actions/logout.php" class="nav-mobile-logout-btn">Logout</a>
+                </li>
             <?php endif; ?>
         </ul>
 
         <div class="nav-right">
             <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="<?php echo $base; ?>actions/logout.php" class="nav-signin-btn" style="background:transparent;color:var(--text-light);border:1px solid var(--border);">Logout</a>
+                <a href="<?php echo $base; ?>actions/logout.php" class="nav-signin-btn btn-logout">Logout</a>
             <?php else: ?>
                 <a href="<?php echo $base; ?>pages/auth/login.php" class="nav-signin-btn">Sign In</a>
             <?php endif; ?>

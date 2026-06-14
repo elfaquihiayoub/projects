@@ -63,7 +63,7 @@ function displayResults(places) {
 
     placesGrid.innerHTML = places.map(place => `
         <div class="place-card" data-category="${escapeHtml(place.category_id)}">
-            <a href="details.php?id=${escapeHtml(place.id)}">
+            <a href="details.php?id=${escapeHtml(place.id)}" class="place-card-image-link">
                 <img src="${place.image ? '../../' + escapeHtml(place.image) : '../../assets/images/placeholder.jpg'}"
                      alt="${escapeHtml(place.name)}"
                      class="place-card-img">
@@ -74,12 +74,21 @@ function displayResults(places) {
                     <a href="details.php?id=${escapeHtml(place.id)}">${escapeHtml(place.name)}</a>
                 </h3>
                 <div class="place-card-info">
-                    <span>&#9679;</span>
-                    <span>${escapeHtml(place.location_name || 'Unknown')}</span>
+                    <span class="location-dot">&#9679;</span>
+                    <span class="location-text">${escapeHtml(place.location_name || 'Unknown')}</span>
                 </div>
             </div>
         </div>
     `).join('');
+
+    // Trigger reveal transitions for dynamic cards
+    document.querySelectorAll('#placesGrid .place-card').forEach(el => {
+        el.classList.add('reveal-item');
+        // Instantly trigger observation or delay transition slightly for cascading effect
+        setTimeout(() => {
+            el.classList.add('revealed');
+        }, 50);
+    });
 }
 
 // Escape HTML to prevent XSS

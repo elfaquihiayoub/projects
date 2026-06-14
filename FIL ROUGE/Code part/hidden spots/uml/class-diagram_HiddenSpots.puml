@@ -1,0 +1,174 @@
+@startuml ClassDiagram_HiddenSpots
+
+title Diagramme de Classes — Hidden Spots Finder
+
+' === STYLE ===
+skinparam {
+    BackgroundColor white
+    RoundCorner 10
+    ArrowColor #2C3E50
+    ClassBackgroundColor #EBF5FB
+    ClassBorderColor #2980B9
+    ClassHeaderBackgroundColor #2980B9
+    ClassFontColor #2C3E50
+    ClassStereotypeFontColor white
+    PackageBackgroundColor #F8F9F9
+    PackageBorderColor #BDC3C7
+}
+
+' =====================================================
+' CLASSES INFRASTRUCTURE
+' =====================================================
+
+class Database {
+    - {static} instance : Database
+    - connection : PDO
+    - host : string
+    - dbname : string
+    - username : string
+    - password : string
+    --
+    - __construct()
+    + {static} getInstance() : Database
+    + getConnection() : PDO
+}
+
+' =====================================================
+' CLASSES METIER (MODELES)
+' =====================================================
+
+class User {
+    - DbConn : PDO
+    --
+    + __construct()
+    + findByEmail(email : string) : array|false
+    + findById(id : int) : array|false
+    + findByUsername(username : string) : array|false
+    + register(username : string, email : string, password : string) : array
+    + login(email : string, password : string) : array
+    + updateProfile(id : int, username : string, email : string) : array
+    + updatePassword(id : int, current : string, new : string) : array
+}
+
+class Place {
+    - DbConn : PDO
+    --
+    + __construct()
+    + getAllPlaces(page : int, perPage : int) : array
+    + countAllPlaces() : int
+    + getAllCategories() : array
+    + getPlaceById(id : int) : array|null
+    + getPlacesByUser(user_id : int, page : int, perPage : int) : array
+    + countPlacesByUser(user_id : int) : int
+    + isOwner(place_id : int, user_id : int) : bool
+    + create(user_id, category_id, name, description, location_name, lat, lng) : int
+    + update(id, category_id, name, description, location_name, lat, lng) : bool
+    + addImage(place_id : int, image_path : string) : bool
+    + countImages(place_id : int) : int
+    + deleteImage(place_id : int, image_path : string) : bool
+    + deleteImages(place_id : int) : bool
+    + delete(id : int) : bool
+    + search(keyword : string, category_id : int, limit : int) : array
+}
+
+class Review {
+    - conn : PDO
+    --
+    + __construct()
+    + save(user_id : int, place_id : int, rating : int, comment : string) : bool
+    + delete(user_id : int, place_id : int) : bool
+    + getByPlace(place_id : int) : array
+    + getUserReview(user_id : int, place_id : int) : array|false
+    + getAverageRating(place_id : int) : float
+}
+
+class Favorite {
+    - DbConn : PDO
+    --
+    + __construct()
+    + isFavorite(user_id : int, place_id : int) : bool
+    + add(user_id : int, place_id : int) : bool
+    + remove(user_id : int, place_id : int) : bool
+    + getUserFavorites(user_id : int) : array
+}
+
+' =====================================================
+' PAGES FRONT (VUE PUBLIQUE)
+' =====================================================
+
+package "Pages Publiques" as FrontPkg #D5F5E3 {
+    class "home.php" as Home <<page>>
+    class "places/list.php" as PlaceList <<page>>
+    class "places/details.php" as PlaceDetail <<page>>
+    class "auth/login.php" as Login <<page>>
+    class "auth/register.php" as Register <<page>>
+}
+
+' =====================================================
+' PAGES UTILISATEUR AUTHENTIFIE
+' =====================================================
+
+package "Pages Utilisateur" as UserPkg #FFF9C4 {
+    class "places/add.php" as PlaceAdd <<page>>
+    class "places/edit.php" as PlaceEdit <<page>>
+    class "places/user_places.php" as MyPlaces <<page>>
+    class "profil.php" as Profil <<page>>
+    class "pages/profile/*.php" as ProfilePages <<groupe>>
+}
+
+' =====================================================
+' ACTIONS / API
+' =====================================================
+
+package "Actions / API" as ApiPkg #F5EEF8 {
+    class "actions/auth.php" as AuthAction <<action>>
+    class "actions/place.php" as PlaceAction <<action>>
+    class "actions/review.php" as ReviewAction <<action>>
+    class "actions/favorite.php" as FavAction <<action>>
+    class "actions/profile.php" as ProfileAction <<action>>
+    class "actions/search_api.php" as SearchApi <<action>>
+}
+
+' =====================================================
+' RELATIONS
+' =====================================================
+
+Database --> PDO : crée
+User --> PDO : utilise
+Place --> PDO : utilise
+Review --> PDO : utilise
+Favorite --> PDO : utilise
+
+FrontPkg --> Database : utilise
+FrontPkg --> Place : lit (liste, détail, recherche)
+FrontPkg --> Review : lit (avis, moyenne)
+FrontPkg --> User : lit (connexion, inscription)
+
+UserPkg --> Database : utilise
+UserPkg --> Place : crée / modifie / supprime
+UserPkg --> Favorite : gère (add, remove, list)
+UserPkg --> User : met à jour (profil, mdp)
+
+ApiPkg --> Database : utilise
+ApiPkg --> User : register, login
+ApiPkg --> Place : create, update, delete
+ApiPkg --> Review : save, delete
+ApiPkg --> Favorite : add, remove
+ApiPkg --> Place : search
+
+note bottom of Place
+  Toutes les méthodes utilisent
+  des Prepared Statements PDO.
+  Pagination côté serveur (LIMIT / OFFSET).
+  Upload d'images dans /uploads/.
+end note
+
+legend bottom
+  |= Symbole |= Sens |
+  | --> | Dépendance / Utilise |
+  | PDO | Classe native PHP (ext. pdo_mysql) |
+  | Database | Singleton — connexion unique |
+  | Place / User / Review / Favorite | Modèles CRUD |
+end legend
+
+@enduml

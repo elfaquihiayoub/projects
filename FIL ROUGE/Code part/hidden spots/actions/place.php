@@ -70,7 +70,7 @@ if (isset($_POST['action']) && $_POST['action'] === "add") {
                 continue;
             }
 
-            $fileName = time() . "_" . $_FILES['images']['name'][$key];
+            $fileName = time() . "_" . $imageCount . "_" . $_FILES['images']['name'][$key];
             $targetFile = $uploadDir . $fileName;
 
             $ext = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
@@ -151,7 +151,7 @@ if (isset($_POST['action']) && $_POST['action'] === "update") {
                 continue;
             }
 
-            $fileName = time() . "_" . $_FILES['images']['name'][$key];
+            $fileName = time() . "_" . $newCount . "_" . $_FILES['images']['name'][$key];
             $targetFile = $uploadDir . $fileName;
 
             $ext = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));

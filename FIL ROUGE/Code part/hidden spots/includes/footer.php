@@ -20,8 +20,8 @@ if (!isset($base)) {
     <div class="container">
         <div class="footer-content">
             <div class="footer-brand">
-                <h3>Hidden Spots Finder</h3>
-                <p>&copy; <?php echo date('Y'); ?> Hidden Spots Finder. Curated Serenity for Urban Explorers.</p>
+                <img src="<?php echo $base; ?>assets/images/logo.png" alt="HiddenSpots" class="footer-logo">
+                <p>&copy; <?php echo date('Y'); ?> HiddenSpots. Find &bull; Explore &bull; Share.</p>
             </div>
 
             <div class="footer-links">
@@ -75,5 +75,6 @@ if (!isset($base)) {
     </div>
 </footer>
 
+<script src="<?php echo $base; ?>assets/js/main.js"></script>
 </body>
 </html>

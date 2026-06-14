@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../includes/auth_check.php';
 require_once __DIR__ . '/../../includes/csrf.php';
 
-$pageTitle = 'Edit Profile - Hidden Spots Finder';
+$pageTitle = 'Edit Profile - HiddenSpots';
 ?>
 <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 

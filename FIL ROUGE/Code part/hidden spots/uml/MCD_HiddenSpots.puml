@@ -1,0 +1,101 @@
+@startuml MCD_HiddenSpots
+
+title MCD — Modèle Conceptuel de Données\nHidden Spots Finder
+
+skinparam {
+    BackgroundColor white
+    RoundCorner 10
+    ArrowColor #2C3E50
+    EntityBackgroundColor #FEF9E7
+    EntityBorderColor #F39C12
+    EntityFontColor #2C3E50
+    NoteBackgroundColor #E8F8F5
+    NoteBorderColor #1ABC9C
+}
+
+' =====================================================
+' ENTITES
+' =====================================================
+
+entity "Utilisateur" as User {
+    * **username** : VARCHAR(25)
+    --
+    email : VARCHAR(60)
+    password : VARCHAR(60)
+    birthday : DATETIME
+    created_at : TIMESTAMP
+}
+
+entity "Lieu" as Place {
+    * **id** : INTEGER
+    --
+    name : VARCHAR(50)
+    description : TEXT
+    location_name : VARCHAR(200)
+    latitude : DECIMAL(10,8)
+    longitude : DECIMAL(11,8)
+    created_at : TIMESTAMP
+}
+
+entity "Categorie" as Category {
+    * **id** : INTEGER
+    --
+    name : VARCHAR(30)
+}
+
+entity "Image" as Image {
+    * **id** : INTEGER
+    --
+    image_path : VARCHAR(255)
+}
+
+entity "Avis" as Review {
+    * **id** : INTEGER
+    --
+    rating : INTEGER(1..5)
+    comment : TEXT
+    created_at : TIMESTAMP
+}
+
+entity "Favori" as Favorite {
+    * **id** : INTEGER
+    --
+    (clé unique : user + lieu)
+}
+
+' =====================================================
+' ASSOCIATIONS & CARDINALITES
+' =====================================================
+
+User ||--o{ Place : "publie"
+
+Place }o--|| Category : "appartient à"
+
+Place ||--o{ Image : "possède"
+
+User ||--o{ Review : "rédige"
+
+Place ||--o{ Review : "reçoit"
+
+User ||--o{ Favorite : "enregistre"
+
+Place ||--o{ Favorite : "est mis en favori"
+
+note right of Place
+  **Contraintes métier**
+  - Un lieu appartient à une seule catégorie
+  - Un lieu peut avoir plusieurs images
+  - Un utilisateur peut ajouter
+    plusieurs lieux (spots cachés)
+  - Suppression en CASCADE depuis users
+end note
+
+note right of Review
+  **Contrainte d'unicité**
+  - UNIQUE (user_id, place_id)
+  - Un utilisateur ne peut laisser
+    qu'un seul avis par lieu
+  - Upsert via ON DUPLICATE KEY UPDATE
+end note
+
+@enduml

@@ -1,0 +1,123 @@
+@startuml SequenceDiagram_Auth
+
+title Diagramme de Séquence — Authentification (Inscription & Connexion)\nHidden Spots Finder
+
+skinparam {
+    BackgroundColor white
+    RoundCorner 10
+    ArrowColor #2C3E50
+    SequenceLifeLineBorderColor #2980B9
+    SequenceParticipantBackgroundColor #D6EAF8
+    SequenceParticipantBorderColor #2980B9
+    SequenceParticipantFontColor #2C3E50
+    SequenceGroupBackgroundColor #F8F9F9
+    SequenceGroupBorderColor #BDC3C7
+    NoteBackgroundColor #E8F8F5
+    NoteBorderColor #1ABC9C
+    ActorBackgroundColor #ECF0F1
+    ActorBorderColor #2980B9
+}
+
+actor "Visiteur" as V
+participant "auth/register.php\n/ auth/login.php" as AuthPage <<page>>
+participant "actions/auth.php" as AuthAction <<action>>
+participant "User" as UserClass <<classe>>
+participant "Database" as DB <<singleton>>
+participant "MySQL" as MySQL <<SGBD>>
+
+' =====================================================
+' SEQUENCE INSCRIPTION
+' =====================================================
+
+group Inscription (Register)
+
+    V -> AuthPage : GET /pages/auth/register.php
+    activate AuthPage
+    AuthPage --> V : Formulaire d'inscription\n(username, email, password)
+    deactivate AuthPage
+
+    V -> AuthAction : POST /actions/auth.php\n{action: register, username, email, password}
+    activate AuthAction
+
+    AuthAction -> UserClass : new User()
+    activate UserClass
+    UserClass -> DB : getInstance()->getConnection()
+    activate DB
+    DB --> UserClass : PDO $conn
+    deactivate DB
+
+    AuthAction -> UserClass : register(username, email, password)
+    UserClass -> UserClass : findByEmail(email)
+    UserClass -> MySQL : SELECT * FROM users WHERE email = :email
+    MySQL --> UserClass : row | false
+
+    alt Email déjà existant
+        UserClass --> AuthAction : {success: false,\nmessage: "Email already exists"}
+        AuthAction --> V : JSON {success: false, message: "..."}
+    else Email disponible
+        UserClass -> UserClass : password_hash(password, PASSWORD_DEFAULT)
+        UserClass -> MySQL : INSERT INTO users\n(username, email, password)
+        MySQL --> UserClass : bool true
+        UserClass --> AuthAction : {success: true}
+        deactivate UserClass
+        AuthAction --> V : JSON {success: true}
+        deactivate AuthAction
+        V -> AuthPage : Redirection vers login.php
+    end
+
+end
+
+' =====================================================
+' SEQUENCE CONNEXION
+' =====================================================
+
+group Connexion (Login)
+
+    V -> AuthPage : GET /pages/auth/login.php
+    activate AuthPage
+    AuthPage --> V : Formulaire de connexion\n(email, password)
+    deactivate AuthPage
+
+    V -> AuthAction : POST /actions/auth.php\n{action: login, email, password}
+    activate AuthAction
+
+    AuthAction -> UserClass : new User()
+    activate UserClass
+    UserClass -> DB : getInstance()->getConnection()
+    activate DB
+    DB --> UserClass : PDO $conn
+    deactivate DB
+
+    AuthAction -> UserClass : login(email, password)
+    UserClass -> UserClass : findByEmail(email)
+    UserClass -> MySQL : SELECT * FROM users WHERE email = :email
+    MySQL --> UserClass : $user | false
+
+    alt Utilisateur introuvable
+        UserClass --> AuthAction : {success: false,\nmessage: "User not found"}
+        AuthAction --> V : JSON {success: false, message: "..."}
+    else Utilisateur trouvé
+        UserClass -> UserClass : password_verify(password, $user['password'])
+        alt Mot de passe incorrect
+            UserClass --> AuthAction : {success: false,\nmessage: "Incorrect password"}
+            AuthAction --> V : JSON {success: false, message: "..."}
+        else Connexion réussie
+            UserClass --> AuthAction : {success: true, user: $user}
+            deactivate UserClass
+            AuthAction -> AuthAction : session_start()\n$_SESSION['user_id'] = $user['id']\n$_SESSION['username'] = $user['username']
+            AuthAction --> V : JSON {success: true}
+            deactivate AuthAction
+            V -> AuthPage : Redirection vers home.php
+            note right of V
+              Session PHP active.
+              Accès aux fonctionnalités :
+              - Publication de spots
+              - Avis & Favoris
+              - Gestion du profil
+            end note
+        end
+    end
+
+end
+
+@enduml

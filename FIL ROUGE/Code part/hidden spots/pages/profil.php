@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . '/../includes/auth_check.php';
 require_once __DIR__ . '/../classes/Place.php';
+require_once __DIR__ . '/../classes/Review.php';
 require_once __DIR__ . '/../classes/favorite.php';
 
 $place = new Place();
+$review = new Review();
 $favorite = new Favorite();
 
 $userId = $_SESSION['user_id'];
@@ -17,7 +19,7 @@ $myPlacesCount = $place->countPlacesByUser($userId);
 // Get user's favorites
 $myFavorites = $favorite->getUserFavorites($userId);
 
-$pageTitle = 'My Profile - Hidden Spots Finder';
+$pageTitle = 'My Profile - HiddenSpots';
 ?>
 
 <?php require_once __DIR__ . '/../includes/header.php'; ?>
@@ -45,7 +47,7 @@ $pageTitle = 'My Profile - Hidden Spots Finder';
     </div>
 
     <!-- Quick Actions -->
-    <div style="display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; justify-content: center;">
+    <div class="profile-actions">
         <a href="profile/edit.php" class="btn btn-secondary">Edit Profile</a>
         <a href="places/add.php" class="btn btn-primary">+ Share New Spot</a>
     </div>
@@ -74,6 +76,8 @@ $pageTitle = 'My Profile - Hidden Spots Finder';
                             <div class="place-card-info">
                                 <span>&#9679;</span>
                                 <span><?php echo htmlspecialchars($p['location_name'] ?? 'Unknown'); ?></span>
+                                <?php $avgR = $review->getAverageRating($p['id']); ?>
+                                <span style="margin-left:auto;">&#9733; <?php echo $avgR > 0 ? number_format($avgR, 1) : '—'; ?></span>
                             </div>
                             <div style="display: flex; gap: 8px; margin-top: 12px;">
                                 <a href="places/edit.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
@@ -115,6 +119,8 @@ $pageTitle = 'My Profile - Hidden Spots Finder';
                             <div class="place-card-info">
                                 <span>&#9679;</span>
                                 <span><?php echo htmlspecialchars($fav['location_name'] ?? 'Unknown'); ?></span>
+                                <?php $avgR = $review->getAverageRating($fav['id']); ?>
+                                <span style="margin-left:auto;">&#9733; <?php echo $avgR > 0 ? number_format($avgR, 1) : '—'; ?></span>
                             </div>
                         </div>
                     </div>
@@ -131,20 +137,32 @@ $pageTitle = 'My Profile - Hidden Spots Finder';
 
 <script>
 function showTab(tabName) {
-    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-    document.getElementById(tabName + '-tab').style.display = 'block';
-    event.target.classList.add('active');
+    if (typeof window.showTabPremium === 'function') {
+        window.showTabPremium(tabName, event);
+    } else {
+        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabName + '-tab').style.display = 'block';
+        if (event && event.target) event.target.classList.add('active');
+    }
 }
 
 // Auto-open favorites tab if URL has #favorites hash
 (function() {
     if (window.location.hash === '#favorites') {
-        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-        document.getElementById('favorites-tab').style.display = 'block';
-        var tabs = document.querySelectorAll('.tab');
-        if (tabs[1]) tabs[1].classList.add('active');
+        setTimeout(function() {
+            var tabs = document.querySelectorAll('.tab');
+            if (tabs[1]) {
+                if (typeof window.showTabPremium === 'function') {
+                    window.showTabPremium('favorites', { currentTarget: tabs[1], target: tabs[1] });
+                } else {
+                    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+                    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+                    document.getElementById('favorites-tab').style.display = 'block';
+                    tabs[1].classList.add('active');
+                }
+            }
+        }, 100);
     }
 })();
 </script>

@@ -1,8 +1,10 @@
 <?php
 require_once __DIR__ . '/../../includes/auth_check.php';
 require_once __DIR__ . '/../../classes/Place.php';
+require_once __DIR__ . '/../../classes/Review.php';
 
 $place = new Place();
+$review = new Review();
 $categories = $place->getAllCategories();
 
 // Get current page number
@@ -20,7 +22,7 @@ if (!empty($keyword) || (!empty($category_id) && $category_id !== 'all')) {
     $places = $place->getAllPlaces($page, $placesPerPage);
 }
 
-$pageTitle = 'Explore Places - Hidden Spots Finder';
+$pageTitle = 'Explore Places - HiddenSpots';
 ?>
 <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
@@ -64,6 +66,8 @@ $pageTitle = 'Explore Places - Hidden Spots Finder';
                         <div class="place-card-info">
                             <span>&#9679;</span>
                             <span><?php echo htmlspecialchars($p['location_name'] ?? 'Unknown'); ?></span>
+                            <?php $avgR = $review->getAverageRating($p['id']); ?>
+                            <span style="margin-left:auto;">&#9733; <?php echo $avgR > 0 ? number_format($avgR, 1) : '—'; ?></span>
                         </div>
                     </div>
                 </div>

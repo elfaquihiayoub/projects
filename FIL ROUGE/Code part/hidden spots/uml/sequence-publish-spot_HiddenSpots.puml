@@ -1,0 +1,97 @@
+@startuml SequenceDiagram_PublishSpot
+
+title Diagramme de Séquence — Publication d'un Spot\nHidden Spots Finder
+
+skinparam {
+    BackgroundColor white
+    RoundCorner 10
+    ArrowColor #2C3E50
+    SequenceLifeLineBorderColor #2980B9
+    SequenceParticipantBackgroundColor #D6EAF8
+    SequenceParticipantBorderColor #2980B9
+    SequenceParticipantFontColor #2C3E50
+    SequenceGroupBackgroundColor #F8F9F9
+    SequenceGroupBorderColor #BDC3C7
+    NoteBackgroundColor #E8F8F5
+    NoteBorderColor #1ABC9C
+    ActorBackgroundColor #ECF0F1
+    ActorBorderColor #2980B9
+}
+
+actor "Utilisateur\nAuthentifié" as U
+participant "places/add.php" as AddPage <<page>>
+participant "actions/place.php" as PlaceAction <<action>>
+participant "Place" as PlaceClass <<classe>>
+participant "Database" as DB <<singleton>>
+participant "MySQL" as MySQL <<SGBD>>
+
+' =====================================================
+' SEQUENCE PRINCIPALE
+' =====================================================
+
+U -> AddPage : GET /pages/places/add.php
+activate AddPage
+
+AddPage -> PlaceClass : new Place()
+activate PlaceClass
+PlaceClass -> DB : getInstance()->getConnection()
+activate DB
+DB --> PlaceClass : PDO $conn
+deactivate DB
+PlaceClass -> PlaceClass : getAllCategories()
+PlaceClass -> MySQL : SELECT * FROM categories
+MySQL --> PlaceClass : [liste catégories]
+PlaceClass --> AddPage : array $categories
+deactivate PlaceClass
+
+AddPage --> U : Formulaire HTML\n(nom, description, localisation, catégorie, images)
+deactivate AddPage
+
+U -> PlaceAction : POST /actions/place.php\n{action: create, name, description, ...}
+activate PlaceAction
+
+group Validation des données
+    PlaceAction -> PlaceAction : Vérifier session active\n(isset $_SESSION['user_id'])
+    alt Session invalide
+        PlaceAction --> U : JSON {success: false,\nmessage: "Non authentifié"}
+    end
+    PlaceAction -> PlaceAction : Valider champs obligatoires\n(name, category_id, location_name)
+end
+
+PlaceAction -> PlaceClass : new Place()
+activate PlaceClass
+PlaceClass -> DB : getInstance()->getConnection()
+activate DB
+DB --> PlaceClass : PDO $conn
+deactivate DB
+
+PlaceAction -> PlaceClass : create(user_id, category_id, name, description,\nlocation_name, latitude, longitude)
+PlaceClass -> MySQL : INSERT INTO places (...)
+MySQL --> PlaceClass : last_insert_id()
+PlaceClass --> PlaceAction : int $place_id
+deactivate PlaceClass
+
+group Upload des images
+    loop Pour chaque fichier image
+        PlaceAction -> PlaceAction : Valider type MIME\n(image/jpeg, image/png)
+        PlaceAction -> PlaceAction : move_uploaded_file()\nvers /uploads/
+        PlaceAction -> PlaceClass : addImage(place_id, image_path)
+        activate PlaceClass
+        PlaceClass -> MySQL : INSERT INTO place_images (...)
+        MySQL --> PlaceClass : bool
+        PlaceClass --> PlaceAction : bool
+        deactivate PlaceClass
+    end
+end
+
+PlaceAction --> U : JSON {success: true,\nplace_id: $place_id}
+deactivate PlaceAction
+
+U -> AddPage : Redirection vers\nplaces/details.php?id=$place_id
+note right of U
+  Le spot est maintenant visible
+  dans la liste publique et
+  dans "Mes spots"
+end note
+
+@enduml

@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../classes/Place.php';
 $place = new Place();
 $categories = $place->getAllCategories();
 
-$pageTitle = 'Share a Hidden Spot - Hidden Spots Finder';
+$pageTitle = 'Share a Hidden Spot - HiddenSpots';
 ?>
 <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
@@ -46,7 +46,7 @@ $pageTitle = 'Share a Hidden Spot - Hidden Spots Finder';
 
             <div class="form-group">
                 <label for="location">Location</label>
-                <input type="text" id="location" name="location_name" class="form-control" placeholder="City, Country">
+                <input type="text" id="location" name="location_name" class="form-control" placeholder="The exact location path">
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -73,7 +73,7 @@ $pageTitle = 'Share a Hidden Spot - Hidden Spots Finder';
                     <p class="hint">PNG, JPG, WEBP (max 5MB each, up to 5 images)</p>
                     <input type="file" name="images[]" id="imageInput" accept="image/*" multiple style="display: none;">
                 </div>
-                <div id="imagePreview" class="image-grid"></div>
+                <div id="imagePreview" class="preview-grid"></div>
             </div>
 
             <div class="info-box">
@@ -101,7 +101,7 @@ imageInput.addEventListener('change', function(e) {
         const reader = new FileReader();
         reader.onload = function(e) {
             const div = document.createElement('div');
-            div.className = 'image-grid-item';
+            div.className = 'preview-item';
             div.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
             imagePreview.appendChild(div);
         };

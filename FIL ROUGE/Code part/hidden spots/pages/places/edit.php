@@ -24,7 +24,7 @@ if (!$place->isOwner($placeId, $_SESSION['user_id'])) {
     exit;
 }
 
-$pageTitle = 'Edit Place - Hidden Spots Finder';
+$pageTitle = 'Edit Place - HiddenSpots';
 ?>
 <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
@@ -88,27 +88,6 @@ $pageTitle = 'Edit Place - Hidden Spots Finder';
                 <textarea id="description" name="description" class="form-control" rows="5"><?php echo htmlspecialchars($placeData['description'] ?? ''); ?></textarea>
             </div>
 
-            <!-- Existing Images -->
-            <?php if (!empty($placeData['images'])): ?>
-                <div class="form-group">
-                    <label>Current Images</label>
-                    <div class="image-grid">
-                        <?php foreach ($placeData['images'] as $img): ?>
-                            <div class="image-grid-item">
-                                <img src="../../<?php echo htmlspecialchars($img['image_path']); ?>" alt="Place image">
-                                <button type="submit" name="action" value="delete_image"
-                                        onclick="return confirm('Delete this image?');"
-                                        class="delete-img" title="Delete image">
-                                    <input type="hidden" name="image_id" value="<?php echo $img['id']; ?>">
-                                    <input type="hidden" name="image_path" value="<?php echo htmlspecialchars($img['image_path']); ?>">
-                                    &#10005;
-                                </button>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            <?php endif; ?>
-
             <div class="form-group">
                 <label>Add More Images</label>
                 <div class="upload-area">
@@ -116,7 +95,7 @@ $pageTitle = 'Edit Place - Hidden Spots Finder';
                     <p class="hint">PNG, JPG, WEBP (max 5MB each)</p>
                     <input type="file" name="images[]" id="imageInput" accept="image/*" multiple style="display: none;">
                 </div>
-                <div id="imagePreview" class="image-grid"></div>
+                <div id="imagePreview" class="preview-grid"></div>
             </div>
 
             <div class="form-actions">
@@ -124,6 +103,27 @@ $pageTitle = 'Edit Place - Hidden Spots Finder';
                 <button type="submit" class="btn btn-primary">Save Changes</button>
             </div>
         </form>
+
+        <!-- Existing Images (separate delete forms — cannot be nested inside the main form) -->
+        <?php if (!empty($placeData['images'])): ?>
+            <div class="form-group" style="margin-top:32px;">
+                <label>Current Images</label>
+                <div class="image-grid">
+                    <?php foreach ($placeData['images'] as $img): ?>
+                        <div class="image-grid-item">
+                            <img src="../../<?php echo htmlspecialchars($img['image_path']); ?>" alt="Place image">
+                            <form method="POST" action="<?php echo $base; ?>actions/place.php" style="position:absolute;top:8px;right:8px;margin:0;">
+                                <input type="hidden" name="action" value="delete_image">
+                                <input type="hidden" name="place_id" value="<?php echo $placeId; ?>">
+                                <input type="hidden" name="image_path" value="<?php echo htmlspecialchars($img['image_path']); ?>">
+                                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+                                <button type="submit" class="delete-img" title="Delete image" onclick="return confirm('Delete this image?');">&#10005;</button>
+                            </form>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -139,7 +139,7 @@ imageInput.addEventListener('change', function(e) {
         const reader = new FileReader();
         reader.onload = function(e) {
             const div = document.createElement('div');
-            div.className = 'image-grid-item';
+            div.className = 'preview-item';
             div.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
             imagePreview.appendChild(div);
         };

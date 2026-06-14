@@ -1,0 +1,103 @@
+@startuml MLD_HiddenSpots
+
+title MLD — Modèle Logique de Données\nHidden Spots Finder
+
+skinparam {
+    BackgroundColor white
+    RoundCorner 10
+    ArrowColor #2C3E50
+    TableBackgroundColor #EBF5FB
+    TableBorderColor #2980B9
+    TableFontColor #2C3E50
+}
+
+' =====================================================
+' TABLES
+' =====================================================
+
+table "users" as tbl_users {
+    **id** : INT <<PK, AUTO_INCREMENT>>
+    --
+    username : VARCHAR(25) <<NOT NULL>>
+    email : VARCHAR(60) <<NOT NULL, UNIQUE>>
+    password : VARCHAR(60) <<NOT NULL>>
+    birthday : DATETIME <<NULL>>
+    created_at : TIMESTAMP <<DEFAULT CURRENT_TIMESTAMP>>
+}
+
+table "categories" as tbl_categories {
+    **id** : INT <<PK, AUTO_INCREMENT>>
+    --
+    name : VARCHAR(30) <<NOT NULL, UNIQUE>>
+}
+
+table "places" as tbl_places {
+    **id** : INT <<PK, AUTO_INCREMENT>>
+    --
+    user_id : INT <<FK, NOT NULL>>
+    category_id : INT <<FK, NOT NULL>>
+    name : VARCHAR(50) <<NOT NULL>>
+    description : TEXT <<NULL>>
+    location_name : VARCHAR(200) <<NULL>>
+    latitude : DECIMAL(10,8) <<NULL>>
+    longitude : DECIMAL(11,8) <<NULL>>
+    created_at : TIMESTAMP <<DEFAULT CURRENT_TIMESTAMP>>
+}
+
+table "place_images" as tbl_place_images {
+    **id** : INT <<PK, AUTO_INCREMENT>>
+    --
+    place_id : INT <<FK, NOT NULL>>
+    image_path : VARCHAR(255) <<NOT NULL>>
+}
+
+table "reviews" as tbl_reviews {
+    **id** : INT <<PK, AUTO_INCREMENT>>
+    --
+    user_id : INT <<FK, NOT NULL>>
+    place_id : INT <<FK, NOT NULL>>
+    rating : INT <<NOT NULL, CHECK 1-5>>
+    comment : TEXT <<NULL>>
+    created_at : TIMESTAMP <<DEFAULT CURRENT_TIMESTAMP>>
+    --
+    UNIQUE (user_id, place_id)
+}
+
+table "favorites" as tbl_favorites {
+    **id** : INT <<PK, AUTO_INCREMENT>>
+    --
+    user_id : INT <<FK, NOT NULL>>
+    place_id : INT <<FK, NOT NULL>>
+    --
+    UNIQUE (user_id, place_id)
+}
+
+' =====================================================
+' CLES ETRANGERES
+' =====================================================
+
+tbl_users ||--o{ tbl_places : "user_id"
+tbl_categories ||--o{ tbl_places : "category_id"
+tbl_places ||--o{ tbl_place_images : "place_id"
+tbl_users ||--o{ tbl_reviews : "user_id"
+tbl_places ||--o{ tbl_reviews : "place_id"
+tbl_users ||--o{ tbl_favorites : "user_id"
+tbl_places ||--o{ tbl_favorites : "place_id"
+
+note right of tbl_places
+  **Contraintes référentielles**
+  - ON DELETE CASCADE depuis users
+  - ON DELETE RESTRICT depuis categories
+  - Recherche par mot-clé et catégorie
+    (méthode search() de la classe Place)
+end note
+
+note right of tbl_reviews
+  **Workflow d'avis**
+  - Un seul avis par (user, lieu)
+  - Upsert via ON DUPLICATE KEY UPDATE
+  - Notation de 1 à 5 étoiles
+    avec commentaire libre
+end note
+
+@enduml

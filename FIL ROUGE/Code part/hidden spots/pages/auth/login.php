@@ -9,20 +9,10 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 
-$pageTitle = 'Sign In - Hidden Spots Finder';
+$pageTitle = 'Sign In - HiddenSpots';
 
-// Compute base path (normally set by header.php)
-$_rootPath = dirname(__DIR__, 2) . '/';
-$_scriptDir = dirname($_SERVER['SCRIPT_FILENAME']) . '/';
-$_rootNormalized = str_replace('\\', '/', $_rootPath);
-$_scriptNormalized = str_replace('\\', '/', $_scriptDir);
-if (strpos($_scriptNormalized, $_rootNormalized) === 0) {
-    $_diff = substr($_scriptNormalized, strlen($_rootNormalized));
-    $_depth = substr_count($_diff, '/');
-    $base = str_repeat('../', $_depth);
-} else {
-    $base = '';
-}
+// Compute base path reliably
+$base = '../../';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,21 +28,11 @@ if (strpos($_scriptNormalized, $_rootNormalized) === 0) {
 <div class="auth-wrapper">
     <!-- Left: Full-bleed Image -->
     <div class="auth-image">
-        <img src="<?php echo $base; ?>assets/images/placeholder.jpg" alt="Hidden spot">
+        <img src="<?php echo $base; ?>assets/images/auth-bg.jpg" alt="Hidden spot">
 
         <div class="auth-branding">
-            <h1>Hidden Spots Finder</h1>
+            <img src="<?php echo $base; ?>assets/images/logo.png" alt="HiddenSpots" class="auth-logo-img">
             <p>Discover the quiet corners of the world, curated for those who seek serenity beyond the noise.</p>
-        </div>
-
-        <div class="auth-spot-card">
-            <div>
-                <div class="auth-spot-card-label">Current Spot</div>
-                <div class="auth-spot-card-name">Mirror Lake, Cascadia</div>
-            </div>
-            <div class="auth-spot-avatar">
-                <img src="<?php echo $base; ?>assets/images/placeholder.jpg" alt="Explorer">
-            </div>
         </div>
     </div>
 
@@ -85,14 +65,16 @@ if (strpos($_scriptNormalized, $_rootNormalized) === 0) {
                     <input type="email" id="email" name="email" class="form-control" placeholder="explorer@serenity.com" required>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 4px;">
-                    <label for="password">Password</label>
+                <div class="form-group">
+                    <div class="password-header">
+                        <label for="password">Password</label>
+                        <a href="#" class="forgot-link">Forgot?</a>
+                    </div>
                     <div class="password-wrapper">
                         <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
                         <button type="button" class="password-toggle" onclick="togglePassword('password', this)" aria-label="Toggle password visibility">&#128065;</button>
                     </div>
                 </div>
-                <a href="#" class="forgot-link">Forgot?</a>
 
                 <button type="submit" class="btn btn-primary btn-auth">Sign In</button>
             </form>

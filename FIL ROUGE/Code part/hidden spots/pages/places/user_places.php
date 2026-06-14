@@ -2,8 +2,10 @@
 require_once __DIR__ . '/../../includes/auth_check.php';
 require_once __DIR__ . '/../../includes/csrf.php';
 require_once __DIR__ . '/../../classes/Place.php';
+require_once __DIR__ . '/../../classes/Review.php';
 
 $place = new Place();
+$review = new Review();
 $userId = $_SESSION['user_id'];
 
 // Get current page number
@@ -15,7 +17,7 @@ $places = $place->getPlacesByUser($userId, $page, $placesPerPage);
 $totalPlaces = $place->countPlacesByUser($userId);
 $totalPages = ceil($totalPlaces / $placesPerPage);
 
-$pageTitle = 'My Places - Hidden Spots Finder';
+$pageTitle = 'My Places - HiddenSpots';
 ?>
 <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
@@ -55,18 +57,20 @@ $pageTitle = 'My Places - Hidden Spots Finder';
                         <div class="place-card-info">
                             <span>&#9679;</span>
                             <span><?php echo htmlspecialchars($p['location_name'] ?? 'Unknown'); ?></span>
+                            <?php $avgR = $review->getAverageRating($p['id']); ?>
+                            <span style="margin-left:auto;">&#9733; <?php echo $avgR > 0 ? number_format($avgR, 1) : '—'; ?></span>
                         </div>
 
-                        <div style="display: flex; gap: 8px; margin-top: 12px;">
-                            <a href="details.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">View</a>
-                            <a href="edit.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
-                            <form method="POST" action="../../actions/place.php" style="flex: 1;" onsubmit="return confirm('Are you sure you want to delete this place?');">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="place_id" value="<?php echo $p['id']; ?>">
-                                <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
-                                <button type="submit" class="btn btn-danger btn-sm" style="width: 100%;">Delete</button>
-                            </form>
-                        </div>
+                        <div class="place-card-actions">
+                                <a href="details.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">View</a>
+                                <a href="edit.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
+                                <form method="POST" action="../../actions/place.php" onsubmit="return confirm('Are you sure you want to delete this place?');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="place_id" value="<?php echo $p['id']; ?>">
+                                    <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
+                                    <button type="submit" class="btn btn-danger btn-sm" style="width: 100%;">Delete</button>
+                                </form>
+                            </div>
                     </div>
                 </div>
             <?php endforeach; ?>

@@ -8,20 +8,10 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 
-$pageTitle = 'Create Account - Hidden Spots Finder';
+$pageTitle = 'Create Account - HiddenSpots';
 
-// Compute base path (normally set by header.php)
-$_rootPath = dirname(__DIR__, 2) . '/';
-$_scriptDir = dirname($_SERVER['SCRIPT_FILENAME']) . '/';
-$_rootNormalized = str_replace('\\', '/', $_rootPath);
-$_scriptNormalized = str_replace('\\', '/', $_scriptDir);
-if (strpos($_scriptNormalized, $_rootNormalized) === 0) {
-    $_diff = substr($_scriptNormalized, strlen($_rootNormalized));
-    $_depth = substr_count($_diff, '/');
-    $base = str_repeat('../', $_depth);
-} else {
-    $base = '';
-}
+// Compute base path reliably
+$base = '../../';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,21 +27,11 @@ if (strpos($_scriptNormalized, $_rootNormalized) === 0) {
 <div class="auth-wrapper">
     <!-- Left: Full-bleed Image -->
     <div class="auth-image">
-        <img src="<?php echo $base; ?>assets/images/placeholder.jpg" alt="Hidden spot">
+        <img src="<?php echo $base; ?>assets/images/auth-bg.jpg" alt="Hidden spot">
 
         <div class="auth-branding">
-            <h1>Hidden Spots Finder</h1>
+            <img src="<?php echo $base; ?>assets/images/logo.png" alt="HiddenSpots" class="auth-logo-img">
             <p>Discover the quiet corners of the world, curated for those who seek serenity beyond the noise.</p>
-        </div>
-
-        <div class="auth-spot-card">
-            <div>
-                <div class="auth-spot-card-label">Current Spot</div>
-                <div class="auth-spot-card-name">Mirror Lake, Cascadia</div>
-            </div>
-            <div class="auth-spot-avatar">
-                <img src="<?php echo $base; ?>assets/images/placeholder.jpg" alt="Explorer">
-            </div>
         </div>
     </div>
 

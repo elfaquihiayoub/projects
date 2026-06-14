@@ -1,0 +1,94 @@
+@startuml UseCase_HiddenSpots
+
+left to right direction
+title Diagramme de Cas d'Utilisation — Hidden Spots Finder
+
+' === DESIGN & STYLING ===
+skinparam {
+    BackgroundColor white
+    Shadowing true
+    RoundCorner 10
+    ArrowColor #2C3E50
+    BorderColor #34495E
+
+    ActorBackgroundColor #ECF0F1
+    ActorBorderColor #2980B9
+    ActorFontColor #2C3E50
+
+    UseCaseBackgroundColor #D6EAF8
+    UseCaseBorderColor #2980B9
+    UseCaseFontColor #2C3E50
+
+    PackageBackgroundColor #F8F9F9
+    PackageBorderColor #BDC3C7
+}
+
+' Acteurs
+actor "Visiteur" as V
+actor "Utilisateur\nAuthentifié" as U
+actor "Système" as S
+
+' Site Public
+package "Accès Public" {
+    usecase "Consulter\nla liste des spots" as UC1
+    usecase "Voir le détail\nd'un spot" as UC2
+    usecase "Rechercher un spot\n(mot-clé / catégorie)" as UC3
+    usecase "S'inscrire" as UC4
+    usecase "Se connecter" as UC5
+}
+
+' Espace Utilisateur Authentifié
+package "Espace Utilisateur" {
+    usecase "Publier un spot" as UC6
+    usecase "Modifier / Supprimer\nson spot" as UC7
+    usecase "Gérer ses images\n(ajout / suppression)" as UC8
+    usecase "Laisser un avis\n(note + commentaire)" as UC9
+    usecase "Ajouter aux favoris" as UC10
+    usecase "Consulter\nses favoris" as UC11
+    usecase "Gérer son profil\n(username, email)" as UC12
+    usecase "Changer de\nmot de passe" as UC13
+    usecase "Se déconnecter" as UC14
+}
+
+' Services Système
+package "Services Système" {
+    usecase "Paginer les résultats" as UC15
+    usecase "Valider les données\n(formulaire)" as UC16
+    usecase "Uploader les images" as UC17
+}
+
+' Associations - Visiteur
+V --> UC1
+V --> UC2
+V --> UC3
+V --> UC4
+V --> UC5
+
+' Associations - Utilisateur Authentifié
+U --> UC1
+U --> UC2
+U --> UC3
+U --> UC6
+U --> UC7
+U --> UC9
+U --> UC10
+U --> UC11
+U --> UC12
+U --> UC13
+U --> UC14
+
+' Relations includes / extends
+UC6 ..> UC8 : <<include>>
+UC7 ..> UC8 : <<include>>
+UC6 ..> UC16 : <<include>>
+UC6 ..> UC17 : <<include>>
+UC7 ..> UC16 : <<include>>
+UC1 ..> UC15 : <<include>>
+UC5 ..> UC12 : <<extend>>
+
+' Système
+S --> UC15
+S --> UC16
+S --> UC17
+
+@enduml

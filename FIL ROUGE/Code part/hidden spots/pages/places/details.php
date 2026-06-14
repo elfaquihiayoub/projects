@@ -28,7 +28,7 @@ $reviews = $review->getByPlace($placeId);
 $avgRating = $review->getAverageRating($placeId);
 $userReview = $review->getUserReview($placeId, $_SESSION['user_id']);
 
-$pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
+$pageTitle = htmlspecialchars($placeData['name']) . ' - HiddenSpots';
 ?>
 <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
@@ -40,25 +40,26 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
 
     <!-- Place Images Gallery -->
     <?php if (!empty($placeData['images'])): ?>
-        <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px;">
+        <div class="details-gallery">
             <?php foreach ($placeData['images'] as $img): ?>
                 <img src="../../<?php echo htmlspecialchars($img['image_path']); ?>"
-                     alt="<?php echo htmlspecialchars($placeData['name']); ?>"
-                     style="width: 100%; height: 280px; object-fit: cover; border-radius: var(--radius-lg);">
+                     alt="<?php echo htmlspecialchars($placeData['name']); ?>">
             <?php endforeach; ?>
         </div>
     <?php else: ?>
-        <img src="../../assets/images/placeholder.jpg"
-             alt="<?php echo htmlspecialchars($placeData['name']); ?>"
-             style="width: 100%; max-height: 420px; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 32px;">
+        <div class="details-gallery">
+            <img src="../../assets/images/placeholder.jpg"
+                 alt="<?php echo htmlspecialchars($placeData['name']); ?>"
+                 style="width: 100%; max-height: 420px; object-fit: cover;">
+        </div>
     <?php endif; ?>
 
     <!-- Place Info -->
-    <div style="display: grid; grid-template-columns: 1fr 320px; gap: 40px; margin-bottom: 40px;">
+    <div class="details-main-layout">
         <div>
-            <h1 style="margin-bottom: 12px; font-size: 2rem;"><?php echo htmlspecialchars($placeData['name']); ?></h1>
+            <h1 class="details-place-name"><?php echo htmlspecialchars($placeData['name']); ?></h1>
 
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+            <div class="details-meta-row">
                 <span class="card-category"><?php echo htmlspecialchars($placeData['category_name'] ?? 'Uncategorized'); ?></span>
                 <?php if ($avgRating > 0): ?>
                     <span style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">
@@ -71,19 +72,19 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
             </div>
 
             <div class="place-card-info mb-2">
-                <span>&#9679;</span>
+                <span class="location-dot">&#9679;</span>
                 <span><?php echo htmlspecialchars($placeData['location_name'] ?? 'Location not specified'); ?></span>
             </div>
 
-            <div class="card" style="padding: 28px; margin-top: 20px;">
-                <h3 style="margin-bottom: 12px;">About this place</h3>
-                <p style="color: var(--text-light); line-height: 1.8;">
+            <div class="details-about-card">
+                <h3>About this place</h3>
+                <p>
                     <?php echo nl2br(htmlspecialchars($placeData['description'] ?? 'No description provided.')); ?>
                 </p>
             </div>
 
             <?php if ($isOwner): ?>
-                <div style="margin-top: 20px; display: flex; gap: 12px;">
+                <div class="details-owner-actions">
                     <a href="edit.php?id=<?php echo $placeId; ?>" class="btn btn-secondary">Edit Place</a>
                     <form method="POST" action="../../actions/place.php" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this place?');">
                         <input type="hidden" name="action" value="delete">
@@ -98,7 +99,7 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
         <!-- Sidebar -->
         <div>
             <!-- Favorite Button -->
-            <div class="card" style="padding: 24px; margin-bottom: 16px;">
+            <div class="sidebar-card">
                 <form method="POST" action="../../actions/favorite.php">
                     <input type="hidden" name="place_id" value="<?php echo $placeId; ?>">
                     <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
@@ -119,11 +120,11 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - Hidden Spots Finder';
 
             <!-- Location Info -->
             <?php if (!empty($placeData['latitude']) && !empty($placeData['longitude'])): ?>
-                <div class="card" style="padding: 24px;">
-                    <h3 style="margin-bottom: 12px;">Location</h3>
-                    <p style="color: var(--text-light); font-size: 0.875rem;">
-                        Lat: <?php echo htmlspecialchars($placeData['latitude']); ?><br>
-                        Lng: <?php echo htmlspecialchars($placeData['longitude']); ?>
+                <div class="sidebar-card">
+                    <h3>Location</h3>
+                    <p style="color: var(--text-light); font-size: 0.875rem; line-height: 1.6;">
+                        <strong>Latitude:</strong> <?php echo htmlspecialchars($placeData['latitude']); ?><br>
+                        <strong>Longitude:</strong> <?php echo htmlspecialchars($placeData['longitude']); ?>
                     </p>
                 </div>
             <?php endif; ?>

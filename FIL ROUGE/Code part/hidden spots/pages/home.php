@@ -1,13 +1,15 @@
 <?php
 
 require_once __DIR__ . '/../classes/Place.php';
+require_once __DIR__ . '/../classes/Review.php';
 require_once __DIR__ . '/../includes/csrf.php';
 
 $place = new Place();
+$review = new Review();
 $categories = $place->getAllCategories();
 $recentPlaces = $place->getAllPlaces(1, 6); // 6 most recent places
 
-$pageTitle = 'Home - Hidden Spots Finder';
+$pageTitle = 'Home - HiddenSpots';
 ?>
 <?php require_once __DIR__ . '/../includes/header.php'; ?>
 
@@ -59,21 +61,49 @@ $pageTitle = 'Home - Hidden Spots Finder';
         <?php if (!empty($categories)): ?>
             <div class="categories-grid">
                 <?php
-                $categoryIcons = ['chill', 'nature', 'study', 'date'];
-                $categorySymbols = ['&#9790;', '&#9968;', '&#128214;', '&#9829;'];
-                $idx = 0;
+                $categoryIconMap = [
+                    'dating'        => ['class' => 'date',      'symbol' => '&#10084;'],
+                    'date'          => ['class' => 'date',      'symbol' => '&#10084;'],
+                    'romantic'      => ['class' => 'date',      'symbol' => '&#10084;'],
+                    'exploring'     => ['class' => 'adventure', 'symbol' => '&#129517;'],
+                    'explore'       => ['class' => 'adventure', 'symbol' => '&#129517;'],
+                    'adventure'     => ['class' => 'adventure', 'symbol' => '&#129517;'],
+                    'hiking'        => ['class' => 'adventure', 'symbol' => '&#129517;'],
+                    'relaxing'      => ['class' => 'chill',     'symbol' => '&#127807;'],
+                    'relax'         => ['class' => 'chill',     'symbol' => '&#127807;'],
+                    'chill'         => ['class' => 'chill',     'symbol' => '&#127807;'],
+                    'socializing'   => ['class' => 'social',    'symbol' => '&#128101;'],
+                    'social'        => ['class' => 'social',    'symbol' => '&#128101;'],
+                    'party'         => ['class' => 'social',    'symbol' => '&#127881;'],
+                    'studying'      => ['class' => 'study',     'symbol' => '&#128214;'],
+                    'study'         => ['class' => 'study',     'symbol' => '&#128214;'],
+                    'library'       => ['class' => 'study',     'symbol' => '&#128214;'],
+                    'work'          => ['class' => 'study',     'symbol' => '&#128187;'],
+                    'nature'        => ['class' => 'nature',    'symbol' => '&#9968;'],
+                    'park'          => ['class' => 'nature',    'symbol' => '&#9968;'],
+                    'garden'        => ['class' => 'nature',    'symbol' => '&#127807;'],
+                    'food'          => ['class' => 'food',      'symbol' => '&#127860;'],
+                    'restaurant'    => ['class' => 'food',      'symbol' => '&#127860;'],
+                    'cafe'          => ['class' => 'cafe',      'symbol' => '&#9749;'],
+                    'coffee'        => ['class' => 'cafe',      'symbol' => '&#9749;'],
+                    'music'         => ['class' => 'music',     'symbol' => '&#127925;'],
+                    'art'           => ['class' => 'art',       'symbol' => '&#127912;'],
+                    'culture'       => ['class' => 'art',       'symbol' => '&#127963;'],
+                    'sport'         => ['class' => 'sport',     'symbol' => '&#9917;'],
+                    'sports'        => ['class' => 'sport',     'symbol' => '&#9917;'],
+                    'fitness'       => ['class' => 'sport',     'symbol' => '&#128170;'],
+                ];
                 foreach ($categories as $category):
-                    $iconClass = $categoryIcons[$idx % 4];
-                    $symbol = $categorySymbols[$idx % 4];
+                    $catNameLower = strtolower(trim($category['name']));
+                    $iconData = $categoryIconMap[$catNameLower] ?? ['class' => 'chill', 'symbol' => '&#10024;'];
                 ?>
                     <a href="places/list.php?category=<?php echo $category['id']; ?>" class="category-card">
-                        <div class="category-icon <?php echo $iconClass; ?>">
-                            <?php echo $symbol; ?>
+                        <div class="category-icon <?php echo $iconData['class']; ?>">
+                            <?php echo $iconData['symbol']; ?>
                         </div>
                         <h3><?php echo htmlspecialchars($category['name']); ?></h3>
                     </a>
                 <?php
-                    $idx++;
                 endforeach;
                 ?>
             </div>
@@ -88,12 +118,6 @@ $pageTitle = 'Home - Hidden Spots Finder';
     <div class="container">
         <div class="discoveries-header">
             <h2>Hand-Picked Discoveries</h2>
-            <div class="discoveries-filters">
-                <a href="places/list.php?sort=trending" class="filter-icon-btn" title="Filter">&#9776;</a>
-                <a href="places/list.php?sort=trending" class="filter-pill active">Trending</a>
-                <a href="places/list.php?sort=newest" class="filter-pill">Newest</a>
-                <a href="places/list.php?sort=near" class="filter-pill">Near Me</a>
-            </div>
         </div>
 
         <?php if (!empty($recentPlaces)): ?>
@@ -101,6 +125,8 @@ $pageTitle = 'Home - Hidden Spots Finder';
                 <?php
                 $displayPlaces = array_slice($recentPlaces, 0, 3);
                 foreach ($displayPlaces as $p):
+                    $avgRating = $review->getAverageRating($p['id']);
+                    $ratingDisplay = $avgRating > 0 ? number_format($avgRating, 1) : 'No reviews';
                 ?>
                     <div class="discovery-card">
                         <div class="discovery-card-img">
@@ -113,7 +139,7 @@ $pageTitle = 'Home - Hidden Spots Finder';
                                     <input type="hidden" name="place_id" value="<?php echo $p['id']; ?>">
                                     <input type="hidden" name="action" value="add">
                                     <input type="hidden" name="_csrf_token" value="<?php echo generateCsrfToken(); ?>">
-                                    <button type="submit" class="discovery-bookmark" title="Save to Favorites">&#9744;</button>
+                                    <button type="submit" class="discovery-bookmark" title="Save to Favorites">&#10084;</button>
                                 </form>
                             <?php endif; ?>
                             <span class="discovery-category-badge"><?php echo htmlspecialchars($p['category_name'] ?? ''); ?></span>
@@ -124,7 +150,7 @@ $pageTitle = 'Home - Hidden Spots Finder';
                             </h3>
                             <div class="discovery-card-meta">
                                 <span class="discovery-card-location">&#9679; <?php echo htmlspecialchars($p['location_name'] ?? 'Unknown'); ?></span>
-                                <span class="discovery-card-rating">&#9733; 4.9</span>
+                                <span class="discovery-card-rating">&#9733; <?php echo $ratingDisplay; ?></span>
                             </div>
                         </div>
                     </div>
