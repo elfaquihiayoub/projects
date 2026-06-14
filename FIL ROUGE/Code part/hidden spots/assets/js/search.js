@@ -76,6 +76,7 @@ function displayResults(places) {
                 <div class="place-card-info">
                     <span class="location-dot">&#9679;</span>
                     <span class="location-text">${escapeHtml(place.location_name || 'Unknown')}</span>
+                    <span style="margin-left:auto;">&#9733; ${place.avg_rating && place.avg_rating > 0 ? Number(place.avg_rating).toFixed(1) : '\u2014'}</span>
                 </div>
             </div>
         </div>

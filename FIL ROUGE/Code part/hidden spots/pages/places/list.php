@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../../includes/auth_check.php';
 require_once __DIR__ . '/../../classes/Place.php';
 require_once __DIR__ . '/../../classes/Review.php';
 

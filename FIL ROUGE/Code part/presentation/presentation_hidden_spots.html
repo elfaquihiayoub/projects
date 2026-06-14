@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Defense Presentation — Hidden Spots Finder</title>
+  <meta name="description"
+    content="Final defense presentation for Hidden Spots Finder — a community platform to discover, share and explore hidden gems.">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════════════════
+       DESIGN TOKENS — Hidden Spots Finder palette
+    ══════════════════════════════════════════════ */
+    :root {
+      --primary: #E8913A;
+      --primary-dark: #C47520;
+      --primary-light: rgba(232, 145, 58, 0.12);
+      --bg: #FDF8F0;
+      --bg-warm: #F5EDE4;
+      --surface: #FFFFFF;
+      --dark: #1E1A17;
+      --mid: #5C524A;
+      --muted: #8E8276;
+      --border: #E8DDD4;
+      --error: #A82E2E;
+      --success: #2E7247;
+
+      --font-heading: 'Playfair Display', Georgia, serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+
+      --shadow-sm: 0 2px 8px rgba(30, 26, 23, .06);
+      --shadow-card: 0 8px 32px rgba(30, 26, 23, .08);
+      --shadow-lg: 0 24px 64px rgba(30, 26, 23, .14);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-xl: 32px;
+      --radius-full: 9999px;
+    }
+
+    /* ══════════════════════════════════════════════
+       RESET & BASE
+    ══════════════════════════════════════════════ */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--dark);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══════════════════════════════════════════════
+       ANIMATED BACKGROUND PARTICLES
+    ══════════════════════════════════════════════ */
+    .bg-particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.18;
+      animation: float linear infinite;
+    }
+
+    .particle:nth-child(1) {
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, var(--primary), transparent 70%);
+      top: -80px;
+      left: -80px;
+      animation-duration: 18s;
+    }
+
+    .particle:nth-child(2) {
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, #D47E2A, transparent 70%);
+      bottom: 60px;
+      right: 80px;
+      animation-duration: 22s;
+      animation-delay: -8s;
+    }
+
+    .particle:nth-child(3) {
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, var(--primary), transparent 70%);
+      top: 40%;
+      left: 60%;
+      animation-duration: 14s;
+      animation-delay: -3s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      33% {
+        transform: translate(30px, -20px) scale(1.05);
+      }
+
+      66% {
+        transform: translate(-20px, 30px) scale(0.96);
+      }
+
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+    }
+
+    /* ══════════════════════════════════════════════
+       HEADER NAV
+    ══════════════════════════════════════════════ */
+    header {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 72px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      background: rgba(253, 248, 240, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(232, 145, 58, .35);
+    }
+
+    .brand-name {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .nav-sections {
+      display: flex;
+      gap: 28px;
+    }
+
+    .nav-sections span {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 4px 0;
+      position: relative;
+      transition: color .25s;
+    }
+
+    .nav-sections span::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 1px;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .3s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .nav-sections span.active {
+      color: var(--dark);
+    }
+
+    .nav-sections span.active::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .slide-counter {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDER
+    ══════════════════════════════════════════════ */
+    .slider-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      overflow: hidden;
+      margin-top: 72px;
+      margin-bottom: 56px;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(40px);
+      transition: opacity .45s cubic-bezier(.16, 1, .3, 1),
+        transform .45s cubic-bezier(.16, 1, .3, 1),
+        visibility 0s .45s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 32px 80px;
+      z-index: 1;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      transition: opacity .45s cubic-bezier(.16, 1, .3, 1),
+        transform .45s cubic-bezier(.16, 1, .3, 1),
+        visibility 0s 0s;
+      z-index: 2;
+    }
+
+    .slide.exit {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+
+    /* ══════════════════════════════════════════════
+       TYPOGRAPHY
+    ══════════════════════════════════════════════ */
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 4.8rem;
+      line-height: 1.05;
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      color: var(--dark);
+      margin-bottom: 32px;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    h2 em {
+      color: var(--primary);
+      font-style: italic;
+    }
+
+    h3 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 1.35rem;
+      color: var(--mid);
+      text-align: center;
+      line-height: 1.65;
+      max-width: 680px;
+    }
+
+    p,
+    li {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: var(--mid);
+    }
+
+    ul {
+      list-style: none;
+      margin-top: 16px;
+    }
+
+    li {
+      margin-bottom: 14px;
+      padding-left: 28px;
+      position: relative;
+    }
+
+    li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-size: 1.5rem;
+      line-height: 1.25;
+      font-weight: 700;
+    }
+
+    /* ══════════════════════════════════════════════
+       LAYOUT HELPERS
+    ══════════════════════════════════════════════ */
+    .split-layout {
+      display: flex;
+      width: 100%;
+      max-width: 1300px;
+      align-items: center;
+      gap: 56px;
+    }
+
+    .split-layout>* {
+      flex: 1;
+    }
+
+    .diagram-img {
+      max-height: 58vh;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 12px;
+      box-shadow: var(--shadow-card);
+    }
+
+    /* ══════════════════════════════════════════════
+       BADGE
+    ══════════════════════════════════════════════ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border: 1px solid rgba(232, 145, 58, .2);
+      border-radius: var(--radius-full);
+      padding: 7px 18px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 24px;
+    }
+
+    /* ══════════════════════════════════════════════
+       CARDS
+    ══════════════════════════════════════════════ */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+    }
+
+    .card.dark {
+      background: var(--dark);
+      border-color: rgba(255, 255, 255, .08);
+    }
+
+    .card.dark h3,
+    .card.dark li,
+    .card.dark p {
+      color: #f0ebe5;
+    }
+
+    .card.dark li::before {
+      color: var(--primary);
+    }
+
+    .card-accent {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+    }
+
+    .card-accent h3,
+    .card-accent p,
+    .card-accent li {
+      color: white;
+    }
+
+    .card-accent li::before {
+      color: rgba(255, 255, 255, .7);
+    }
+
+    /* ══════════════════════════════════════════════
+       TECH GRID
+    ══════════════════════════════════════════════ */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .tech-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      transition: transform .3s, box-shadow .3s;
+    }
+
+    .tech-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .tech-icon {
+      font-size: 2.4rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .tech-card h3 {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+
+    .tech-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* ══════════════════════════════════════════════
+       ACTOR CARD (roles analysis)
+    ══════════════════════════════════════════════ */
+    .actor-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .actor-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .actor-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .actor-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .actor-avatar.visitor {
+      background: #EBF5FB;
+    }
+
+    .actor-avatar.user {
+      background: #FEF3E2;
+    }
+
+    .actor-avatar.system {
+      background: #F3E8FE;
+    }
+
+    .actor-head h3 {
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .actor-head small {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ══════════════════════════════════════════════
+       STAT ROW (title slide)
+    ══════════════════════════════════════════════ */
+    .stat-row {
+      display: flex;
+      gap: 40px;
+      margin-top: 40px;
+      justify-content: center;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: block;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    /* ══════════════════════════════════════════════
+       DB TABLE DISPLAY
+    ══════════════════════════════════════════════ */
+    .db-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .db-table {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .db-table-head {
+      background: var(--dark);
+      color: #f0ebe5;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .db-table-head span {
+      color: var(--primary);
+    }
+
+    .db-table-body {
+      padding: 12px 16px;
+    }
+
+    .db-field {
+      font-size: 0.82rem;
+      padding: 4px 0;
+      color: var(--mid);
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .db-field:last-child {
+      border-bottom: none;
+    }
+
+    .db-field strong {
+      color: var(--dark);
+      font-weight: 600;
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    .db-field .pk {
+      color: var(--primary);
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .db-field .fk {
+      color: #3A83F1;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    /* ══════════════════════════════════════════════
+       LINK BUTTON
+    ══════════════════════════════════════════════ */
+    .demo-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--dark);
+      color: var(--bg);
+      padding: 18px 44px;
+      border-radius: var(--radius-full);
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 36px;
+      transition: background .25s, transform .25s, box-shadow .25s;
+      box-shadow: 0 8px 24px rgba(30, 26, 23, .18);
+      border: 2px solid var(--dark);
+    }
+
+    .demo-btn:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(232, 145, 58, .35);
+    }
+
+    /* ══════════════════════════════════════════════
+       PROGRESS BAR
+    ══════════════════════════════════════════════ */
+    .progress-bar {
+      position: fixed;
+      top: 72px;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      transition: width .4s cubic-bezier(.16, 1, .3, 1);
+      z-index: 200;
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* ══════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════ */
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 56px;
+      background: var(--dark);
+      color: rgba(240, 235, 229, .8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      font-size: 0.88rem;
+      z-index: 100;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: rgba(240, 235, 229, .3);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background .3s, transform .3s;
+    }
+
+    .dot.active {
+      background: var(--primary);
+      transform: scale(1.35);
+    }
+
+    .arrow {
+      cursor: pointer;
+      font-size: 1.25rem;
+      user-select: none;
+      color: rgba(240, 235, 229, .7);
+      transition: color .2s, transform .2s;
+      line-height: 1;
+    }
+
+    .arrow:hover {
+      color: var(--primary);
+      transform: scale(1.2);
+    }
+
+    .footer-info {
+      font-size: 0.82rem;
+      color: rgba(240, 235, 229, .55);
+    }
+
+    /* ══════════════════════════════════════════════
+       PLAN SLIDE
+    ══════════════════════════════════════════════ */
+    .plan-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .plan-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 24px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .plan-item:hover {
+      transform: translateX(6px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .plan-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .plan-text {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    /* ══════════════════════════════════════════════
+       THANK YOU SLIDE
+    ══════════════════════════════════════════════ */
+    .thank-you-icon {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.08);
+      }
+    }
+
+    /* ══════════════════════════════════════════════
+       CONCLUSION LISTS
+    ══════════════════════════════════════════════ */
+    .conclusion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    /* scrollbar hide */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- animated background -->
+  <div class="bg-particles" aria-hidden="true">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- progress bar -->
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- ══════ HEADER ══════ -->
+  <header>
+    <div class="header-brand">
+      <div class="brand-icon">📍</div>
+      <span class="brand-name">Hidden Spots</span>
+    </div>
+
+    <nav class="nav-sections" id="nav-sections" aria-label="Presentation sections">
+      <span data-section="intro" class="active">Introduction</span>
+      <span data-section="needs">Analysis</span>
+      <span data-section="conception">Conception</span>
+      <span data-section="realization">Realization</span>
+      <span data-section="demo">Demo</span>
+    </nav>
+
+    <div class="slide-counter" id="slide-counter">1 / 14</div>
+  </header>
+
+  <!-- ══════ SLIDER ══════ -->
+  <div class="slider-container" id="slider">
+
+    <!-- ── SLIDE 1: Title ── -->
+    <section class="slide active" data-section="intro" id="slide-0">
+      <div class="badge">🎓 &nbsp; End-of-Year Project — OFPPT / SoliCode</div>
+      <h1>Hidden Spots<br><em style="font-style:italic; color:var(--primary)">Finder</em></h1>
+      <p class="subtitle">
+        A community web platform to <strong>discover</strong>, <strong>share</strong>,
+        and <strong>explore</strong> the hidden gems of your city — built with PHP, MySQL &amp; modern web standards.
+      </p>
+      <div class="stat-row">
+        <div class="stat"><span class="stat-number">4</span><span class="stat-label">OOP Models</span></div>
+        <div class="stat"><span class="stat-number">6</span><span class="stat-label">Tables</span></div>
+        <div class="stat"><span class="stat-number">14+</span><span class="stat-label">Pages</span></div>
+        <div class="stat"><span class="stat-number">MVC</span><span class="stat-label">Architecture</span></div>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 2: Plan ── -->
+    <section class="slide" data-section="intro" id="slide-1">
+      <h2>Presentation <em>Plan</em></h2>
+      <div class="plan-list">
+        <div class="plan-item">
+          <div class="plan-num">1</div><span class="plan-text">Introduction &amp; Problematic</span>
+        </div>
+        <div class="plan-item">
+          <div class="plan-num">2</div><span class="plan-text">Needs Analysis (Actors &amp; Use Cases)</span>
+        </div>
+        <div class="plan-item">
+          <div class="plan-num">3</div><span class="plan-text">Conception — UML, MCD, MLD</span>
+        </div>
+        <div class="plan-item">
+          <div class="plan-num">4</div><span class="plan-text">Realization — Technologies &amp; Architecture</span>
+        </div>
+        <div class="plan-item">
+          <div class="plan-num">5</div><span class="plan-text">Live Demonstration (UI / UX)</span>
+        </div>
+        <div class="plan-item">
+          <div class="plan-num">6</div><span class="plan-text">Conclusion &amp; Prospects</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 3: Introduction ── -->
+    <section class="slide" data-section="intro" id="slide-2">
+      <div class="split-layout">
+        <div>
+          <div class="badge">💡 &nbsp; Context</div>
+          <h2 style="text-align:left;">Introduction</h2>
+          <p>Today, discovering authentic local places relies heavily on word-of-mouth or mainstream tourist apps that
+            miss <strong>hidden, local gems</strong>.</p>
+          <ul>
+            <li>Urban explorers lack a <strong>dedicated, community-driven</strong> platform.</li>
+            <li>No structured way to <strong>categorize, rate, and save</strong> secret spots.</li>
+            <li>Existing social media doesn't offer <strong>geolocation + review</strong> features together.</li>
+          </ul>
+          <p style="margin-top:20px;">
+            <strong>Hidden Spots Finder</strong> bridges this gap with a full-stack PHP web application.
+          </p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="card" style="text-align:center; padding:24px;">
+            <div style="font-size:3rem; margin-bottom:12px;">🗺️</div>
+            <h3 style="font-family:var(--font-body); font-size:1rem; color:var(--dark);">Discover Hidden Places</h3>
+            <p style="font-size:.9rem; margin:0; color:var(--muted);">Browse &amp; search by category</p>
+          </div>
+          <div class="card" style="text-align:center; padding:24px;">
+            <div style="font-size:3rem; margin-bottom:12px;">📸</div>
+            <h3 style="font-family:var(--font-body); font-size:1rem; color:var(--dark);">Share Your Spots</h3>
+            <p style="font-size:.9rem; margin:0; color:var(--muted);">Upload photos, add location</p>
+          </div>
+          <div class="card" style="text-align:center; padding:24px;">
+            <div style="font-size:3rem; margin-bottom:12px;">⭐</div>
+            <h3 style="font-family:var(--font-body); font-size:1rem; color:var(--dark);">Rate &amp; Review</h3>
+            <p style="font-size:.9rem; margin:0; color:var(--muted);">1–5 star ratings with comments</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 4: Problematic ── -->
+    <section class="slide" data-section="needs" id="slide-3">
+      <h2>The <em>Problematic</em></h2>
+      <div class="split-layout">
+        <div class="card dark">
+          <h3>❌ &nbsp; Without Hidden Spots</h3>
+          <ul>
+            <li>Local gems stay <strong>unknown</strong> — buried in generic platforms.</li>
+            <li>No community feature for <strong>photo sharing + geolocation</strong> together.</li>
+            <li>Manual sharing via WhatsApp/Instagram — <strong>disorganized</strong>.</li>
+            <li>No personal space to <strong>save favorites</strong> or manage your own spots.</li>
+          </ul>
+        </div>
+        <div class="card card-accent">
+          <h3>✅ &nbsp; With Hidden Spots</h3>
+          <ul>
+            <li>A <strong>dedicated community</strong> platform for local explorers.</li>
+            <li>Centralized place with <strong>categories, search, and filters</strong>.</li>
+            <li>Complete user <strong>profile management</strong> &amp; favorites system.</li>
+            <li>Server-side <strong>image upload</strong>, AJAX interactions, secure auth.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 5: Roles Analysis ── -->
+    <section class="slide" data-section="needs" id="slide-4">
+      <h2>Actors &amp; <em>Roles</em> Analysis</h2>
+      <div class="actor-grid">
+        <div class="actor-card">
+          <div class="actor-head">
+            <div class="actor-avatar visitor">👤</div>
+            <div>
+              <h3>Visitor</h3><small>Public access — no account required</small>
+            </div>
+          </div>
+          <ul>
+            <li>Browse the spots list</li>
+            <li>Search by keyword / category</li>
+            <li>Register or Sign in</li>
+          </ul>
+        </div>
+        <div class="actor-card">
+          <div class="actor-head">
+            <div class="actor-avatar user">🔑</div>
+            <div>
+              <h3>Authenticated User</h3><small>Full community access</small>
+            </div>
+          </div>
+          <ul>
+            <li>Publish, edit &amp; delete spots</li>
+            <li>Manage images (upload/delete)</li>
+            <li>Leave a rating + review</li>
+            <li>Add / remove favorites</li>
+            <li>Edit profile &amp; change password</li>
+          </ul>
+        </div>
+        <div class="actor-card">
+          <div class="actor-head">
+            <div class="actor-avatar system">⚙️</div>
+            <div>
+              <h3>System</h3><small>Automated services</small>
+            </div>
+          </div>
+          <ul>
+            <li>Paginate results (LIMIT/OFFSET)</li>
+            <li>Validate all form inputs</li>
+            <li>Handle image uploads &amp; storage</li>
+            <li>Manage sessions &amp; security</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 6: Use Case Diagram ── -->
+    <section class="slide" data-section="conception" id="slide-5">
+      <h2>Use Case <em>Diagram</em></h2>
+      <img src="../hidden spots/uml/use-case_HiddenSpots.png" class="diagram-img"
+        alt="Use Case Diagram — Hidden Spots Finder">
+    </section>
+
+    <!-- ── SLIDE 7: Class Diagram ── -->
+    <section class="slide" data-section="conception" id="slide-6">
+      <h2>Class <em>Diagram</em></h2>
+      <img src="../hidden spots/uml/class-diagram_HiddenSpots image.png" class="diagram-img"
+        alt="Class Diagram — Hidden Spots Finder">
+    </section>
+
+    <!-- ── SLIDE 8: MCD ── -->
+    <section class="slide" data-section="conception" id="slide-7">
+      <h2>Conceptual Data Model <em>(MCD)</em></h2>
+      <img src="../hidden spots/uml/MCD.png" class="diagram-img" alt="MCD — Hidden Spots Finder">
+    </section>
+
+    <!-- ── SLIDE 9: MLD / Database Schema ── -->
+    <section class="slide" data-section="conception" id="slide-8">
+      <h2>Logical Data Model <em>(MLD)</em></h2>
+      <div class="db-grid">
+        <div class="db-table">
+          <div class="db-table-head"><span>📋</span> users</div>
+          <div class="db-table-body">
+            <div class="db-field"><strong>id</strong><span class="pk">PK</span></div>
+            <div class="db-field"><strong>username</strong> VARCHAR(25)</div>
+            <div class="db-field"><strong>email</strong> UNIQUE</div>
+            <div class="db-field"><strong>password</strong> HASH</div>
+            <div class="db-field"><strong>created_at</strong> TIMESTAMP</div>
+          </div>
+        </div>
+        <div class="db-table">
+          <div class="db-table-head"><span>📍</span> places</div>
+          <div class="db-table-body">
+            <div class="db-field"><strong>id</strong><span class="pk">PK</span></div>
+            <div class="db-field"><strong>user_id</strong><span class="fk">FK</span></div>
+            <div class="db-field"><strong>category_id</strong><span class="fk">FK</span></div>
+            <div class="db-field"><strong>name</strong> VARCHAR(50)</div>
+            <div class="db-field"><strong>lat / lng</strong> DECIMAL</div>
+          </div>
+        </div>
+        <div class="db-table">
+          <div class="db-table-head"><span>🖼️</span> place_images</div>
+          <div class="db-table-body">
+            <div class="db-field"><strong>id</strong><span class="pk">PK</span></div>
+            <div class="db-field"><strong>place_id</strong><span class="fk">FK</span></div>
+            <div class="db-field"><strong>image_path</strong> VARCHAR</div>
+          </div>
+        </div>
+        <div class="db-table">
+          <div class="db-table-head"><span>⭐</span> reviews</div>
+          <div class="db-table-body">
+            <div class="db-field"><strong>id</strong><span class="pk">PK</span></div>
+            <div class="db-field"><strong>user_id</strong><span class="fk">FK</span></div>
+            <div class="db-field"><strong>place_id</strong><span class="fk">FK</span></div>
+            <div class="db-field"><strong>rating</strong> 1–5</div>
+            <div class="db-field"><strong>comment</strong> TEXT</div>
+          </div>
+        </div>
+        <div class="db-table">
+          <div class="db-table-head"><span>❤️</span> favorites</div>
+          <div class="db-table-body">
+            <div class="db-field"><strong>id</strong><span class="pk">PK</span></div>
+            <div class="db-field"><strong>user_id</strong><span class="fk">FK</span></div>
+            <div class="db-field"><strong>place_id</strong><span class="fk">FK</span></div>
+            <div class="db-field"><strong>UNIQUE</strong> (user, place)</div>
+          </div>
+        </div>
+        <div class="db-table">
+          <div class="db-table-head"><span>🗂️</span> categories</div>
+          <div class="db-table-body">
+            <div class="db-field"><strong>id</strong><span class="pk">PK</span></div>
+            <div class="db-field"><strong>name</strong> UNIQUE</div>
+            <div class="db-field" style="color:var(--muted); font-style:italic; font-size:.78rem;">e.g. Chill, Nature,
+              Study,<br>Date, Café, Adventure…</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 10: Dev Tools ── -->
+    <section class="slide" data-section="realization" id="slide-9">
+      <h2>Development <em>Tools</em></h2>
+      <div class="tech-grid">
+        <div class="tech-card"><span class="tech-icon">💻</span>
+          <h3>VS Code</h3>
+          <p>Lightweight, extensible editor with PHP/MySQL extension support.</p>
+        </div>
+        <div class="tech-card"><span class="tech-icon">🐘</span>
+          <h3>XAMPP</h3>
+          <p>Local Apache + MySQL + PHP environment for rapid development.</p>
+        </div>
+        <div class="tech-card"><span class="tech-icon">🐙</span>
+          <h3>Git &amp; GitHub</h3>
+          <p>Version control, branching strategy and source code management.</p>
+        </div>
+        <div class="tech-card"><span class="tech-icon">🎨</span>
+          <h3>PlantUML</h3>
+          <p>UML diagram generation — Use Case, Class, MCD, MLD, Sequence.</p>
+        </div>
+        <div class="tech-card"><span class="tech-icon">🖼️</span>
+          <h3>Figma</h3>
+          <p>UI wireframes and component design before implementation.</p>
+        </div>
+        <div class="tech-card"><span class="tech-icon">🗄️</span>
+          <h3>phpMyAdmin</h3>
+          <p>Database management, schema creation and data inspection.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 11: Tech Stack ── -->
+    <section class="slide" data-section="realization" id="slide-10">
+      <h2>Technologies <em>Used</em></h2>
+      <div class="split-layout" style="max-width:1100px;">
+        <div class="card">
+          <h3>🌐 &nbsp; Frontend (Client)</h3>
+          <ul>
+            <li><strong>HTML5 — </strong>Semantic structure, SEO-ready markup</li>
+            <li><strong>CSS3 — </strong>Custom properties, Flexbox, Grid, animations</li>
+            <li><strong>Vanilla JS (ES6) — </strong>DOM, AJAX (Fetch API), CSRF tokens</li>
+            <li><strong>Playfair Display + Inter — </strong>Premium typography</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>🖥️ &nbsp; Backend (Server)</h3>
+          <ul>
+            <li><strong>PHP 8.x (OOP) — </strong>Models, actions, session management</li>
+            <li><strong>MySQL + PDO — </strong>Prepared statements, ON DUPLICATE KEY</li>
+            <li><strong>MVC Architecture — </strong>Pages / Classes / Actions separation</li>
+            <li><strong>File System — </strong>Multipart image upload to <code>/uploads/</code></li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top:24px; display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
+        <span class="badge"
+          style="font-size:.75rem; background:rgba(41,128,185,.1); color:#1a5c85; border-color:rgba(41,128,185,.2);">🔒
+          Password hashing (bcrypt)</span>
+        <span class="badge"
+          style="font-size:.75rem; background:rgba(46,114,71,.1); color:#1a5230; border-color:rgba(46,114,71,.2);">📄
+          Server-side pagination</span>
+        <span class="badge"
+          style="font-size:.75rem; background:rgba(168,46,46,.1); color:#7a1a1a; border-color:rgba(168,46,46,.2);">🛡️
+          XSS &amp; CSRF Protection</span>
+        <span class="badge" style="font-size:.75rem;">🔄 Singleton DB Pattern</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 12: Architecture ── -->
+    <section class="slide" data-section="realization" id="slide-11">
+      <h2>Project <em>Architecture</em></h2>
+      <div class="split-layout" style="max-width: 1000px; align-items: flex-start;">
+        <div>
+          <div class="card" style="padding:28px;">
+            <h3
+              style="font-family:var(--font-body); font-size:1rem; font-weight:700; margin-bottom:14px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em;">
+              📁 File Structure</h3>
+            <div style="font-family:monospace; font-size:.88rem; line-height:2; color:var(--dark);">
+              <div style="color:var(--primary); font-weight:700;">hidden-spots/</div>
+              <div style="padding-left:16px;">├── <span style="color:#3A83F1;">classes/</span> &nbsp;&nbsp; <span
+                  style="color:var(--muted);">OOP Models</span></div>
+              <div style="padding-left:32px; color:var(--muted); font-size:.8rem;">User · Place · Review · Favorite
+              </div>
+              <div style="padding-left:16px;">├── <span style="color:#3A83F1;">pages/</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color:var(--muted);">Views (PHP)</span>
+              </div>
+              <div style="padding-left:32px; color:var(--muted); font-size:.8rem;">auth/ · places/ · profile/</div>
+              <div style="padding-left:16px;">├── <span style="color:#3A83F1;">actions/</span> &nbsp;&nbsp; <span
+                  style="color:var(--muted);">Controllers / API</span></div>
+              <div style="padding-left:32px; color:var(--muted); font-size:.8rem;">auth · place · review · favorite
+              </div>
+              <div style="padding-left:16px;">├── <span style="color:#3A83F1;">assets/</span> &nbsp;&nbsp;&nbsp; <span
+                  style="color:var(--muted);">CSS · JS · Images</span></div>
+              <div style="padding-left:16px;">├── <span style="color:#3A83F1;">includes/</span> &nbsp; <span
+                  style="color:var(--muted);">header · footer</span></div>
+              <div style="padding-left:16px;">└── <span style="color:#3A83F1;">config/</span> &nbsp;&nbsp;&nbsp; <span
+                  style="color:var(--muted);">DB Singleton</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="card" style="padding:24px; border-left: 4px solid var(--primary);">
+            <h3 style="font-size:1rem; font-family:var(--font-body); color:var(--dark); margin-bottom:8px;">🔁 Request
+              Flow</h3>
+            <p style="font-size:.88rem; color:var(--mid); margin:0;">Browser → <code>index.php</code> → <strong>Page
+                (View)</strong> → instantiates <strong>Model</strong> → queries <strong>Database</strong> via PDO →
+              renders HTML</p>
+          </div>
+          <div class="card" style="padding:24px; border-left: 4px solid #3A83F1;">
+            <h3 style="font-size:1rem; font-family:var(--font-body); color:var(--dark); margin-bottom:8px;">⚡ AJAX Flow
+            </h3>
+            <p style="font-size:.88rem; color:var(--mid); margin:0;">JS (Fetch) → <strong>actions/</strong> controller →
+              JSON response → DOM update (no page reload)</p>
+          </div>
+          <div class="card" style="padding:24px; border-left: 4px solid #2E7247;">
+            <h3 style="font-size:1rem; font-family:var(--font-body); color:var(--dark); margin-bottom:8px;">🗄️ Database
+            </h3>
+            <p style="font-size:.88rem; color:var(--mid); margin:0;">Singleton <code>Database</code> class returns a
+              single <code>PDO</code> instance. All queries use <strong>prepared statements</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 13: Live Demo ── -->
+    <section class="slide" data-section="demo" id="slide-12">
+      <div class="badge">🚀 &nbsp; Live Walkthrough</div>
+      <h2>Platform <em>Demonstration</em></h2>
+      <p class="subtitle">
+        We will now navigate through the Hidden Spots Finder — from the public home page to the authenticated user
+        dashboard, spot creation, and review system.
+      </p>
+      <a href="Code part\hidden spots\pages\home.php" target="_blank" id="demo-link" class="demo-btn">
+        <span>📍</span> Open Hidden Spots Finder
+      </a>
+      <p style="margin-top:20px; font-size:.9rem; color:var(--muted); text-align:center;">
+        <code>http://localhost/hidden%20spots/</code>
+      </p>
+    </section>
+
+    <!-- ── SLIDE 14: Conclusion ── -->
+    <section class="slide" data-section="demo" id="slide-13">
+      <h2>Conclusion &amp; <em>Prospects</em></h2>
+      <div class="conclusion-grid">
+        <div class="card">
+          <h3>✅ &nbsp; What Was Achieved</h3>
+          <ul>
+            <li>Full-stack community platform with OOP PHP + MySQL.</li>
+            <li>Secure auth — bcrypt hashing, session guards, PDO.</li>
+            <li>Dynamic AJAX interactions — favorites &amp; search.</li>
+            <li>Responsive, premium UI using pure CSS variables.</li>
+            <li>5 UML diagrams documenting the full system.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>🔭 &nbsp; Future Prospects</h3>
+          <ul>
+            <li>Integration of an <strong>interactive map</strong> (Leaflet.js / Google Maps).</li>
+            <li>Mobile application with <strong>GPS geolocation</strong> in real-time.</li>
+            <li>Admin dashboard with <strong>moderation</strong> &amp; analytics.</li>
+            <li>Social features — <strong>follow users</strong>, activity feed.</li>
+            <li><strong>REST API</strong> layer to decouple frontend from backend.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 15: Thank You ── -->
+    <section class="slide" data-section="demo" id="slide-14">
+      <div class="thank-you-icon">📍</div>
+      <h1 style="font-size:5.5rem;">Thank You</h1>
+      <p class="subtitle" style="margin-top:16px; font-size:1.5rem;">
+        For your attention and questions.
+      </p>
+      <div class="stat-row" style="margin-top:48px;">
+        <div class="stat"><span class="stat-number" style="font-size:1.5rem; color:var(--mid);">Supervised
+            by</span><span class="stat-label"
+            style="font-size:1rem; color:var(--dark); font-weight:700; text-transform:none; letter-spacing:0;">Mrs Imane
+            Bouziane</span></div>
+      </div>
+    </section>
+
+  </div><!-- /slider -->
+
+  <!-- ══════ FOOTER ══════ -->
+  <footer>
+    <div class="footer-info">Presented by: <strong id="author-name">Ayoub El Faquihi</strong></div>
+    <div class="controls">
+      <span class="arrow" id="prev-btn" role="button" aria-label="Previous slide">◀</span>
+      <div class="dots" id="dots-container" role="tablist" aria-label="Slide navigation"></div>
+      <span class="arrow" id="next-btn" role="button" aria-label="Next slide">▶</span>
+    </div>
+    <div class="footer-info">Supervised By: <strong>Mrs Imane Bouziane</strong></div>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const dotsWrap = document.getElementById('dots-container');
+    const navSpans = document.querySelectorAll('.nav-sections span');
+    const progressBar = document.getElementById('progress-bar');
+    const counter = document.getElementById('slide-counter');
+    let current = 0;
+
+    /* — build dots — */
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.classList.add('dot');
+      d.setAttribute('role', 'tab');
+      d.setAttribute('aria-label', `Slide ${i + 1}`);
+      if (i === 0) d.classList.add('active');
+      d.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(d);
+    });
+    const dots = document.querySelectorAll('.dot');
+
+    function updateNav(section) {
+      navSpans.forEach(s => {
+        s.classList.toggle('active', s.dataset.section === section);
+      });
+    }
+
+    function goTo(n) {
+      if (n === current) return;
+
+      slides[current].classList.remove('active');
+      slides[current].classList.add('exit');
+      dots[current].classList.remove('active');
+
+      const prev = current;
+      current = (n + slides.length) % slides.length;
+
+      setTimeout(() => slides[prev].classList.remove('exit'), 450);
+
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+
+      updateNav(slides[current].dataset.section);
+
+      /* progress bar */
+      const pct = ((current) / (slides.length - 1)) * 100;
+      progressBar.style.width = pct + '%';
+
+      /* counter */
+      counter.textContent = `${current + 1} / ${slides.length}`;
+    }
+
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') { e.preventDefault(); goTo(current + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+    });
+
+    /* click nav section labels to jump to first matching slide */
+    navSpans.forEach(span => {
+      span.addEventListener('click', () => {
+        const target = span.dataset.section;
+        for (let i = 0; i < slides.length; i++) {
+          if (slides[i].dataset.section === target) { goTo(i); break; }
+        }
+      });
+    });
+
+    /* init progress */
+    progressBar.style.width = '0%';
+  </script>
+</body>
+
+</html>

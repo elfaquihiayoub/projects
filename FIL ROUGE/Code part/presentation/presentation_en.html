@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soutenance - Projet byines</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand-cream: #F4F1EE;
+      --brand-dark: #1A1A1A;
+      --brand-earth: #D2C3B4;
+      --brand-mid: #8C7B6B;
+      --font-serif: 'Noto Serif', serif;
+      --font-sans: 'Noto Sans', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--brand-cream);
+      color: var(--brand-dark);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ═══════ HEADER ═══════ */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      height: 100px;
+      position: absolute;
+      top: 0; width: 100%;
+      z-index: 10;
+    }
+
+    .logos img { height: 60px; margin-right: 20px; }
+    
+    .nav-sections {
+      display: flex;
+      gap: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--brand-mid);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .nav-sections span.active { color: var(--brand-dark); border-bottom: 2px solid var(--brand-earth); }
+
+    /* ═══════ SLIDES CONTAINER ═══════ */
+    .slider-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin-top: 100px;
+      margin-bottom: 60px;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+      transform: translateX(50px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 100px;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    /* ═══════ TYPOGRAPHY ═══════ */
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 4.5rem;
+      color: var(--brand-dark);
+      margin-bottom: 20px;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    h2 {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      color: var(--brand-dark);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 1.5rem;
+      color: var(--brand-mid);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    p, li { font-size: 1.4rem; line-height: 1.6; color: #444; }
+    .dark-bg p, .dark-bg li { color: #ddd; }
+    ul { margin-left: 40px; margin-top: 20px; }
+    li { margin-bottom: 15px; }
+
+    /* ═══════ LAYOUTS ═══════ */
+    .split-layout {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      gap: 50px;
+      max-width: 1400px;
+    }
+
+    .split-layout > div { flex: 1; }
+
+    .img-fluid {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .diagram-img {
+      max-height: 60vh;
+      object-fit: contain;
+      box-shadow: none;
+      border: 1px solid var(--brand-earth);
+      padding: 10px;
+      background: white;
+    }
+
+    /* ═══════ CUSTOM ELEMENTS ═══════ */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .tech-card {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      border: 2px solid var(--brand-earth);
+    }
+    .tech-card h3 { font-family: var(--font-serif); margin-bottom: 10px; font-size: 1.5rem; }
+
+    /* ═══════ FOOTER ═══════ */
+    footer {
+      background-color: var(--brand-dark);
+      color: var(--brand-cream);
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 50px;
+      font-size: 1.2rem;
+      position: absolute;
+      bottom: 0; width: 100%;
+      z-index: 10;
+    }
+
+    .controls { display: flex; gap: 20px; align-items: center; }
+    .dots { display: flex; gap: 10px; }
+    .dot { width: 12px; height: 12px; background: var(--brand-mid); border-radius: 50%; cursor: pointer; }
+    .dot.active { background: var(--brand-cream); }
+    
+    .arrow { cursor: pointer; font-size: 1.5rem; user-select: none; color: var(--brand-cream); transition: 0.2s; }
+    .arrow:hover { color: var(--brand-earth); }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logos">
+      <img src="./archive/report/images/logo_byines.png" alt="ByInes Logo">
+      <img src="./archive/report/images/ofppt_logo.png" alt="OFPPT">
+      <img src="./archive/report/images/solicode_logo.png" alt="SoliCode">
+    </div>
+    <div class="nav-sections" id="nav-sections">
+      <span data-section="intro" class="active">Introduction</span>
+      <span data-section="needs">Analysis & Needs</span>
+      <span data-section="conception">Conception</span>
+      <span data-section="realization">Realization</span>
+      <span data-section="demo">Live Demo</span>
+    </div>
+  </header>
+
+  <div class="slider-container" id="slider">
+
+    <!-- title slide -->
+    <section class="slide active" data-section="intro">
+      <div style="display: flex; gap: 60px; justify-content: center; margin-bottom: 40px; align-items: center;">
+        <img src="./archive/report/images/ofppt_logo.png" alt="OFPPT" style="height: 120px;">
+        <img src="./archive/report/images/solicode_logo.png" alt="SoliCode" style="height: 120px;">
+      </div>
+      <h1 style="font-size: 3.5rem;">Design and Development of an E-Commerce Platform</h1>
+      <p class="subtitle" style="margin-bottom: 20px;">Premium Web Application for Modest & Islamic Fashion for the Brand "byines"</p>
+      <img src="./archive/report/images/logo_byines.png" alt="Logo" style="max-width: 200px; margin: 20px 0;">
+    </section>
+
+    <!-- plan -->
+    <section class="slide" data-section="intro">
+      <h2>Presentation Plan</h2>
+      <div style="font-size: 1.8rem; line-height: 2; color: var(--brand-mid);">
+        <ol>
+          <li>Introduction & Problematic</li>
+          <li>Needs Analysis</li>
+          <li>System Conception (UML, MCD, MLD)</li>
+          <li>Realization & Technologies</li>
+          <li>Platform Demonstration (UI/UX)</li>
+          <li>Conclusion & Prospects</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- introduction -->
+    <section class="slide" data-section="intro">
+      <div class="split-layout">
+        <div>
+          <h2>Introduction</h2>
+          <p>The <strong>modest fashion</strong> market is experiencing strong growth.</p>
+          <ul>
+            <li>Female clientele seeking elegance and modesty.</li>
+            <li>Need to modernize offerings through professional digital channels.</li>
+          </ul>
+          <p style="margin-top:20px;">The goal of the <strong>byines</strong> project is to design a high-end and efficient virtual showroom.</p>
+        </div>
+        <div>
+          <img src="./archive/report/images/screen_accueil.png" class="img-fluid" alt="Accueil">
+        </div>
+      </div>
+    </section>
+
+    <!-- problematic -->
+    <section class="slide" data-section="needs">
+      <h2>Problematic</h2>
+      <div class="split-layout">
+        <div>
+          <p>Despite the success of their <strong>3 physical stores</strong> and a rising Instagram page with <strong>close to 100,000 followers</strong>, the brand faces the limitations of traditional sales and social media:</p>
+          <ul>
+            <li><strong>Geographical limits:</strong> Exclusive dependence on 3 local stores.</li>
+            <li><strong>Sales by message (WhatsApp/Instagram):</strong> Disorganized, risk of errors, massive waste of time.</li>
+            <li><strong>Inventory management:</strong> No centralized, real-time tracking (overselling).</li>
+            <li><strong>Brand image:</strong> Unprofessional customer experience online.</li>
+          </ul>
+        </div>
+        <div style="text-align: center; display: flex; flex-direction: column; gap: 20px;">
+          <div style="display: flex; gap: 20px; justify-content: center; align-items: center;">
+            <img src="./archive/report/images/irl_store.png" class="img-fluid" style="max-height: 420px; border: 2px solid var(--brand-earth);" alt="Physical Store">
+            <img src="./archive/report/images/instagram page.png" class="img-fluid" style="max-height: 600px; border: 2px solid var(--brand-earth);" alt="Instagram Page">
+          </div>
+          <p style="font-style: italic; margin-top:10px;">A centralized, automated, and elegant solution has become a necessity.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- analysis -->
+    <section class="slide" data-section="needs">
+      <h2>Roles Analysis</h2>
+      <div class="split-layout" style="align-items: flex-start; text-align: center;">
+        <div style="background: white; padding: 40px; border-radius: 8px; border: 2px solid var(--brand-earth);">
+          <h3 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom:20px;">CUSTOMER</h3>
+          <ul style="text-align: left;">
+            <li>Browse the catalog (Categories)</li>
+            <li>Filter (Price, Sizes, Colors)</li>
+            <li>Manage Cart (AJAX)</li>
+            <li>Place order (Checkout)</li>
+            <li>Track order status</li>
+          </ul>
+        </div>
+        <div class="dark-bg" style="background: var(--brand-dark); color: white; padding: 40px; border-radius: 8px;">
+          <h3 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom:20px; color: var(--brand-cream);">ADMINISTRATOR</h3>
+          <ul style="text-align: left;">
+            <li>Manage Products (Stock variants)</li>
+            <li>Manage Categories and Collections</li>
+            <li>Track Orders (Statuses)</li>
+            <li>Manage Contact Messages</li>
+            <li>View Dashboard (KPIs)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- conception: use case -->
+    <section class="slide" data-section="conception">
+      <h2>Use Case Diagram</h2>
+      <img src="./archive/report/images/usecase_byines.png" class="img-fluid diagram-img" alt="Use Case">
+    </section>
+
+    <!-- conception: class diagram -->
+    <section class="slide" data-section="conception">
+      <h2>Class Diagram</h2>
+      <img src="./archive/report/images/class_byines.png" class="img-fluid diagram-img" alt="Class Diagram">
+    </section>
+
+    <!-- conception: mcd -->
+    <section class="slide" data-section="conception">
+      <h2>Conceptual Data Model (MCD)</h2>
+      <img src="./archive/report/images/mcd_byines.png" class="img-fluid diagram-img" alt="MCD">
+    </section>
+
+    <!-- conception: mld -->
+    <section class="slide" data-section="conception">
+      <h2>Logical Data Model (MLD)</h2>
+      <img src="./archive/report/images/mld_byines.png" class="img-fluid diagram-img" alt="MLD">
+    </section>
+
+    <!-- realization: tools -->
+    <section class="slide" data-section="realization">
+      <h2>Realization Tools</h2>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <h3>VS Code</h3>
+          <p>Lightweight and extensible code editor for Full-Stack development.</p>
+        </div>
+        <div class="tech-card">
+          <h3>XAMPP</h3>
+          <p>Local web server (Apache) including MySQL and PHP.</p>
+        </div>
+        <div class="tech-card">
+          <h3>Git &amp; GitHub</h3>
+          <p>Version control and source code management.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- realization: tech stack -->
+    <section class="slide" data-section="realization">
+      <h2>Technologies Used</h2>
+      <div class="split-layout">
+        <div class="tech-card" style="text-align:left;">
+          <h3>Frontend (Client)</h3>
+          <ul>
+            <li><strong>HTML5:</strong> Semantic structure</li>
+            <li><strong>CSS3:</strong> Variables, Flexbox, Responsive Design</li>
+            <li><strong>JavaScript (ES6):</strong> DOM, AJAX, Interactive Cart</li>
+          </ul>
+        </div>
+        <div class="tech-card" style="text-align:left;">
+          <h3>Backend (Server)</h3>
+          <ul>
+            <li><strong>PHP 8.x (OOP):</strong> Business logic and controllers</li>
+            <li><strong>MySQL (PDO):</strong> Prepared statements and security</li>
+            <li><strong>MVC Architecture:</strong> Separation of Views / Models</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- live demo -->
+    <section class="slide" data-section="demo">
+      <h2 style="font-size: 4rem;">Live Demonstration of the Platform</h2>
+      <p class="subtitle" style="font-size: 1.8rem; max-width: 800px; margin: 0 auto 40px;">
+        We will now move on to the interactive demonstration of the e-commerce site and the administration area (UI/UX).
+      </p>
+      <a href="http://localhost/byines/" target="_blank" style="background: var(--brand-dark); color: var(--brand-cream); padding: 20px 40px; font-size: 1.5rem; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.2s;">
+        👉 Open http://localhost/byines/
+      </a>
+    </section>
+
+    <!-- conclusion -->
+    <section class="slide" data-section="demo">
+      <h2>Conclusion and Prospects</h2>
+      <div class="split-layout">
+        <div>
+          <h3>Summary</h3>
+          <ul>
+            <li>Creation of an elegant and autonomous platform.</li>
+            <li>Automation of the sales funnel and inventory management.</li>
+            <li>Improved and professionalized customer experience.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Future Prospects</h3>
+          <ul>
+            <li>Integration of an <strong>online payment</strong> gateway.</li>
+            <li>Optimizing <strong>SEO</strong> to improve search engine rankings.</li>
+            <li>Adding <strong>multi-language</strong> and <strong>multi-currency</strong> support.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- thank you -->
+    <section class="slide" data-section="demo">
+      <h1 style="font-size: 6rem; margin-bottom: 20px;">THANK YOU</h1>
+      <p class="subtitle" style="font-size: 2rem;">For your attention.</p>
+    </section>
+
+  </div>
+
+  <footer>
+    <div>Directed By: <strong>Aymane Salmoune</strong></div>
+    <div class="controls">
+      <span class="arrow" id="prev-btn">◀</span>
+      <div class="dots" id="dots-container"></div>
+      <span class="arrow" id="next-btn">▶</span>
+    </div>
+    <div>Supervised By: <strong>M. Youssef Yazidi Alaoui</strong></div>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const dotsContainer = document.getElementById('dots-container');
+    const navSections = document.querySelectorAll('.nav-sections span');
+    let currentSlide = 0;
+
+    // Create dots
+    slides.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.classList.add('dot');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goToSlide(i));
+      dotsContainer.appendChild(dot);
+    });
+    const dots = document.querySelectorAll('.dot');
+
+    function updateNavSection(section) {
+      navSections.forEach(nav => {
+        if(nav.dataset.section === section) {
+          nav.classList.add('active');
+        } else {
+          nav.classList.remove('active');
+        }
+      });
+    }
+
+    function goToSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      
+      currentSlide = (n + slides.length) % slides.length;
+      
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+      
+      const currentSection = slides[currentSlide].dataset.section;
+      updateNavSection(currentSection);
+    }
+
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function prevSlide() { goToSlide(currentSlide - 1); }
+
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>

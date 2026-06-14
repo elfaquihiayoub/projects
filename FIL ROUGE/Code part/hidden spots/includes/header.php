@@ -1,4 +1,8 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $pageTitle = isset($pageTitle) ? $pageTitle : 'HiddenSpots';
 
 // Auto-compute relative path from current page to project root

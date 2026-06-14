@@ -249,7 +249,8 @@ class Place{
                    (SELECT image_path 
                     FROM place_images 
                     WHERE place_id = p.id 
-                    LIMIT 1) AS image
+                    LIMIT 1) AS image,
+                   (SELECT AVG(rating) FROM reviews WHERE place_id = p.id) AS avg_rating
             FROM places p
             JOIN users u ON p.user_id = u.id
             JOIN categories c ON p.category_id = c.id
