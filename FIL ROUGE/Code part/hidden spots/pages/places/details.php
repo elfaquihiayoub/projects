@@ -38,6 +38,14 @@ $pageTitle = htmlspecialchars($placeData['name']) . ' - HiddenSpots';
         <a href="list.php" class="btn btn-secondary btn-sm">&larr; Back to Explore</a>
     </div>
 
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert alert-success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+    <?php endif; ?>
+
     <!-- Place Images Gallery -->
     <?php if (!empty($placeData['images'])): ?>
         <div class="details-gallery">

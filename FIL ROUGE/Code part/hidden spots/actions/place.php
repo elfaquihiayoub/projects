@@ -54,19 +54,37 @@ if (isset($_POST['action']) && $_POST['action'] === "add") {
       if (!empty($_FILES['images']['name'][0])) {
 
         $uploadDir = __DIR__ . "/../uploads/";
-        $imageCount = 0; // For new places, start at 0
+
+        // Ensure uploads directory exists
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $imageCount = 0;
+        $uploadErrors = [];
 
         foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
 
+            // Skip if upload had an error
+            if ($_FILES['images']['error'][$key] !== UPLOAD_ERR_OK) {
+                $uploadErrors[] = $_FILES['images']['name'][$key] . ': upload error code ' . $_FILES['images']['error'][$key];
+                continue;
+            }
+
+            // Skip empty tmp_name
+            if (empty($tmp_name)) {
+                continue;
+            }
+
             // Check max image count
             if ($imageCount >= MAX_IMAGES_PER_PLACE) {
-                $_SESSION['error'] = "Maximum " . MAX_IMAGES_PER_PLACE . " images allowed per place.";
+                $uploadErrors[] = "Maximum " . MAX_IMAGES_PER_PLACE . " images allowed. Remaining files skipped.";
                 break;
             }
 
             // Check file size (5 MB max)
             if ($_FILES['images']['size'][$key] > MAX_FILE_SIZE) {
-                $_SESSION['error'] = "File '" . $_FILES['images']['name'][$key] . "' exceeds 5 MB limit.";
+                $uploadErrors[] = $_FILES['images']['name'][$key] . ' exceeds 5 MB limit.';
                 continue;
             }
 
@@ -79,13 +97,16 @@ if (isset($_POST['action']) && $_POST['action'] === "add") {
             if (!in_array($ext, $allowed)) continue;
 
             if (move_uploaded_file($tmp_name, $targetFile)) {
-
                 $imagePath = "uploads/" . $fileName;
-
-                // insert image into DB via Place class
                 $place->addImage($place_id, $imagePath);
                 $imageCount++;
+            } else {
+                $uploadErrors[] = $_FILES['images']['name'][$key] . ': failed to move uploaded file.';
             }
+        }
+
+        if (!empty($uploadErrors)) {
+            $_SESSION['error'] = "Some images failed: " . implode(' | ', $uploadErrors);
         }
     }
 
@@ -134,20 +155,38 @@ if (isset($_POST['action']) && $_POST['action'] === "update") {
     // Handle new image uploads
     if (!empty($_FILES['images']['name'][0])) {
         $uploadDir = __DIR__ . "/../uploads/";
+
+        // Ensure uploads directory exists
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
         $existingCount = $place->countImages($id);
         $newCount = 0;
+        $uploadErrors = [];
 
         foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
 
+            // Skip if upload had an error
+            if ($_FILES['images']['error'][$key] !== UPLOAD_ERR_OK) {
+                $uploadErrors[] = $_FILES['images']['name'][$key] . ': upload error code ' . $_FILES['images']['error'][$key];
+                continue;
+            }
+
+            // Skip empty tmp_name
+            if (empty($tmp_name)) {
+                continue;
+            }
+
             // Check max image count (existing + new)
             if (($existingCount + $newCount) >= MAX_IMAGES_PER_PLACE) {
-                $_SESSION['error'] = "Maximum " . MAX_IMAGES_PER_PLACE . " images allowed per place.";
+                $uploadErrors[] = "Maximum " . MAX_IMAGES_PER_PLACE . " images allowed. Remaining files skipped.";
                 break;
             }
 
             // Check file size (5 MB max)
             if ($_FILES['images']['size'][$key] > MAX_FILE_SIZE) {
-                $_SESSION['error'] = "File '" . $_FILES['images']['name'][$key] . "' exceeds 5 MB limit.";
+                $uploadErrors[] = $_FILES['images']['name'][$key] . ' exceeds 5 MB limit.';
                 continue;
             }
 
@@ -163,7 +202,13 @@ if (isset($_POST['action']) && $_POST['action'] === "update") {
                 $imagePath = "uploads/" . $fileName;
                 $place->addImage($id, $imagePath);
                 $newCount++;
+            } else {
+                $uploadErrors[] = $_FILES['images']['name'][$key] . ': failed to move uploaded file.';
             }
+        }
+
+        if (!empty($uploadErrors)) {
+            $_SESSION['error'] = "Some images failed: " . implode(' | ', $uploadErrors);
         }
     }
 

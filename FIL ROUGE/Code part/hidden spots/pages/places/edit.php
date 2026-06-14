@@ -39,6 +39,10 @@ $pageTitle = 'Edit Place - HiddenSpots';
             <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
         <?php endif; ?>
 
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+        <?php endif; ?>
+
         <form method="POST" action="<?php echo $base; ?>actions/place.php" enctype="multipart/form-data">
             <input type="hidden" name="action" value="update">
             <input type="hidden" name="place_id" value="<?php echo $placeId; ?>">

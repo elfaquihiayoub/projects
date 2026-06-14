@@ -31,6 +31,14 @@ $pageTitle = 'Explore Places - HiddenSpots';
         <p>Discover hidden gems from around the world</p>
     </div>
 
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-error"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert alert-success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+    <?php endif; ?>
+
     <!-- Search Bar -->
     <div class="search-bar">
         <span style="color: var(--text-muted);">&#128269;</span>
