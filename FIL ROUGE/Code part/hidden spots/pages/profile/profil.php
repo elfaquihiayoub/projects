@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../includes/auth_check.php';
-require_once __DIR__ . '/../classes/Place.php';
-require_once __DIR__ . '/../classes/Review.php';
-require_once __DIR__ . '/../classes/favorite.php';
+require_once __DIR__ . '/../../includes/auth_check.php';
+require_once __DIR__ . '/../../classes/Place.php';
+require_once __DIR__ . '/../../classes/Review.php';
+require_once __DIR__ . '/../../classes/favorite.php';
 
 $place = new Place();
 $review = new Review();
@@ -22,7 +22,7 @@ $myFavorites = $favorite->getUserFavorites($userId);
 $pageTitle = 'My Profile - HiddenSpots';
 ?>
 
-<?php require_once __DIR__ . '/../includes/header.php'; ?>
+<?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
 <div class="container">
     <!-- Profile Header -->
@@ -48,8 +48,8 @@ $pageTitle = 'My Profile - HiddenSpots';
 
     <!-- Quick Actions -->
     <div class="profile-actions">
-        <a href="profile/edit.php" class="btn btn-secondary">Edit Profile</a>
-        <a href="places/add.php" class="btn btn-primary">+ Share New Spot</a>
+        <a href="edit.php" class="btn btn-secondary">Edit Profile</a>
+        <a href="../places/add.php" class="btn btn-primary">+ Share New Spot</a>
     </div>
 
     <!-- Tabs -->
@@ -64,14 +64,14 @@ $pageTitle = 'My Profile - HiddenSpots';
             <div class="places-grid">
                 <?php foreach ($myPlaces as $p): ?>
                     <div class="place-card">
-                        <a href="places/details.php?id=<?php echo $p['id']; ?>">
-                            <img src="<?php echo !empty($p['image']) ? '../' . htmlspecialchars($p['image']) : '../assets/images/placeholder.jpg'; ?>"
+                        <a href="../places/details.php?id=<?php echo $p['id']; ?>">
+                            <img src="<?php echo !empty($p['image']) ? '../../' . htmlspecialchars($p['image']) : '../../assets/images/placeholder.jpg'; ?>"
                                  alt="<?php echo htmlspecialchars($p['name']); ?>"
                                  class="place-card-img">
                         </a>
                         <div class="place-card-body">
                             <h3 class="place-card-title">
-                                <a href="places/details.php?id=<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['name']); ?></a>
+                                <a href="../places/details.php?id=<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['name']); ?></a>
                             </h3>
                             <div class="place-card-info">
                                 <span>&#9679;</span>
@@ -80,8 +80,8 @@ $pageTitle = 'My Profile - HiddenSpots';
                                 <span style="margin-left:auto;">&#9733; <?php echo $avgR > 0 ? number_format($avgR, 1) : '—'; ?></span>
                             </div>
                             <div style="display: flex; gap: 8px; margin-top: 12px;">
-                                <a href="places/edit.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
-                                <a href="places/details.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">View</a>
+                                <a href="../places/edit.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
+                                <a href="../places/details.php?id=<?php echo $p['id']; ?>" class="btn btn-secondary btn-sm">View</a>
                             </div>
                         </div>
                     </div>
@@ -90,13 +90,13 @@ $pageTitle = 'My Profile - HiddenSpots';
 
             <?php if ($myPlacesCount > 6): ?>
                 <div class="text-center mt-3">
-                    <a href="places/user_places.php" class="btn btn-secondary">View All My Places</a>
+                    <a href="../places/user_places.php" class="btn btn-secondary">View All My Places</a>
                 </div>
             <?php endif; ?>
         <?php else: ?>
             <div class="empty-state">
                 <p>You haven't shared any places yet.</p>
-                <a href="places/add.php" class="btn btn-primary">Share Your First Hidden Spot</a>
+                <a href="../places/add.php" class="btn btn-primary">Share Your First Hidden Spot</a>
             </div>
         <?php endif; ?>
     </div>
@@ -107,14 +107,14 @@ $pageTitle = 'My Profile - HiddenSpots';
             <div class="places-grid">
                 <?php foreach ($myFavorites as $fav): ?>
                     <div class="place-card">
-                        <a href="places/details.php?id=<?php echo $fav['id']; ?>">
-                            <img src="<?php echo !empty($fav['image']) ? '../' . htmlspecialchars($fav['image']) : '../assets/images/placeholder.jpg'; ?>"
+                        <a href="../places/details.php?id=<?php echo $fav['id']; ?>">
+                            <img src="<?php echo !empty($fav['image']) ? '../../' . htmlspecialchars($fav['image']) : '../../assets/images/placeholder.jpg'; ?>"
                                  alt="<?php echo htmlspecialchars($fav['name']); ?>"
                                  class="place-card-img">
                         </a>
                         <div class="place-card-body">
                             <h3 class="place-card-title">
-                                <a href="places/details.php?id=<?php echo $fav['id']; ?>"><?php echo htmlspecialchars($fav['name']); ?></a>
+                                <a href="../places/details.php?id=<?php echo $fav['id']; ?>"><?php echo htmlspecialchars($fav['name']); ?></a>
                             </h3>
                             <div class="place-card-info">
                                 <span>&#9679;</span>
@@ -129,7 +129,7 @@ $pageTitle = 'My Profile - HiddenSpots';
         <?php else: ?>
             <div class="empty-state">
                 <p>You haven't added any favorites yet.</p>
-                <a href="places/list.php" class="btn btn-primary">Explore Places</a>
+                <a href="../places/list.php" class="btn btn-primary">Explore Places</a>
             </div>
         <?php endif; ?>
     </div>
@@ -167,4 +167,4 @@ function showTab(tabName) {
 })();
 </script>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>

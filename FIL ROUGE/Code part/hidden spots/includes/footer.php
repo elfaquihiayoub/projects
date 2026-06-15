@@ -42,8 +42,8 @@ if (!isset($base)) {
                 <h4>Account</h4>
                 <ul>
                     <?php if (isset($_SESSION['user_id'])): ?>
-                        <li><a href="<?php echo $base; ?>pages/profil.php">My Profile</a></li>
-                        <li><a href="<?php echo $base; ?>pages/profil.php#favorites">My Favorites</a></li>
+                        <li><a href="<?php echo $base; ?>pages/profile/profil.php">My Profile</a></li>
+                        <li><a href="<?php echo $base; ?>pages/profile/profil.php#favorites">My Favorites</a></li>
                         <li><a href="<?php echo $base; ?>pages/profile/edit.php">Settings</a></li>
                         <li><a href="<?php echo $base; ?>actions/logout.php">Logout</a></li>
                     <?php else: ?>
@@ -61,15 +61,6 @@ if (!isset($base)) {
                     <li><a href="<?php echo $base; ?>pages/home.php">Terms of Service</a></li>
                     <li><a href="<?php echo $base; ?>pages/home.php">Community Guidelines</a></li>
                 </ul>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>All rights reserved.</p>
-            <div class="footer-social">
-                <a href="<?php echo $base; ?>pages/home.php" aria-label="Home">&#127760;</a>
-                <a href="<?php echo isset($_SESSION['user_id']) ? $base . 'pages/profil.php' : $base . 'pages/auth/login.php'; ?>" aria-label="Account">&#9993;</a>
-                <a href="<?php echo $base; ?>pages/places/list.php" aria-label="Explore">&#10148;</a>
             </div>
         </div>
     </div>

@@ -54,7 +54,7 @@ $_currentDir = basename(dirname($_SERVER['SCRIPT_FILENAME']));
                 <li><a href="<?php echo $base; ?>pages/home.php" class="<?php echo ($_currentPage === 'home') ? 'active' : ''; ?>">Home</a></li>
                 <li><a href="<?php echo $base; ?>pages/places/list.php" class="<?php echo ($_currentDir === 'places' && $_currentPage === 'list') ? 'active' : ''; ?>">Places</a></li>
                 <li><a href="<?php echo $base; ?>pages/places/add.php" class="<?php echo ($_currentDir === 'places' && $_currentPage === 'add') ? 'active' : ''; ?>">Add Place</a></li>
-                <li><a href="<?php echo $base; ?>pages/profil.php" class="<?php echo ($_currentPage === 'profil') ? 'active' : ''; ?>">Profile</a></li>
+                <li><a href="<?php echo $base; ?>pages/profile/profil.php" class="<?php echo ($_currentPage === 'profil') ? 'active' : ''; ?>">Profile</a></li>
                 <li class="nav-mobile-logout">
                     <a href="<?php echo $base; ?>actions/logout.php" class="nav-mobile-logout-btn">Logout</a>
                 </li>

@@ -15,7 +15,7 @@ $user_id = $_SESSION['user_id'];
 $action  = $_POST['action'] ?? null;
 
 if (!$action) {
-    header("Location: ../pages/profil.php");
+    header("Location: ../pages/profile/profil.php");
     exit;
 }
 
@@ -99,5 +99,5 @@ if ($action === "change_password") {
 }
 
 // Fallback
-header("Location: ../pages/profil.php");
+header("Location: ../pages/profile/profil.php");
 exit;

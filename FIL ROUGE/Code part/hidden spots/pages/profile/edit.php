@@ -83,7 +83,7 @@ $pageTitle = 'Edit Profile - HiddenSpots';
         </div>
 
         <div style="margin-top: 32px; text-align: center;">
-            <a href="../profil.php" class="btn btn-secondary">&larr; Back to Profile</a>
+            <a href="profil.php" class="btn btn-secondary">&larr; Back to Profile</a>
         </div>
     </div>
 </div>
